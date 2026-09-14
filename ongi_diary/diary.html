@@ -1,0 +1,681 @@
+<meta charset="UTF-8">
+<title>온기 다이어리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Gaegu:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+  :root{
+    --paper:#fffdf9;
+    --paper-edge:#eee9df;
+    --pink:#f6cfda;
+    --pink-deep:#e893ac;
+    --ink:#5b4636;
+    --ink-soft:#9a8168;
+    --ink-faint:#c3ae8e;
+    --rule-solid:#b69a6b;
+    --rule-dot:#d9c7a0;
+    --yellow-temp:#ffd873;
+    --red-temp:#df5a4a;
+    --star:#e4643f;
+    --shadow:rgba(91,70,54,.22);
+    --bg:#efe2ce;
+    --panel:#fffaf0;
+    --focus:#c76b52;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#241c14;
+      --paper-edge:#2e2419;
+      --pink:#4a2f3a;
+      --pink-deep:#a85a72;
+      --ink:#f1e3cd;
+      --ink-soft:#c2ab8c;
+      --ink-faint:#6a5a43;
+      --rule-solid:#8a6f4b;
+      --rule-dot:#4d4230;
+      --yellow-temp:#e0b354;
+      --red-temp:#e2685a;
+      --star:#f0764f;
+      --shadow:rgba(0,0,0,.45);
+      --bg:#171310;
+      --panel:#2a2118;
+      --focus:#e2856e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#241c14;
+    --paper-edge:#2e2419;
+    --pink:#4a2f3a;
+    --pink-deep:#a85a72;
+    --ink:#f1e3cd;
+    --ink-soft:#c2ab8c;
+    --ink-faint:#6a5a43;
+    --rule-solid:#8a6f4b;
+    --rule-dot:#4d4230;
+    --yellow-temp:#e0b354;
+    --red-temp:#e2685a;
+    --star:#f0764f;
+    --shadow:rgba(0,0,0,.45);
+    --bg:#171310;
+    --panel:#2a2118;
+    --focus:#e2856e;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Nunito',sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 14px 60px;
+    gap:18px;
+  }
+
+  .toolbar{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:var(--panel);
+    border:1px solid var(--ink-faint);
+    border-radius:999px;
+    padding:8px 10px 8px 18px;
+    box-shadow:0 2px 10px var(--shadow);
+  }
+  .toolbar .label{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:17px;
+    min-width:150px;
+    text-align:center;
+    letter-spacing:.02em;
+  }
+  .nav-btn{
+    width:32px;height:32px;border-radius:50%;
+    border:1px solid var(--ink-faint);
+    background:var(--paper);
+    color:var(--ink);
+    font-size:16px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s, transform .1s;
+  }
+  .nav-btn:hover{background:var(--pink);}
+  .nav-btn:active{transform:scale(.92);}
+  .today-btn{
+    border:none;background:none;color:var(--ink-soft);
+    font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;
+    letter-spacing:.05em;cursor:pointer;padding:6px 10px;border-radius:999px;
+  }
+  .today-btn:hover{background:var(--pink);color:var(--ink);}
+
+  .save-flag{
+    font-size:11px;color:var(--ink-soft);
+    min-height:14px;letter-spacing:.03em;
+  }
+
+  .book{
+    display:flex;
+    background:linear-gradient(90deg,var(--paper-edge),var(--paper) 6%,var(--paper) 94%,var(--paper-edge));
+    border-radius:10px;
+    box-shadow:0 18px 40px var(--shadow), 0 2px 0 var(--paper-edge) inset;
+    position:relative;
+    overflow:hidden;
+  }
+  .book::after{
+    content:"";
+    position:absolute;
+    left:50%;top:0;bottom:0;
+    width:26px;
+    transform:translateX(-50%);
+    background:linear-gradient(90deg, transparent, var(--shadow), transparent);
+    opacity:.55;
+    pointer-events:none;
+    z-index:3;
+  }
+  .page{
+    position:relative;
+    width:540px;
+    flex:none;
+    padding:26px 24px 30px;
+    background-color:var(--paper);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.22' intercept='0.8'/%3E%3CfeFuncG type='linear' slope='0.22' intercept='0.8'/%3E%3CfeFuncB type='linear' slope='0.22' intercept='0.8'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-blend-mode:multiply;
+    background-size:140px 140px;
+  }
+  .page-right{padding-left:20px;padding-right:20px;}
+
+  .month-head{
+    height:var(--head-h);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding-bottom:9px;
+    border-bottom:2px solid var(--rule-solid);
+    margin-bottom:2px;
+  }
+  .month-num{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:50px;
+    line-height:1;
+    color:var(--ink);
+  }
+  .month-name{
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:12.5px;
+    letter-spacing:.24em;
+    color:var(--ink-soft);
+    margin-top:5px;
+  }
+
+  .days-list{display:flex;flex-direction:column;}
+  .day-row{
+    height:var(--row-h);
+    display:flex;
+    align-items:center;
+    gap:9px;
+    border-bottom:1px dashed var(--rule-dot);
+  }
+  .day-row:last-child{border-bottom:none;}
+  .day-row.weekend .day-num{color:var(--pink-deep);}
+  .day-num{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:15px;
+    width:22px;
+    text-align:right;
+    color:var(--ink);
+    flex:none;
+  }
+  .day-wd{
+    font-size:10px;
+    color:var(--ink-faint);
+    width:14px;
+    flex:none;
+  }
+  .diary-input{
+    flex:1;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    font-family:'Gaegu',cursive;
+    font-size:16px;
+    outline:none;
+    min-width:0;
+  }
+  .diary-input::placeholder{color:var(--ink-faint);font-family:'Nunito',sans-serif;font-size:12px;}
+  .diary-input:focus{background:var(--pink);border-radius:4px;padding-left:4px;}
+
+  /* right page grid */
+  .right-grid{
+    display:grid;
+    grid-template-rows: var(--head-h) repeat(var(--n-days), var(--row-h));
+    position:relative;
+  }
+  .rg-cell{
+    display:flex;align-items:center;justify-content:center;
+    border-bottom:1px dashed var(--rule-dot);
+    min-width:0;
+  }
+  .rg-row-last{border-bottom:none;}
+
+  .head-cell{
+    border-bottom:2px solid var(--rule-solid);
+    align-items:flex-end;
+    padding-bottom:8px;
+    position:relative;
+    overflow:visible;
+  }
+
+  .vlabel{
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:11.5px;
+    letter-spacing:.22em;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+  }
+
+  .habit-input-wrap{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding-bottom:6px;
+  }
+  .habit-input{
+    height:calc(var(--head-h) - 14px);
+    width:22px;
+    text-align:start;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    font-family:'Gaegu',cursive;
+    font-weight:700;
+    font-size:14px;
+    outline:none;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    padding:3px 2px;
+  }
+  .habit-input:focus{background:var(--pink);border-radius:4px;}
+  .habit-input::placeholder{color:var(--ink-faint);font-family:'Nunito',sans-serif;font-weight:600;font-size:10px;}
+
+  .checkbox{
+    width:19px;height:19px;
+    border:1.5px solid var(--ink-faint);
+    border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:12px;
+    color:var(--red-temp);
+    background:var(--panel);
+    user-select:none;
+    transition:transform .08s;
+  }
+  .checkbox:active{transform:scale(.88);}
+  .checkbox.checked{background:var(--pink);border-color:var(--pink-deep);}
+  .checkbox.disabled{opacity:.25;pointer-events:none;}
+
+  .temp-cell{
+    font-family:'Nunito',sans-serif;
+    font-variant-numeric:tabular-nums;
+    font-weight:800;
+    font-size:14px;
+  }
+  .temp-axis{
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:10px;
+    color:var(--ink-soft);
+  }
+
+  .graph-cell{
+    font-size:15px;
+    color:var(--star);
+    position:relative;
+    z-index:2;
+  }
+  .graph-axis{
+    display:flex;
+    height:100%;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:4px;
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:10px;
+    color:var(--ink-soft);
+  }
+  .graph-placeholder{
+    grid-column: 1 / -1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:var(--ink-faint);
+    font-size:12px;
+    padding:6px;
+  }
+
+  .graph-line{position:absolute;pointer-events:none;z-index:1;}
+
+  @media (max-width: 1150px){
+    .book{flex-direction:column;}
+    .page{width:100%;}
+    .book::after{left:0;right:0;top:50%;bottom:auto;height:26px;width:auto;transform:translateY(-50%);
+      background:linear-gradient(180deg, transparent, var(--shadow), transparent);}
+  }
+</style>
+
+<div class="toolbar">
+  <button class="nav-btn" id="prevBtn" aria-label="이전 달">‹</button>
+  <div class="label" id="monthLabel"></div>
+  <button class="nav-btn" id="nextBtn" aria-label="다음 달">›</button>
+  <button class="today-btn" id="todayBtn">오늘</button>
+</div>
+<div class="save-flag" id="saveFlag"></div>
+
+<div class="book" id="book" style="--head-h:96px; --row-h:34px;">
+  <section class="page page-left">
+    <div class="month-head">
+      <div class="month-num" id="monthNum">09</div>
+      <div class="month-name" id="monthName">SEPTEMBER</div>
+    </div>
+    <div class="days-list" id="daysList"></div>
+  </section>
+  <section class="page page-right">
+    <div class="right-grid" id="rightGrid"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  const HABIT_SLOTS = 8;
+  const COL_W = 27, COL_GAP = 10, TEMP_W = 44;
+
+  let db = null;
+  let state = { habits: Array(HABIT_SLOTS).fill(""), days: {} };
+  let current = new Date();
+  let saveTimer = null;
+  let loadToken = 0;
+
+  const monthLabelEl = document.getElementById('monthLabel');
+  const monthNumEl = document.getElementById('monthNum');
+  const monthNameEl = document.getElementById('monthName');
+  const daysListEl = document.getElementById('daysList');
+  const rightGridEl = document.getElementById('rightGrid');
+  const bookEl = document.getElementById('book');
+  const saveFlagEl = document.getElementById('saveFlag');
+
+  const MONTH_NAMES = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+  const WD = ["일","월","화","수","목","금","토"];
+
+  function monthKey(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0'); }
+  function daysInMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); }
+
+  function tempColor(pct){
+    const t = Math.max(0, Math.min(1, pct/100));
+    const y=[255,216,115], r=[223,90,74];
+    const c = y.map((v,i)=>Math.round(v+(r[i]-v)*t));
+    return `rgb(${c[0]},${c[1]},${c[2]})`;
+  }
+
+  function habitCount(){ return state.habits.filter(h=>h && h.trim()).length; }
+
+  function dayState(day){
+    const key = String(day);
+    if(!state.days[key]) state.days[key] = { text:"", checks: Array(HABIT_SLOTS).fill(false) };
+    if(!state.days[key].checks) state.days[key].checks = Array(HABIT_SLOTS).fill(false);
+    return state.days[key];
+  }
+
+  function flashSaved(){
+    saveFlagEl.textContent = "저장 중...";
+    clearTimeout(flashSaved._t);
+    flashSaved._t = setTimeout(()=>{ saveFlagEl.textContent = "저장됨"; }, 260);
+  }
+
+  function scheduleSave(){
+    flashSaved();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(doSave, 500);
+  }
+
+  async function doSave(){
+    const key = monthKey(current);
+    try{
+      if(db){
+        await db.doc('diary_months/' + key).set(state);
+      } else {
+        localStorage.setItem('diary_' + key, JSON.stringify(state));
+      }
+      saveFlagEl.textContent = "저장됨";
+    }catch(e){
+      saveFlagEl.textContent = "저장 실패";
+    }
+  }
+
+  async function loadMonth(){
+    const myToken = ++loadToken;
+    const key = monthKey(current);
+    saveFlagEl.textContent = "불러오는 중...";
+    let loaded = { habits: Array(HABIT_SLOTS).fill(""), days: {} };
+    try{
+      if(db){
+        const snap = await db.doc('diary_months/' + key).get();
+        if(myToken !== loadToken) return;
+        if(snap.exists){
+          const d = snap.data();
+          loaded.habits = (d.habits && d.habits.length===HABIT_SLOTS) ? d.habits : Array(HABIT_SLOTS).fill("");
+          loaded.days = d.days || {};
+        }
+      } else {
+        const raw = localStorage.getItem('diary_' + key);
+        if(raw){
+          const d = JSON.parse(raw);
+          loaded.habits = (d.habits && d.habits.length===HABIT_SLOTS) ? d.habits : Array(HABIT_SLOTS).fill("");
+          loaded.days = d.days || {};
+        }
+      }
+    }catch(e){}
+    if(myToken !== loadToken) return;
+    state = loaded;
+    saveFlagEl.textContent = "";
+    renderAll();
+  }
+
+  function renderHeader(){
+    monthLabelEl.textContent = current.getFullYear() + "." + String(current.getMonth()+1).padStart(2,'0');
+    monthNumEl.textContent = String(current.getMonth()+1).padStart(2,'0');
+    monthNameEl.textContent = MONTH_NAMES[current.getMonth()];
+  }
+
+  function renderLeft(){
+    const n = daysInMonth(current);
+    daysListEl.innerHTML = "";
+    for(let day=1; day<=n; day++){
+      const dow = new Date(current.getFullYear(), current.getMonth(), day).getDay();
+      const row = document.createElement('div');
+      row.className = 'day-row' + ((dow===0||dow===6) ? ' weekend' : '');
+      row.innerHTML = `
+        <div class="day-num">${day}</div>
+        <div class="day-wd">${WD[dow]}</div>
+        <input class="diary-input" maxlength="50" placeholder="오늘의 한 줄..." data-day="${day}">
+      `;
+      daysListEl.appendChild(row);
+      const inp = row.querySelector('.diary-input');
+      inp.value = dayState(day).text || "";
+      inp.addEventListener('input', (e)=>{
+        dayState(day).text = e.target.value;
+        scheduleSave();
+      });
+    }
+  }
+
+  function buildColumnTemplate(nGraph){
+    const habitCols = `repeat(${HABIT_SLOTS}, ${COL_W}px)`;
+    const graphCols = nGraph>0 ? `repeat(${nGraph}, ${COL_W}px)` : `1fr`;
+    return `${habitCols} ${COL_GAP}px ${TEMP_W}px ${COL_GAP}px ${graphCols}`;
+  }
+
+  function renderRight(){
+    const n = daysInMonth(current);
+    const nGraph = habitCount();
+    rightGridEl.style.gridTemplateColumns = buildColumnTemplate(nGraph);
+    rightGridEl.style.setProperty('--n-days', n);
+    rightGridEl.innerHTML = "";
+
+    const totalCols = HABIT_SLOTS + 3;
+
+    // header row
+    for(let i=0;i<HABIT_SLOTS;i++){
+      const cell = document.createElement('div');
+      cell.className = 'rg-cell head-cell';
+      cell.style.gridColumn = (i+1);
+      cell.style.gridRow = 1;
+      cell.innerHTML = `<div class="habit-input-wrap"><input class="habit-input" maxlength="12" placeholder="습관 ${i+1}" data-idx="${i}"></div>`;
+      rightGridEl.appendChild(cell);
+      const inp = cell.querySelector('.habit-input');
+      inp.value = state.habits[i] || "";
+      let wasFilled = !!(state.habits[i] && state.habits[i].trim());
+      inp.addEventListener('input', (e)=>{
+        state.habits[i] = e.target.value;
+        scheduleSave();
+      });
+      inp.addEventListener('blur', ()=>{
+        const nowFilled = !!(state.habits[i] && state.habits[i].trim());
+        if(nowFilled !== wasFilled) renderRight();
+      });
+    }
+    const tempHead = document.createElement('div');
+    tempHead.className = 'rg-cell head-cell';
+    tempHead.style.gridColumn = HABIT_SLOTS + 2;
+    tempHead.style.gridRow = 1;
+    tempHead.innerHTML = `<span class="vlabel">습관 온도</span>`;
+    rightGridEl.appendChild(tempHead);
+
+    const graphHead = document.createElement('div');
+    graphHead.className = 'rg-cell head-cell';
+    graphHead.style.gridColumn = (HABIT_SLOTS + 4) + (nGraph>0 ? ` / span ${nGraph}` : ' / span 1');
+    graphHead.style.gridRow = 1;
+    graphHead.style.flexDirection = 'column';
+    graphHead.style.alignItems = 'stretch';
+    if(nGraph>0){
+      let axisHtml = '<div style="display:flex;flex:1;">';
+      for(let i=1;i<=nGraph;i++){
+        axisHtml += `<div class="graph-axis" style="flex:1;">${i}</div>`;
+      }
+      axisHtml += '</div>';
+      graphHead.innerHTML = `<div style="display:flex;justify-content:center;flex:1;align-items:center;"><span class="vlabel">습관 그래프</span></div>` + axisHtml;
+    } else {
+      graphHead.innerHTML = `<div style="display:flex;justify-content:center;flex:1;align-items:center;"><span class="vlabel">습관 그래프</span></div>`;
+    }
+    rightGridEl.appendChild(graphHead);
+
+    // body rows
+    for(let day=1; day<=n; day++){
+      const ds = dayState(day);
+      const isLast = day===n;
+      for(let i=0;i<HABIT_SLOTS;i++){
+        const filled = !!(state.habits[i] && state.habits[i].trim());
+        const cb = document.createElement('div');
+        cb.className = 'rg-cell' + (isLast?' rg-row-last':'');
+        cb.style.gridColumn = (i+1);
+        cb.style.gridRow = day+1;
+        const box = document.createElement('div');
+        box.className = 'checkbox' + (ds.checks[i]?' checked':'') + (filled?'':' disabled');
+        box.textContent = ds.checks[i] ? '✔' : '';
+        box.addEventListener('click', ()=>{
+          ds.checks[i] = !ds.checks[i];
+          scheduleSave();
+          renderRight();
+        });
+        cb.appendChild(box);
+        rightGridEl.appendChild(cb);
+      }
+
+      const filledCount = ds.checks.filter((c,i)=> c && state.habits[i] && state.habits[i].trim()).length;
+      const total = nGraph;
+      const pct = total>0 ? Math.round((filledCount/total)*100) : null;
+
+      const tempCell = document.createElement('div');
+      tempCell.className = 'rg-cell temp-cell' + (isLast?' rg-row-last':'');
+      tempCell.style.gridColumn = HABIT_SLOTS + 2;
+      tempCell.style.gridRow = day+1;
+      if(pct===null){
+        tempCell.textContent = '–';
+        tempCell.style.color = 'var(--ink-faint)';
+      } else {
+        tempCell.textContent = pct + '°';
+        tempCell.style.color = tempColor(pct);
+      }
+      rightGridEl.appendChild(tempCell);
+
+      if(nGraph>0){
+        for(let col=1; col<=nGraph; col++){
+          const gc = document.createElement('div');
+          gc.className = 'rg-cell graph-cell' + (isLast?' rg-row-last':'');
+          gc.style.gridColumn = (HABIT_SLOTS + 4 + col - 1);
+          gc.style.gridRow = day+1;
+          if(filledCount === col){ gc.textContent = '⭐'; }
+          rightGridEl.appendChild(gc);
+        }
+      } else if(day===1){
+        const ph = document.createElement('div');
+        ph.className = 'rg-cell graph-placeholder';
+        ph.style.gridColumn = (HABIT_SLOTS+4) + ' / span 1';
+        ph.style.gridRow = '2 / span ' + n;
+        ph.textContent = '이달의 습관을 입력해 주세요';
+        rightGridEl.appendChild(ph);
+      }
+    }
+
+    drawGraphLine(n, nGraph);
+  }
+
+  function drawGraphLine(n, nGraph){
+    const old = rightGridEl.querySelector('.graph-line');
+    if(old) old.remove();
+    if(nGraph<=0) return;
+
+    const points = [];
+    for(let day=1; day<=n; day++){
+      const ds = dayState(day);
+      const filledCount = ds.checks.filter((c,i)=> c && state.habits[i] && state.habits[i].trim()).length;
+      if(filledCount>0){
+        const x = (filledCount-1)*COL_W + COL_W/2;
+        const y = (day-1)*getRowH() + getRowH()/2;
+        points.push([x,y]);
+      }
+    }
+    if(points.length<2) return;
+
+    const width = nGraph*COL_W;
+    const height = n*getRowH();
+    const gridLeft = HABIT_SLOTS*COL_W + 2*COL_GAP + TEMP_W;
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS,'svg');
+    svg.setAttribute('class','graph-line');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.style.left = gridLeft + 'px';
+    svg.style.top = getHeadH() + 'px';
+
+    const poly = document.createElementNS(svgNS,'polyline');
+    poly.setAttribute('points', points.map(p=>p.join(',')).join(' '));
+    poly.setAttribute('fill','none');
+    poly.setAttribute('stroke', 'var(--red-temp)');
+    poly.setAttribute('stroke-width','2');
+    poly.setAttribute('stroke-linecap','round');
+    poly.setAttribute('stroke-linejoin','round');
+    poly.setAttribute('opacity','0.8');
+    svg.appendChild(poly);
+    rightGridEl.appendChild(svg);
+  }
+
+  function getRowH(){
+    return parseFloat(getComputedStyle(bookEl).getPropertyValue('--row-h'));
+  }
+  function getHeadH(){
+    return parseFloat(getComputedStyle(bookEl).getPropertyValue('--head-h'));
+  }
+
+  function renderAll(){
+    renderHeader();
+    renderLeft();
+    renderRight();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', ()=>{
+    current = new Date(current.getFullYear(), current.getMonth()-1, 1);
+    loadMonth();
+  });
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    current = new Date(current.getFullYear(), current.getMonth()+1, 1);
+    loadMonth();
+  });
+  document.getElementById('todayBtn').addEventListener('click', ()=>{
+    current = new Date();
+    loadMonth();
+  });
+
+  renderAll();
+
+  if(typeof claude !== 'undefined' && claude.use){
+    claude.use('db').then(ns=>{
+      db = ns;
+      loadMonth();
+    }).catch(()=>{ loadMonth(); });
+    setTimeout(()=>{ if(!db) loadMonth(); }, 1200);
+  } else {
+    loadMonth();
+  }
+})();
+</script>
