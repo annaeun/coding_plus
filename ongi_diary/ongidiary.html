@@ -415,6 +415,9 @@
 </div>
 <div class="save-flag" id="saveFlag"></div>
 
+<div id="pageWProbe" style="position:absolute;visibility:hidden;height:0;width:var(--page-w);pointer-events:none;"></div>
+<span id="textMeasure" style="position:absolute;visibility:hidden;white-space:pre;top:-9999px;left:-9999px;font-family:'Gaegu',cursive;font-size:16px;"></span>
+
 <div class="book" id="book" style="--head-h:96px; --row-h:34px;">
   <section class="page page-left">
     <div class="month-head">
@@ -446,9 +449,54 @@
   const rightGridEl = document.getElementById('rightGrid');
   const bookEl = document.getElementById('book');
   const saveFlagEl = document.getElementById('saveFlag');
+  const pageWProbe = document.getElementById('pageWProbe');
+  const textMeasureEl = document.getElementById('textMeasure');
 
   const MONTH_NAMES = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
   const WD = ["일","월","화","수","목","금","토"];
+
+  // 오늘의 한 줄 — a line longer than the current page reveals more of the
+  // (hidden) page by widening it, up to the shared 810px max; beyond that,
+  // typing is blocked instead of silently overflowing or scrolling inside
+  // the input.
+  const MAX_PAGE_W = 810;
+  const ROW_LABEL_W = 54; // day-num(22) + gap(9) + day-wd(14) + gap(9)
+  const ROW_BUFFER = 10;
+
+  function tierPageW(){ return pageWProbe.getBoundingClientRect().width; }
+  function pagePadX(){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--page-pad-x')); }
+  function measureTextWidth(text){ textMeasureEl.textContent = text || ''; return textMeasureEl.getBoundingClientRect().width; }
+  function maxTextWidthForRow(){ return MAX_PAGE_W - 2*pagePadX() - ROW_LABEL_W - ROW_BUFFER; }
+
+  function truncateToWidth(text, maxW){
+    if(measureTextWidth(text) <= maxW) return text;
+    let lo = 0, hi = text.length;
+    while(lo < hi){
+      const mid = Math.ceil((lo+hi)/2);
+      if(measureTextWidth(text.slice(0, mid)) <= maxW) lo = mid; else hi = mid-1;
+    }
+    return text.slice(0, lo);
+  }
+
+  function requiredPageWidthForText(text){
+    return pagePadX()*2 + ROW_LABEL_W + measureTextWidth(text) + ROW_BUFFER;
+  }
+
+  function recomputePageWidth(){
+    const n = daysInMonth(current);
+    let maxReq = 0;
+    for(let d=1; d<=n; d++){
+      const req = requiredPageWidthForText(dayState(d).text || '');
+      if(req > maxReq) maxReq = req;
+    }
+    const natural = tierPageW();
+    const effective = Math.min(MAX_PAGE_W, Math.max(natural, maxReq));
+    if(effective > natural + 0.5){
+      bookEl.style.setProperty('--page-w', effective + 'px');
+    } else {
+      bookEl.style.removeProperty('--page-w');
+    }
+  }
 
   function monthKey(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0'); }
   function daysInMonth(d){ return new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); }
@@ -524,16 +572,24 @@
       row.innerHTML = `
         <div class="day-num">${day}</div>
         <div class="day-wd">${WD[dow]}</div>
-        <input class="diary-input" maxlength="50" placeholder="오늘의 한 줄..." data-day="${day}">
+        <input class="diary-input" maxlength="120" placeholder="오늘의 한 줄..." data-day="${day}">
       `;
       daysListEl.appendChild(row);
       const inp = row.querySelector('.diary-input');
       inp.value = dayState(day).text || "";
       inp.addEventListener('input', (e)=>{
-        dayState(day).text = e.target.value;
+        let val = e.target.value;
+        const maxW = maxTextWidthForRow();
+        if(measureTextWidth(val) > maxW){
+          val = truncateToWidth(val, maxW);
+          e.target.value = val;
+        }
+        dayState(day).text = val;
         scheduleSave();
+        recomputePageWidth();
       });
     }
+    recomputePageWidth();
   }
 
   function buildColumnTemplate(nGraph){
@@ -742,7 +798,7 @@
   let resizeTimer = null;
   window.addEventListener('resize', ()=>{
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(renderRight, 150);
+    resizeTimer = setTimeout(()=>{ recomputePageWidth(); renderRight(); }, 150);
   });
 
   loadMonth();
