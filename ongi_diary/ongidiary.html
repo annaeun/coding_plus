@@ -65,10 +65,14 @@
         --body-pad: 28px 20px 56px;
       }
     }
-    /* pc (≥1024px): same fluid page-width curve as tablet (no jump at the
-       breakpoint), just roomier margins around the book. */
+    /* pc (≥1024px): picks up exactly where the tablet curve left off at
+       1024px (540 + (1024-788)*0.44 = 643.84px, so no jump at the
+       breakpoint) and keeps expanding with its own slope tuned to typical
+       desktop widths, so PC screens keep growing toward the shared 810px
+       ceiling instead of the tablet curve having already flattened out. */
     @media (min-width: 1024px){
       :root{
+        --page-w: clamp(643.84px, calc(643.84px + (100vw - 1024px) * 0.1854), 810px);
         --page-pad-y: 30px;
         --page-pad-x: 28px;
         --page-right-pad-x: 24px;
@@ -198,7 +202,7 @@
       overflow-x:auto;
       overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
-      scroll-snap-type:x mandatory;
+      scroll-snap-type:x proximity;
       overscroll-behavior-x:contain;
     }
     .book::after{
