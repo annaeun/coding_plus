@@ -2,7 +2,7 @@
 
 매일 한 줄 일기와 이달의 습관을 함께 기록하는 다이어리입니다. 왼쪽 페이지에는 하루하루의 짧은 일기를, 오른쪽 페이지에는 이번 달 습관 체크와 그 결과(습관 온도·습관 그래프)를 남깁니다.
 
-바로 열어보기: [온기 다이어리 ](https://annaeun.github.io/vibe-coding/ongidiary.html)
+바로 열어보기: [온기 다이어리 ](https://github.com/annaeun/coding_plus/blob/main/ongi_diary/ongidiary.html)
 
 ## 화면 구성
 
