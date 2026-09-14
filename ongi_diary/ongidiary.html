@@ -254,8 +254,16 @@
       margin-top:5px;
     }
 
-    .days-list{display:flex;flex-direction:column;}
+    .days-list{
+      display:flex;
+      flex-direction:column;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
     .day-row{
+      width:var(--diary-w, 100%);
+      flex:none;
       height:var(--row-h);
       display:flex;
       align-items:center;
@@ -455,10 +463,13 @@
   const MONTH_NAMES = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
   const WD = ["일","월","화","수","목","금","토"];
 
-  // 오늘의 한 줄 — a line longer than the current page reveals more of the
-  // (hidden) page by widening it, up to the shared 810px max; beyond that,
-  // typing is blocked instead of silently overflowing or scrolling inside
-  // the input.
+  // 오늘의 한 줄 — the page itself always stays at the tier's normal
+  // (기준) size, at rest. A line longer than that stays hidden inside its
+  // own row until the diary list is scrolled: only .days-list (not the
+  // page, not the divider, not the right page) widens to fit it, up to
+  // the shared 810px max; past that, typing is blocked instead of
+  // silently overflowing. Scrolling past the widened row's end chains
+  // naturally into the outer book scroll toward the right page.
   const MAX_PAGE_W = 810;
   const ROW_LABEL_W = 54; // day-num(22) + gap(9) + day-wd(14) + gap(9)
   const ROW_BUFFER = 10;
@@ -466,7 +477,9 @@
   function tierPageW(){ return pageWProbe.getBoundingClientRect().width; }
   function pagePadX(){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--page-pad-x')); }
   function measureTextWidth(text){ textMeasureEl.textContent = text || ''; return textMeasureEl.getBoundingClientRect().width; }
-  function maxTextWidthForRow(){ return MAX_PAGE_W - 2*pagePadX() - ROW_LABEL_W - ROW_BUFFER; }
+  function naturalRowWidth(){ return tierPageW() - 2*pagePadX() - ROW_LABEL_W; }
+  function maxRowWidth(){ return MAX_PAGE_W - 2*pagePadX() - ROW_LABEL_W; }
+  function maxTextWidthForRow(){ return maxRowWidth() - ROW_BUFFER; }
 
   function truncateToWidth(text, maxW){
     if(measureTextWidth(text) <= maxW) return text;
@@ -478,23 +491,20 @@
     return text.slice(0, lo);
   }
 
-  function requiredPageWidthForText(text){
-    return pagePadX()*2 + ROW_LABEL_W + measureTextWidth(text) + ROW_BUFFER;
-  }
-
-  function recomputePageWidth(){
+  function recomputeDiaryWidth(){
     const n = daysInMonth(current);
-    let maxReq = 0;
+    let maxTextW = 0;
     for(let d=1; d<=n; d++){
-      const req = requiredPageWidthForText(dayState(d).text || '');
-      if(req > maxReq) maxReq = req;
+      const w = measureTextWidth(dayState(d).text || '');
+      if(w > maxTextW) maxTextW = w;
     }
-    const natural = tierPageW();
-    const effective = Math.min(MAX_PAGE_W, Math.max(natural, maxReq));
-    if(effective > natural + 0.5){
-      bookEl.style.setProperty('--page-w', effective + 'px');
+    const needed = maxTextW + ROW_BUFFER;
+    const natural = naturalRowWidth();
+    if(needed > natural){
+      const rowW = Math.min(needed, maxRowWidth()) + ROW_LABEL_W;
+      daysListEl.style.setProperty('--diary-w', rowW + 'px');
     } else {
-      bookEl.style.removeProperty('--page-w');
+      daysListEl.style.removeProperty('--diary-w');
     }
   }
 
@@ -586,10 +596,10 @@
         }
         dayState(day).text = val;
         scheduleSave();
-        recomputePageWidth();
+        recomputeDiaryWidth();
       });
     }
-    recomputePageWidth();
+    recomputeDiaryWidth();
   }
 
   function buildColumnTemplate(nGraph){
@@ -798,7 +808,7 @@
   let resizeTimer = null;
   window.addEventListener('resize', ()=>{
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(()=>{ recomputePageWidth(); renderRight(); }, 150);
+    resizeTimer = setTimeout(()=>{ recomputeDiaryWidth(); renderRight(); }, 150);
   });
 
   loadMonth();
