@@ -1004,7 +1004,7 @@
     graphHead.style.alignItems = 'stretch';
     if(nGraph>0){
       let axisHtml = '<div style="display:flex;flex:1;">';
-      for(let i=1;i<=nGraph;i++){
+      for(let i=nGraph;i>=1;i--){
         axisHtml += `<div class="graph-axis" style="flex:1;">${i}</div>`;
       }
       axisHtml += '</div>';
@@ -1059,7 +1059,7 @@
           gc.className = 'rg-cell graph-cell' + (isLast?' rg-row-last':'');
           gc.style.gridColumn = (HABIT_SLOTS + 4 + col - 1);
           gc.style.gridRow = day+1;
-          if(filledCount === col){ gc.textContent = '⭐'; }
+          if(filledCount === (nGraph - col + 1)){ gc.textContent = '⭐'; }
           rightGridEl.appendChild(gc);
         }
       } else if(day===1){
@@ -1086,7 +1086,7 @@
       const ds = dayState(day);
       const filledCount = ds.checks.filter((c,i)=> c && state.habits[i] && state.habits[i].trim()).length;
       if(filledCount>0){
-        const x = (filledCount-1)*w + w/2;
+        const x = (nGraph-filledCount)*w + w/2;
         const y = (day-1)*getRowH() + getRowH()/2;
         points.push([x,y]);
       }
