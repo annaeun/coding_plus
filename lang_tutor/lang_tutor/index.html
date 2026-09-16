@@ -1,0 +1,2856 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🌱 Daily English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- Soft pastel + neutral palette ---- */
+    --bg: #FBF6EE;
+    --card: #FFFFFF;
+    --card-alt: #FFF9F0;
+    --primary: #8CAF97;
+    --primary-light: #DCEBDE;
+    --primary-dark: #729C7E;
+    --secondary: #C7C3EA;
+    --secondary-light: #ECEAF9;
+    --accent: #F3B79C;
+    --accent-light: #FBE6DA;
+    --text: #3A3532;
+    --subtext: #948C86;
+    --border: #ECE4D8;
+    --success: #6E9C79;
+    --success-light: #E1EEE3;
+    --error: #D98C7A;
+    --error-light: #F8E4DD;
+
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 4px 18px rgba(58, 53, 50, 0.06);
+    --shadow-hover: 0 10px 26px rgba(58, 53, 50, 0.10);
+    --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 90px;
+  }
+
+  h1, h2, h3, h4 { font-weight: 600; margin: 0; }
+  p { margin: 0; }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+
+  /* ---------- Header ---------- */
+
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .logo .emoji { font-size: 1.4rem; }
+
+  nav.top-nav {
+    display: flex;
+    gap: 6px;
+    background: var(--bg);
+    padding: 6px;
+    border-radius: var(--radius-pill);
+  }
+
+  .nav-btn {
+    padding: 9px 20px;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--subtext);
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.15s var(--ease);
+  }
+
+  .nav-btn:hover { color: var(--text); }
+
+  .nav-btn.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .login-btn {
+    padding: 9px 18px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .ui-lang-wrap { position: relative; }
+
+  .ui-lang-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-hover);
+    padding: 6px;
+    min-width: 160px;
+    z-index: 60;
+  }
+  .ui-lang-menu.open { display: block; }
+
+  .ui-lang-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--text);
+    text-align: left;
+  }
+  .ui-lang-option:hover { background: var(--primary-light); }
+  .ui-lang-option.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 600; }
+
+  /* ---------- Layout ---------- */
+
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 24px 40px;
+  }
+
+  .view { display: none; animation: fadeIn 0.35s var(--ease); }
+  .view.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Cards (generic) ---------- */
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 24px;
+  }
+
+  /* ---------- Home / Dashboard ---------- */
+
+  .lang-select-card {
+    margin-bottom: 18px;
+  }
+
+  .lang-select-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--subtext);
+    margin-bottom: 10px;
+  }
+
+  .lang-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .lang-pill {
+    padding: 9px 16px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    font-size: 0.85rem;
+    color: var(--subtext);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .lang-pill:hover {
+    border-color: var(--secondary);
+    color: var(--text);
+    transform: translateY(-2px);
+  }
+
+  .lang-pill.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .mobile-select {
+    display: none;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .mobile-select:focus { outline: none; border-color: var(--primary); }
+
+  .greeting-card {
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+    border-radius: var(--radius-lg);
+    padding: 28px 30px;
+    margin-bottom: 24px;
+  }
+
+  .greeting-card h1 { font-size: 1.5rem; }
+  .greeting-card p { color: var(--subtext); margin-top: 6px; font-size: 0.95rem; }
+
+  .progress-block { margin-top: 20px; }
+
+  .progress-block .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--subtext);
+    margin-bottom: 8px;
+  }
+
+  .progress-block .progress-percent {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .progress-bar-track {
+    background: rgba(255,255,255,0.6);
+    border-radius: var(--radius-pill);
+    height: 12px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.6s var(--ease);
+  }
+
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 8px 0 14px;
+    color: var(--text);
+  }
+
+  .today-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 16px;
+  }
+
+  .study-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: left;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .study-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .study-card:active { transform: translateY(-1px); }
+
+  .study-card .icon {
+    font-size: 1.6rem;
+    display: inline-flex;
+    width: 46px; height: 46px;
+    align-items: center; justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--primary-light);
+    margin-bottom: 12px;
+  }
+
+  .study-card.card-secondary .icon { background: var(--secondary-light); }
+  .study-card.card-accent .icon { background: var(--accent-light); }
+
+  .study-card h3 { font-size: 1rem; margin-bottom: 4px; }
+  .study-card p { color: var(--subtext); font-size: 0.85rem; }
+
+  .study-card .done-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    font-size: 0.75rem;
+    color: var(--success);
+    background: var(--success-light);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    display: none;
+  }
+
+  .study-card.done .done-badge { display: inline-block; }
+
+  /* ---------- Buttons ---------- */
+
+  .btn {
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: transform 0.15s var(--ease), background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-hover); }
+
+  .btn-soft { background: var(--primary-light); color: var(--primary-dark); }
+  .btn-soft:hover { background: var(--primary); color: #fff; }
+
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary-dark); }
+
+  .btn:active { transform: scale(0.96); }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* ---------- Study / Vocabulary ---------- */
+
+  .subtabs {
+    display: flex;
+    gap: 4px;
+    background: var(--card-alt);
+    border: 1px solid var(--border);
+    padding: 5px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 26px;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .subtabs::-webkit-scrollbar { display: none; }
+
+  .subtab-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    color: var(--subtext);
+    transition: all 0.2s var(--ease);
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .subtab-btn.active { background: var(--secondary); color: #fff; }
+
+  .study-progress-label {
+    text-align: center;
+    color: var(--subtext);
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+
+  .flashcard-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .flashcard {
+    width: 100%;
+    max-width: 380px;
+    height: 260px;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%; height: 100%;
+    transition: transform 0.55s var(--ease);
+    transform-style: preserve-3d;
+  }
+
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .flashcard-face.back {
+    transform: rotateY(180deg);
+    background: var(--secondary-light);
+  }
+
+  .flashcard-face .word {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .flashcard-face .ipa {
+    font-size: 0.95rem;
+    color: var(--subtext);
+  }
+
+  .flashcard-face .hint-text,
+  .content-card .hint-text {
+    font-size: 0.82rem;
+    color: var(--primary-dark);
+    background: var(--primary-light);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .flashcard-face .hint-text.show,
+  .content-card .hint-text.show { display: inline-block; }
+
+  .flashcard-face .meaning {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .flashcard-face .example {
+    font-size: 0.9rem;
+    color: var(--subtext);
+    font-style: italic;
+    max-width: 280px;
+  }
+
+  .flashcard-face .tap-hint {
+    position: absolute;
+    bottom: 14px;
+    font-size: 0.72rem;
+    color: var(--subtext);
+    opacity: 0.7;
+  }
+
+  .flashcard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  /* ---------- Non-flashcard content card (Grammar / Conversation study) ---------- */
+
+  .content-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .content-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px 4px;
+    text-align: center;
+  }
+
+  .content-eyebrow {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--subtext);
+    margin-bottom: 8px;
+  }
+
+  .content-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .content-explanation {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .content-example {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .content-card .hint-text {
+    margin-top: 6px;
+  }
+
+  /* ---------- Per-mode review (fill-blank / Q&A) ---------- */
+
+  .review-card {
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .review-instruction {
+    color: var(--subtext);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .review-sentence {
+    font-size: 1.08rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .review-input-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .review-input-row input {
+    flex: 1;
+    min-width: 160px;
+    max-width: 280px;
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border);
+    font-size: 0.95rem;
+    font-family: inherit;
+    background: var(--card);
+    color: var(--text);
+  }
+
+  .review-input-row input:focus { outline: none; border-color: var(--primary); }
+  .review-input-row input.correct { border-color: var(--success); background: var(--success-light); }
+  .review-input-row input.incorrect { border-color: var(--error); background: var(--error-light); }
+
+  .review-listen-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    margin-bottom: 12px;
+    color: var(--primary-dark);
+    transition: transform 0.15s var(--ease);
+  }
+  .review-listen-btn:hover { transform: scale(1.1); }
+
+  .review-input-row input.underline-input {
+    border: none;
+    border-bottom: 2px solid var(--text);
+    border-radius: 8px 8px 0 0;
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .review-input-row input.underline-input:focus { border-bottom-color: var(--primary); }
+
+  .review-feedback {
+    margin-top: 14px;
+    font-size: 0.88rem;
+    min-height: 20px;
+    color: var(--subtext);
+  }
+
+  #convReviewFeedback { color: var(--text); }
+
+  .review-result {
+    max-width: 480px;
+    margin: 16px auto 0;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .flashcard-face .explanation {
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  /* ---------- Listening ---------- */
+
+  .listening-card {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 10px 4px;
+  }
+
+  .listen-hero { text-align: center; }
+
+  .listen-big-btn { font-size: 1rem; padding: 15px 30px; }
+
+  .listen-stage-hint {
+    color: var(--subtext);
+    font-size: 0.85rem;
+    margin-top: 14px;
+  }
+
+  .listen-sentence-block { margin-top: 22px; text-align: left; }
+
+  .listen-sentence {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+
+  .listen-translation-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .listen-translation-row .btn { flex-shrink: 0; }
+
+  .listen-translation-inline {
+    min-width: 0;
+    color: var(--subtext);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .listen-expressions-block {
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .listen-expressions-title {
+    font-size: 0.85rem;
+    color: var(--subtext);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .listen-expressions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .listen-expressions-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .listen-expressions-table td.term { font-weight: 600; color: var(--primary-dark); white-space: nowrap; }
+  .listen-expressions-table td.meaning { color: var(--subtext); }
+
+  /* ---------- Review / Quiz ---------- */
+
+  .quiz-wrap { max-width: 480px; margin: 0 auto; }
+
+  .quiz-progress {
+    text-align: center;
+    color: var(--subtext);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .quiz-question-card {
+    padding: 26px 4px;
+    text-align: center;
+  }
+
+  .quiz-question-card .q-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+
+  .quiz-options { display: flex; flex-direction: column; gap: 12px; }
+
+  .quiz-option {
+    background: var(--card-alt);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.15s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+
+  .quiz-option:hover:not(:disabled) {
+    border-color: var(--secondary);
+    transform: translateY(-2px);
+  }
+
+  .quiz-option .num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--secondary-light);
+    color: var(--text);
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .quiz-option.correct {
+    background: var(--success-light);
+    border-color: var(--success);
+    animation: pulseGood 0.4s var(--ease);
+  }
+
+  .quiz-option.incorrect {
+    background: var(--error-light);
+    border-color: var(--error);
+    animation: shakeBad 0.4s var(--ease);
+  }
+
+  .quiz-option:disabled { cursor: default; }
+
+  @keyframes pulseGood {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shakeBad {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .quiz-feedback {
+    margin-top: 16px;
+    font-size: 0.88rem;
+    min-height: 20px;
+    color: var(--subtext);
+  }
+
+  .quiz-result {
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .quiz-result .score {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 10px 0;
+  }
+
+  /* ---------- Progress view ---------- */
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 6px 0 2px;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.8rem;
+    color: var(--subtext);
+  }
+
+  .streak-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--accent-light), var(--primary-light));
+  }
+
+  .streak-card .stat-value { font-size: 1.9rem; }
+
+  .chart-card { padding: 26px; }
+
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+    height: 160px;
+    margin-top: 20px;
+  }
+
+  .chart-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .chart-bar {
+    width: 100%;
+    max-width: 34px;
+    border-radius: var(--radius-pill) var(--radius-pill) 8px 8px;
+    background: linear-gradient(180deg, var(--secondary), var(--primary));
+    transition: height 0.6s var(--ease);
+  }
+
+  .chart-col.today .chart-bar { background: linear-gradient(180deg, var(--accent), var(--primary-dark)); }
+
+  .chart-col-label { font-size: 0.72rem; color: var(--subtext); }
+
+  /* ---------- Placeholder (coming soon) ---------- */
+
+  .placeholder-card {
+    text-align: center;
+    padding: 50px 24px;
+    color: var(--subtext);
+  }
+  .placeholder-card .big-emoji { font-size: 2.4rem; margin-bottom: 12px; }
+  .placeholder-card h3 { color: var(--text); margin-bottom: 8px; }
+  .placeholder-card p { margin-bottom: 20px; font-size: 0.9rem; }
+
+  /* ---------- Toast & Celebration ---------- */
+
+  .toast {
+    position: fixed;
+    bottom: 100px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--text);
+    color: #fff;
+    padding: 11px 20px;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+    z-index: 300;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .celebration-overlay {
+    position: fixed; inset: 0;
+    background: rgba(58,53,50,0.25);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 400;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
+  }
+  .celebration-overlay.show { opacity: 1; pointer-events: auto; }
+
+  .celebration-card {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    text-align: center;
+    box-shadow: var(--shadow-hover);
+    transform: scale(0.85);
+    transition: transform 0.3s var(--ease);
+  }
+  .celebration-overlay.show .celebration-card { transform: scale(1); }
+  .celebration-card .emoji { font-size: 2.8rem; margin-bottom: 10px; }
+  .celebration-card h3 { margin-bottom: 6px; }
+  .celebration-card p { color: var(--subtext); font-size: 0.88rem; margin-bottom: 18px; }
+
+  /* ---------- Mobile bottom nav ---------- */
+
+  .bottom-nav { display: none; }
+
+  @media (max-width: 700px) {
+    .app-header { padding: 14px 18px; }
+    .app-header nav.top-nav { display: none; }
+    main { padding: 20px 16px 30px; }
+
+    .lang-pills { display: none; }
+    .mobile-select { display: block; }
+
+    .bottom-nav {
+      display: flex;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+      z-index: 250;
+    }
+    .bottom-nav .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.68rem;
+      padding: 8px 4px;
+      border-radius: 14px;
+    }
+    .bottom-nav .nav-btn .bn-icon { font-size: 1.25rem; }
+    .bottom-nav .nav-btn.active { background: var(--primary-light); color: var(--primary-dark); }
+
+    .flashcard { max-width: 100%; }
+
+    .subtab-btn { padding: 8px 12px; font-size: 0.8rem; }
+    .review-input-row input { min-width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="logo"><span class="emoji">🌱</span> Daily English</div>
+    <div class="header-right">
+      <nav class="top-nav" id="topNav">
+        <button class="nav-btn active" data-view="home"><span class="nav-label">Home</span></button>
+        <button class="nav-btn" data-view="study"><span class="nav-label">Study</span></button>
+        <button class="nav-btn" data-view="progress"><span class="nav-label">Progress</span></button>
+      </nav>
+      <div class="ui-lang-wrap">
+        <button class="icon-btn" id="uiLangBtn" title="Interface language">🇰🇷</button>
+        <div class="ui-lang-menu" id="uiLangMenu"></div>
+      </div>
+      <button class="btn btn-outline login-btn" id="loginBtn"></button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="lang-select-card">
+        <p class="lang-select-title" id="studyLangLabel">오늘 학습할 언어</p>
+        <div class="lang-pills" id="langPills"></div>
+        <select class="mobile-select" id="langSelectMobile"></select>
+      </div>
+
+      <div class="lang-select-card">
+        <p class="lang-select-title" id="levelLabel">학습 레벨</p>
+        <div class="lang-pills" id="levelPills"></div>
+        <select class="mobile-select" id="levelSelectMobile"></select>
+      </div>
+
+      <div class="greeting-card">
+        <h1 id="greetingText">Good morning! ☀️</h1>
+        <p id="greetingSubtext">Let's learn a little English today.</p>
+        <div class="progress-block">
+          <div class="progress-label">
+            <span id="todayProgressLabel">Today's Progress</span>
+            <span class="progress-percent" id="homeProgressPercent">0%</span>
+          </div>
+          <div class="progress-bar-track"><div class="progress-bar-fill" id="homeProgressFill"></div></div>
+        </div>
+      </div>
+
+      <h2 class="section-title" id="todayStudyLabel">Today's Study</h2>
+      <div class="today-grid">
+        <button class="study-card" data-goto="study" data-subtab="vocabulary">
+          <span class="done-badge">완료 ✓</span>
+          <span class="icon">📖</span>
+          <h3 id="cardVocabTitle">Vocabulary</h3>
+          <p id="vocabCardDesc">10 words</p>
+        </button>
+        <button class="study-card card-secondary" data-goto="study" data-subtab="grammar">
+          <span class="done-badge">완료 ✓</span>
+          <span class="icon">📝</span>
+          <h3 id="cardGrammarTitle">Grammar</h3>
+          <p id="grammarCardDesc">5 patterns</p>
+        </button>
+        <button class="study-card card-accent" data-goto="study" data-subtab="conversation">
+          <span class="done-badge">완료 ✓</span>
+          <span class="icon">💬</span>
+          <h3 id="cardConvTitle">Conversation</h3>
+          <p id="convCardDesc">5 sentences</p>
+        </button>
+        <button class="study-card" data-goto="study" data-subtab="listening">
+          <span class="done-badge">완료 ✓</span>
+          <span class="icon">🎧</span>
+          <h3 id="cardListenTitle">Listening</h3>
+          <p id="listenCardDesc">3 clips</p>
+        </button>
+      </div>
+    </section>
+
+    <!-- STUDY -->
+    <section class="view" id="view-study">
+      <div class="subtabs" id="studySubtabs">
+        <button class="subtab-btn active" data-subtab="vocabulary">📖 Vocabulary</button>
+        <button class="subtab-btn" data-subtab="grammar">📝 Grammar</button>
+        <button class="subtab-btn" data-subtab="conversation">💬 Conversation</button>
+        <button class="subtab-btn" data-subtab="listening">🎧 Listening</button>
+      </div>
+
+      <!-- Vocabulary sub-view -->
+      <div id="study-vocabulary">
+        <div id="vocab-study-phase">
+          <p class="study-progress-label" id="vocabProgressLabel">1 / 10</p>
+          <div class="flashcard-stage">
+            <div class="flashcard" id="flashcard">
+              <div class="flashcard-inner">
+                <div class="flashcard-face front">
+                  <div class="word" id="cardWord">comfortable</div>
+                  <div class="ipa" id="cardIpa">/ˈkʌm.fər.tə.bəl/</div>
+                  <div class="hint-text" id="cardHint"></div>
+                  <span class="tap-hint">탭해서 뒤집기</span>
+                </div>
+                <div class="flashcard-face back">
+                  <div class="meaning" id="cardMeaning">편안한</div>
+                  <div class="word" id="cardWordBack">comfortable</div>
+                  <div class="example" id="cardExample">"These shoes are very comfortable."</div>
+                </div>
+              </div>
+            </div>
+            <div class="flashcard-actions">
+              <button class="btn btn-outline" id="btnListen">🔊 Listen</button>
+              <button class="btn btn-outline" id="btnHint">💡 Hint</button>
+              <button class="btn btn-soft" id="btnReview">↻ Review</button>
+              <button class="btn btn-primary" id="btnKnow">✓ I know</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="vocab-review-phase" class="review-phase" style="display:none">
+          <p class="study-progress-label" id="vocabReviewProgress">1 / 10</p>
+          <div class="card review-card" id="vocabReviewCard">
+            <p class="review-instruction" id="vocabReviewInstruction">문장을 듣고, 오늘 학습한 단어를 빈칸에 입력하세요.</p>
+            <div class="review-sentence" id="vocabReviewSentence"></div>
+            <div class="review-input-row">
+              <button class="btn btn-outline" id="vocabReviewListenBtn">🔊</button>
+              <input type="text" id="vocabReviewInput" placeholder="정답 입력" autocomplete="off" />
+              <button class="btn btn-primary" id="vocabReviewCheckBtn">확인</button>
+            </div>
+            <div class="review-feedback" id="vocabReviewFeedback"></div>
+          </div>
+          <div class="review-result card" id="vocabReviewResult" style="display:none">
+            <div class="big-emoji">🎉</div>
+            <h3 id="vocabReviewResultTitle">Vocabulary review complete!</h3>
+            <div class="score" id="vocabReviewScore">0 / 10</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grammar sub-view -->
+      <div id="study-grammar" style="display:none">
+        <div id="grammar-study-phase">
+          <p class="study-progress-label" id="grammarProgressLabel">1 / 5</p>
+          <div class="content-stage">
+            <div class="content-card">
+              <div class="content-eyebrow">Grammar</div>
+              <h3 class="content-title" id="grammarCardTitle"></h3>
+              <p class="content-explanation" id="grammarCardExplanation"></p>
+              <p class="content-example" id="grammarCardExample"></p>
+              <div class="hint-text" id="grammarCardHint"></div>
+            </div>
+            <div class="flashcard-actions">
+              <button class="btn btn-outline" id="grammarBtnListen">🔊 Listen</button>
+              <button class="btn btn-outline" id="grammarBtnHint">💡 Hint</button>
+              <button class="btn btn-soft" id="grammarBtnReview">↻ Review</button>
+              <button class="btn btn-primary" id="grammarBtnKnow">✓ I know</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="grammar-review-phase" class="review-phase" style="display:none">
+          <p class="study-progress-label" id="grammarReviewProgress">1 / 5</p>
+          <div class="review-card" id="grammarReviewCard">
+            <p class="review-instruction" id="grammarReviewInstruction">문장을 보고, 오늘 학습한 문법 표현을 빈칸에 입력하세요.</p>
+            <button class="review-listen-btn" id="grammarReviewListenBtn">🔊</button>
+            <div class="review-sentence" id="grammarReviewSentence"></div>
+            <div class="review-input-row">
+              <input type="text" id="grammarReviewInput" class="underline-input" placeholder="정답 입력" autocomplete="off" />
+              <button class="btn btn-primary" id="grammarReviewCheckBtn">확인</button>
+            </div>
+            <div class="review-feedback" id="grammarReviewFeedback"></div>
+          </div>
+          <div class="review-result card" id="grammarReviewResult" style="display:none">
+            <div class="big-emoji">🎉</div>
+            <h3 id="grammarReviewResultTitle">Grammar review complete!</h3>
+            <div class="score" id="grammarReviewScore">0 / 5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation sub-view -->
+      <div id="study-conversation" style="display:none">
+        <div id="conv-study-phase">
+          <p class="study-progress-label" id="convProgressLabel">1 / 5</p>
+          <div class="content-stage">
+            <div class="content-card">
+              <div class="content-eyebrow">Situation</div>
+              <h3 class="content-title" id="convCardSituation"></h3>
+              <p class="content-example" id="convCardSentence"></p>
+              <p class="content-explanation" id="convCardMeaning"></p>
+              <div class="hint-text" id="convCardHint"></div>
+            </div>
+            <div class="flashcard-actions">
+              <button class="btn btn-outline" id="convBtnListen">🔊 Listen</button>
+              <button class="btn btn-outline" id="convBtnHint">💡 Hint</button>
+              <button class="btn btn-soft" id="convBtnReview">↻ Review</button>
+              <button class="btn btn-primary" id="convBtnKnow">✓ I know</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="conv-review-phase" class="review-phase" style="display:none">
+          <p class="study-progress-label" id="convReviewProgress">1 / 5</p>
+          <div class="review-card" id="convReviewCard">
+            <p class="review-instruction" id="convReviewSituation">상황</p>
+            <button class="review-listen-btn" id="convReviewListenBtn">🔊</button>
+            <div class="review-sentence" id="convReviewQuestion"></div>
+            <div class="review-input-row">
+              <input type="text" id="convReviewInput" class="underline-input" placeholder="답변 입력" autocomplete="off" />
+              <button class="btn btn-primary" id="convReviewCheckBtn">확인</button>
+            </div>
+            <div class="review-feedback" id="convReviewFeedback"></div>
+          </div>
+          <div class="review-result card" id="convReviewResult" style="display:none">
+            <div class="big-emoji">🎉</div>
+            <h3 id="convReviewResultTitle">Conversation review complete!</h3>
+            <div class="score" id="convReviewScore">0 / 5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Listening sub-view -->
+      <div id="study-listening" style="display:none">
+        <div id="listen-study-phase">
+          <p class="study-progress-label" id="listenProgressLabel">1 / 3</p>
+          <div class="listening-card">
+            <div class="listen-hero">
+              <button class="btn btn-primary listen-big-btn" id="listenPlayBtn">🔊 Listen</button>
+              <p class="listen-stage-hint" id="listenStageHint">문장을 들어보세요.</p>
+            </div>
+
+            <div class="listen-sentence-block" id="listenSentenceBlock" style="display:none">
+              <p class="listen-sentence" id="listenSentenceText"></p>
+              <div class="listen-translation-row" id="listenTranslationBlock" style="display:none">
+                <button class="btn btn-outline" id="listenShowTranslationBtn">🌐 번역보기</button>
+                <span class="listen-translation-inline" id="listenTranslationText" style="display:none"></span>
+              </div>
+            </div>
+
+            <div class="listen-expressions-block" id="listenExpressionsBlock" style="display:none">
+              <p class="listen-expressions-title" id="listenExpressionsTitle">알아두면 좋은 표현</p>
+              <table class="listen-expressions-table">
+                <tbody id="listenExpressionsBody"></tbody>
+              </table>
+            </div>
+
+            <div class="listen-hero">
+              <button class="btn btn-primary" id="listenNextBtn" style="display:none">다음 →</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="listen-review-phase" class="review-phase" style="display:none">
+          <p class="study-progress-label" id="listenReviewProgress">1 / 3</p>
+          <div class="quiz-question-card" id="listenReviewCard">
+            <div class="q-text" id="listenReviewQuestion"></div>
+            <div class="quiz-options" id="listenReviewOptions"></div>
+            <div class="quiz-feedback" id="listenReviewFeedback"></div>
+            <button class="btn btn-outline" id="listenReviewHintBtn" style="display:none">🔊 문장 다시 듣기</button>
+          </div>
+          <div class="review-result card" id="listenReviewResult" style="display:none">
+            <div class="big-emoji">🎉</div>
+            <h3 id="listenReviewResultTitle">Listening review complete!</h3>
+            <div class="score" id="listenReviewScore">0 / 3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="view" id="view-progress">
+      <h2 class="section-title" id="progressTitle">My Progress</h2>
+      <div class="stats-grid">
+        <div class="stat-card streak-card">
+          <div class="stat-label" id="streakLabel">Streak</div>
+          <div class="stat-value" id="statStreak">🔥 7 day streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="wordsLabel">Words learned</div>
+          <div class="stat-value" id="statWords">248</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="accuracyLabel">Quiz accuracy</div>
+          <div class="stat-value" id="statAccuracy">86%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label" id="timeLabel">Study time</div>
+          <div class="stat-value" id="statTime">12h 35m</div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <h3 class="section-title" id="chartTitle" style="margin-top:0">Last 7 days</h3>
+        <div class="chart-bars" id="chartBars"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-view="home"><span class="bn-icon">🏠</span><span class="nav-label">Home</span></button>
+    <button class="nav-btn" data-view="study"><span class="bn-icon">📖</span><span class="nav-label">Study</span></button>
+    <button class="nav-btn" data-view="progress"><span class="bn-icon">📊</span><span class="nav-label">Progress</span></button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="celebration-overlay" id="celebrationOverlay">
+    <div class="celebration-card">
+      <div class="emoji" id="celebrationEmoji">🎉</div>
+      <h3 id="celebrationTitle">Great job!</h3>
+      <p id="celebrationText">오늘도 한 걸음 나아갔어요.</p>
+      <button class="btn btn-primary" id="celebrationCloseBtn">계속하기</button>
+    </div>
+  </div>
+
+  <div class="celebration-overlay" id="loginModal">
+    <div class="celebration-card">
+      <div class="emoji">🔐</div>
+      <h3 id="loginModalTitle">로그인</h3>
+      <p id="loginModalText">로그인 기능은 준비 중이에요. 곧 만나요!</p>
+      <button class="btn btn-primary" id="loginModalCloseBtn">닫기</button>
+    </div>
+  </div>
+
+<script>
+  // ---------------- Data ----------------
+
+  const LANGUAGES = [
+    { key: 'english', flag: '🇺🇸', label: 'English' },
+    { key: 'japanese', flag: '🇯🇵', label: '日本語' },
+    { key: 'chinese', flag: '🇨🇳', label: '中文' },
+    { key: 'spanish', flag: '🇪🇸', label: 'Español' },
+    { key: 'french', flag: '🇫🇷', label: 'Français' },
+    { key: 'korean', flag: '🇰🇷', label: '한국어' },
+    { key: 'thai', flag: '🇹🇭', label: 'ภาษาไทย' },
+  ];
+
+  const LANG_TTS = {
+    english: 'en-US',
+    japanese: 'ja-JP',
+    chinese: 'zh-CN',
+    spanish: 'es-ES',
+    french: 'fr-FR',
+    korean: 'ko-KR',
+    thai: 'th-TH',
+  };
+
+  const VOCAB_BY_LANG = {
+    english: [
+      { word: 'comfortable', ipa: '/ˈkʌm.fər.tə.bəl/', meaning: '편안한', example: 'These shoes are very comfortable.', hint: 'uncomfortable의 반대말이에요.' },
+      { word: 'journey', ipa: '/ˈdʒɜːr.ni/', meaning: '여정', example: 'Life is a journey, not a destination.', hint: '긴 여행이나 과정을 뜻해요.' },
+      { word: 'gratitude', ipa: '/ˈɡræt.ɪ.tuːd/', meaning: '감사', example: 'She expressed her gratitude with a warm smile.', hint: '고마운 마음을 뜻해요.' },
+      { word: 'curious', ipa: '/ˈkjʊr.i.əs/', meaning: '호기심 많은', example: 'The curious cat explored every corner.', hint: '더 알고 싶어하는 마음이에요.' },
+      { word: 'peaceful', ipa: '/ˈpiːs.fəl/', meaning: '평화로운', example: 'The lake was calm and peaceful.', hint: '조용하고 갈등이 없는 상태예요.' },
+      { word: 'achieve', ipa: '/əˈtʃiːv/', meaning: '성취하다', example: 'She worked hard to achieve her goals.', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: 'embrace', ipa: '/ɪmˈbreɪs/', meaning: '받아들이다', example: 'He decided to embrace the change.', hint: '변화를 안아준다고 생각해보세요.' },
+      { word: 'genuine', ipa: '/ˈdʒen.ju.ɪn/', meaning: '진실한', example: 'Her smile was warm and genuine.', hint: '가짜가 아니라는 뜻이에요.' },
+      { word: 'flourish', ipa: '/ˈflʌr.ɪʃ/', meaning: '번창하다', example: 'The garden began to flourish in spring.', hint: '식물처럼 잘 자란다는 의미예요.' },
+      { word: 'reliable', ipa: '/rɪˈlaɪ.ə.bəl/', meaning: '믿을 수 있는', example: 'He is a reliable friend.', hint: 'rely(의지하다)에서 나온 단어예요.' },
+    ],
+    japanese: [
+      { word: 'ありがとう', ipa: 'arigatou', meaning: '고마워요', example: '皆さん、本当にありがとう。', hint: '감사 인사할 때 가장 많이 쓰는 표현이에요.' },
+      { word: '頑張って', ipa: 'ganbatte', meaning: '힘내', example: '試験、頑張ってね。', hint: '누군가를 응원할 때 써요.' },
+      { word: '大丈夫', ipa: 'daijoubu', meaning: '괜찮아', example: '大丈夫、心配しないで。', hint: '묻고 답할 때 모두 쓸 수 있어요.' },
+      { word: '素敵', ipa: 'suteki', meaning: '멋진', example: 'それは素敵なアイデアですね。', hint: '칭찬할 때 자주 쓰는 표현이에요.' },
+      { word: '楽しい', ipa: 'tanoshii', meaning: '즐거운', example: '今日はとても楽しい一日でした。', hint: '기분 좋은 경험을 말할 때 써요.' },
+      { word: '一生懸命', ipa: 'isshoukenmei', meaning: '열심히', example: '彼は一生懸命勉強しています。', hint: '최선을 다한다는 뜻이에요.' },
+      { word: '優しい', ipa: 'yasashii', meaning: '다정한', example: '彼女はとても優しい人です。', hint: '성격이 부드럽고 친절하다는 뜻이에요.' },
+      { word: '挑戦', ipa: 'chousen', meaning: '도전', example: '新しいことに挑戦してみたい。', hint: '새로운 것에 도전한다는 의미예요.' },
+      { word: '信頼', ipa: 'shinrai', meaning: '신뢰', example: 'お互いの信頼が大切です。', hint: '서로 믿는다는 뜻이에요.' },
+      { word: '成長', ipa: 'seichou', meaning: '성장', example: '毎日少しずつ成長しています。', hint: '조금씩 자란다는 의미예요.' },
+    ],
+    chinese: [
+      { word: '谢谢', ipa: 'xièxiè', meaning: '고마워', example: '谢谢你的帮助。', hint: '가장 기본적인 감사 표현이에요.' },
+      { word: '加油', ipa: 'jiāyóu', meaning: '힘내', example: '考试加油!', hint: '응원할 때 정말 많이 써요.' },
+      { word: '没关系', ipa: 'méi guānxi', meaning: '괜찮아', example: '没关系,别担心。', hint: '걱정하지 말라는 뜻이에요.' },
+      { word: '漂亮', ipa: 'piàoliang', meaning: '예쁜', example: '这件衣服很漂亮。', hint: '외모나 사물을 칭찬할 때 써요.' },
+      { word: '开心', ipa: 'kāixīn', meaning: '즐거운', example: '今天玩得很开心。', hint: '기분이 좋다는 뜻이에요.' },
+      { word: '努力', ipa: 'nǔlì', meaning: '노력하다', example: '他一直很努力学习。', hint: '열심히 한다는 의미예요.' },
+      { word: '温柔', ipa: 'wēnróu', meaning: '다정한', example: '她的性格很温柔。', hint: '부드럽고 다정한 성격을 뜻해요.' },
+      { word: '挑战', ipa: 'tiǎozhàn', meaning: '도전', example: '我想挑战一下自己。', hint: '새로운 도전을 의미해요.' },
+      { word: '信任', ipa: 'xìnrèn', meaning: '신뢰', example: '朋友之间需要信任。', hint: '서로 믿는다는 뜻이에요.' },
+      { word: '成长', ipa: 'chéngzhǎng', meaning: '성장', example: '我们都在不断成长。', hint: '점점 자란다는 뜻이에요.' },
+    ],
+    spanish: [
+      { word: 'cómodo', ipa: '/ˈko.mo.ðo/', meaning: '편안한', example: 'Estos zapatos son muy cómodos.', hint: '영어 comfortable과 비슷한 어감이에요.' },
+      { word: 'viaje', ipa: '/ˈbja.xe/', meaning: '여행', example: 'La vida es un viaje, no un destino.', hint: '영어 journey와 비슷한 의미예요.' },
+      { word: 'gratitud', ipa: '/ɡɾa.tiˈtuð/', meaning: '감사', example: 'Ella mostró su gratitud con una sonrisa.', hint: '영어 gratitude와 철자가 비슷해요.' },
+      { word: 'curioso', ipa: '/ku.ˈɾjo.so/', meaning: '호기심 많은', example: 'El gato curioso exploró cada rincón.', hint: '영어 curious와 어원이 같아요.' },
+      { word: 'tranquilo', ipa: '/tɾaŋˈki.lo/', meaning: '차분한', example: 'El lago estaba tranquilo.', hint: '차분하고 평온한 느낌을 표현해요.' },
+      { word: 'lograr', ipa: '/loˈɣɾaɾ/', meaning: '성취하다', example: 'Ella trabajó duro para lograr sus metas.', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: 'abrazar', ipa: '/a.βɾaˈsaɾ/', meaning: '받아들이다', example: 'Decidió abrazar el cambio.', hint: '원래 포옹하다라는 뜻도 있어요.' },
+      { word: 'genuino', ipa: '/xeˈnwi.no/', meaning: '진실한', example: 'Su gesto fue cálido y genuino.', hint: '영어 genuine과 철자가 비슷해요.' },
+      { word: 'florecer', ipa: '/flo.ɾeˈseɾ/', meaning: '번창하다', example: 'El jardín comenzó a florecer en primavera.', hint: 'flor(꽃)에서 나온 단어예요.' },
+      { word: 'confiable', ipa: '/komˈfja.βle/', meaning: '믿을 수 있는', example: 'Él es un amigo confiable.', hint: 'confiar(신뢰하다)에서 나왔어요.' },
+    ],
+    french: [
+      { word: 'confortable', ipa: '/kɔ̃.fɔʁ.tabl/', meaning: '편안한', example: 'Ces chaussures sont très confortables.', hint: '영어 comfortable과 철자가 비슷해요.' },
+      { word: 'voyage', ipa: '/vwa.jaʒ/', meaning: '여행', example: "La vie est un voyage, pas une destination.", hint: '영어 journey와 비슷한 의미예요.' },
+      { word: 'gratitude', ipa: '/ɡʁa.ti.tyd/', meaning: '감사', example: 'Elle a exprimé sa gratitude avec un sourire.', hint: '영어와 철자가 거의 같아요.' },
+      { word: 'curieux', ipa: '/ky.ʁjø/', meaning: '호기심 많은', example: 'Le chat curieux explorait chaque coin.', hint: '영어 curious와 어원이 같아요.' },
+      { word: 'paisible', ipa: '/pɛ.zibl/', meaning: '평화로운', example: 'Le lac était calme et paisible.', hint: 'paix(평화)에서 나온 단어예요.' },
+      { word: 'réussir', ipa: '/ʁe.y.siʁ/', meaning: '성취하다', example: 'Elle a travaillé dur pour réussir ses objectifs.', hint: '성공하다는 뜻도 있어요.' },
+      { word: 'accueillir', ipa: '/a.kœ.jiʁ/', meaning: '받아들이다', example: 'Il a décidé d\'accueillir le changement.', hint: '누군가를 맞이한다는 뜻도 있어요.' },
+      { word: 'sincère', ipa: '/sɛ̃.sɛʁ/', meaning: '진실한', example: 'Son sourire était chaleureux et sincère.', hint: '영어 sincere와 철자가 비슷해요.' },
+      { word: "s'épanouir", ipa: '/se.pa.nwiʁ/', meaning: '번창하다', example: 'Le jardin a commencé à s\'épanouir au printemps.', hint: '꽃이 활짝 핀다는 느낌의 단어예요.' },
+      { word: 'fiable', ipa: '/fjabl/', meaning: '믿을 수 있는', example: 'Il est un ami fiable.', hint: '영어 reliable과 비슷한 뜻이에요.' },
+    ],
+    korean: [
+      { word: '편안하다', ipa: 'pyeonanhada', meaning: 'comfortable', example: '이 신발은 정말 편안하다.', hint: '구두나 옷이 편할 때 쓰는 말이에요.' },
+      { word: '여정', ipa: 'yeojeong', meaning: 'journey', example: '인생은 여정이지 목적지가 아니다.', hint: '여행이나 과정을 뜻하는 말이에요.' },
+      { word: '감사', ipa: 'gamsa', meaning: 'gratitude', example: '그녀는 미소로 감사를 표현했다.', hint: '고마운 마음을 나타내는 말이에요.' },
+      { word: '호기심', ipa: 'hogisim', meaning: 'curiosity', example: '호기심 많은 고양이가 구석구석을 탐험했다.', hint: '새로운 것을 알고 싶어하는 마음이에요.' },
+      { word: '평화롭다', ipa: 'pyeonghwaropda', meaning: 'peaceful', example: '호수는 고요하고 평화롭다.', hint: '조용하고 갈등이 없는 상태예요.' },
+      { word: '성취하다', ipa: 'seongchwihada', meaning: 'to achieve', example: '그녀는 마침내 목표를 성취하다.', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: '받아들이다', ipa: 'badadeurida', meaning: 'to accept/embrace', example: '그는 결국 변화를 받아들이다.', hint: '새로운 것을 인정하고 수용한다는 뜻이에요.' },
+      { word: '진실하다', ipa: 'jinsilhada', meaning: 'genuine', example: '그녀의 미소는 따뜻하고 진실하다.', hint: '거짓이 없다는 뜻이에요.' },
+      { word: '번창하다', ipa: 'beonchanghada', meaning: 'to flourish', example: '봄이 되면 정원이 번창하다.', hint: '잘 자라거나 번영한다는 뜻이에요.' },
+      { word: '믿음직하다', ipa: 'mideumjikhada', meaning: 'reliable', example: '그는 정말 믿음직하다.', hint: '믿을 수 있다는 뜻이에요.' },
+    ],
+    thai: [
+      { word: 'สบาย', ipa: 'sabai', meaning: '편안한', example: 'รองเท้าคู่นี้สบายมาก', hint: '기분 좋고 편안하다는 뜻이에요.' },
+      { word: 'การเดินทาง', ipa: 'kan-doen-thang', meaning: '여정', example: 'ชีวิตคือการเดินทาง ไม่ใช่จุดหมายปลายทาง', hint: '여행이나 이동의 과정을 뜻해요.' },
+      { word: 'ความขอบคุณ', ipa: 'kwam-khob-khun', meaning: '감사', example: 'เธอแสดงความขอบคุณด้วยรอยยิ้มที่อบอุ่น', hint: '고마운 마음을 나타내는 말이에요.' },
+      { word: 'อยากรู้อยากเห็น', ipa: 'yak-ru-yak-hen', meaning: '호기심 많은', example: 'แมวที่อยากรู้อยากเห็นสำรวจทุกมุม', hint: '새로운 것을 알고 싶어하는 마음이에요.' },
+      { word: 'สงบ', ipa: 'sa-ngob', meaning: '평화로운', example: 'ทะเลสาบแห่งนี้เงียบและสงบ', hint: '조용하고 갈등이 없는 상태예요.' },
+      { word: 'บรรลุ', ipa: 'ban-lu', meaning: 'to achieve', example: 'เธอพยายามอย่างหนักเพื่อบรรลุเป้าหมาย', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: 'ยอมรับ', ipa: 'yom-rap', meaning: 'to accept/embrace', example: 'เขาตัดสินใจยอมรับการเปลี่ยนแปลง', hint: '새로운 것을 인정하고 받아들인다는 뜻이에요.' },
+      { word: 'จริงใจ', ipa: 'jing-jai', meaning: 'genuine', example: 'รอยยิ้มของเธออบอุ่นและจริงใจ', hint: '거짓이 없다는 뜻이에요.' },
+      { word: 'เจริญรุ่งเรือง', ipa: 'ja-roen-rung-rueang', meaning: 'to flourish', example: 'สวนเริ่มเจริญรุ่งเรืองในฤดูใบไม้ผลิ', hint: '잘 자라거나 번영한다는 뜻이에요.' },
+      { word: 'น่าเชื่อถือ', ipa: 'na-chuea-thue', meaning: 'reliable', example: 'เขาเป็นเพื่อนที่น่าเชื่อถือ', hint: '믿을 수 있다는 뜻이에요.' },
+    ],
+  };
+
+  const GRAMMAR_BY_LANG = {
+    english: [
+      { title: 'Present continuous (be + -ing)', explanation: "지금 진행 중인 동작을 말할 때 'be동사 + -ing'를 사용해요.", example: 'She is reading a book right now.', answer: 'is reading', hint: '주어가 3인칭 단수일 때 be동사는 is예요.' },
+      { title: 'Past simple (regular -ed)', explanation: '이미 끝난 과거의 일을 말할 때 동사에 -ed를 붙여요.', example: 'They visited their grandparents last weekend.', answer: 'visited', hint: '규칙동사는 동사원형 + ed 형태예요.' },
+      { title: 'Comparative adjectives (-er)', explanation: '두 대상을 비교할 때 형용사에 -er을 붙이거나 more를 사용해요.', example: 'This backpack is heavier than that one.', answer: 'heavier', hint: '짧은 형용사는 -er, 긴 형용사는 more를 써요.' },
+      { title: "Future with 'going to'", explanation: "미리 계획된 미래의 일을 말할 때 'be going to'를 사용해요.", example: 'We are going to travel to Japan next month.', answer: 'are going to travel', hint: 'be동사 + going to + 동사원형 순서예요.' },
+      { title: 'Present perfect (have + p.p.)', explanation: '과거에 시작해서 현재까지 영향을 미치는 일을 말할 때 사용해요.', example: 'I have finished my homework already.', answer: 'have finished', hint: 'have/has 뒤에는 과거분사(p.p.)가 와요.' },
+    ],
+    japanese: [
+      { title: 'て형 + います (진행형)', explanation: '지금 진행 중인 동작을 말할 때 て형 뒤에 います를 붙여요.', example: '毎日日本語を勉強しています。', answer: '勉強しています', hint: '동사의 て형 + います 순서예요.' },
+      { title: 'ました (과거형)', explanation: '이미 끝난 과거의 일을 말할 때 ます형을 ました로 바꿔요.', example: '昨日映画を見ました。', answer: '見ました', hint: 'ます형에서 ます를 ました로 바꾸면 과거형이에요.' },
+      { title: 'より (비교)', explanation: '두 가지를 비교할 때 より를 사용해요.', example: '今日は昨日より寒いです。', answer: 'より寒い', hint: 'A는 Bより ~: B보다 더 ~하다예요.' },
+      { title: 'つもりです (예정)', explanation: '미래의 계획이나 의도를 말할 때 동사 사전형 + つもりです를 사용해요.', example: '来月日本へ行くつもりです。', answer: '行くつもり', hint: '동사 사전형 + つもりです 순서예요.' },
+      { title: 'たことがあります (경험)', explanation: '과거의 경험을 말할 때 た형 + ことがあります를 사용해요.', example: '富士山に登ったことがあります。', answer: '登ったことがあります', hint: "동사 た형 + ことがあります는 '~한 적이 있다'예요." },
+    ],
+    chinese: [
+      { title: '在 + 동사 (진행형)', explanation: "지금 진행 중인 동작은 '在 + 동사'로 표현해요.", example: '我在学习中文。', answer: '在学习', hint: "在는 동사 앞에 위치해서 '~하고 있다'를 나타내요." },
+      { title: '了 (완료)', explanation: '동작이 완료되었음을 나타낼 때 동사 뒤에 了를 붙여요.', example: '我昨天吃了晚饭。', answer: '吃了', hint: '동사 + 了는 동작의 완료를 나타내요.' },
+      { title: '比 (비교)', explanation: "두 대상을 비교할 때 'A 比 B + 형용사' 구조를 사용해요.", example: '今天比昨天冷。', answer: '比昨天冷', hint: 'A 比 B ~: A는 B보다 ~해요.' },
+      { title: '打算 (계획)', explanation: "미래의 계획을 말할 때 '打算 + 동사'를 사용해요.", example: '我打算下个月去日本。', answer: '打算下个月去', hint: '打算 뒤에 계획하는 행동을 붙여요.' },
+      { title: '过 (경험)', explanation: '과거의 경험을 말할 때 동사 뒤에 过를 붙여요.', example: '我去过北京。', answer: '去过', hint: "동사 + 过는 '~해 본 적이 있다'를 나타내요." },
+    ],
+    spanish: [
+      { title: 'Presente continuo (estar + gerundio)', explanation: "지금 진행 중인 동작은 'estar + 현재분사'로 표현해요.", example: 'Ella está leyendo un libro ahora.', answer: 'está leyendo', hint: 'estar 동사 + 동사의 -ando/-iendo 형태예요.' },
+      { title: 'Pretérito (과거형)', explanation: '이미 끝난 과거의 일은 pretérito 형태로 표현해요.', example: 'Ellos visitaron a sus abuelos el fin de semana.', answer: 'visitaron', hint: '규칙 -ar 동사는 -aron으로 끝나요.' },
+      { title: 'Comparativos (más ... que)', explanation: "두 대상을 비교할 때 'más + 형용사 + que'를 사용해요.", example: 'Esta mochila es más pesada que esa.', answer: 'más pesada que', hint: 'más + 형용사 + que ~: ~보다 더 ...해요.' },
+      { title: "Futuro con 'ir a'", explanation: "가까운 미래의 계획은 'ir a + 동사원형'으로 표현해요.", example: 'Vamos a viajar a Japón el próximo mes.', answer: 'Vamos a viajar', hint: 'ir 동사 + a + 동사원형 순서예요.' },
+      { title: 'Pretérito perfecto (haber + participio)', explanation: "과거에 시작해 현재까지 영향을 주는 일은 'haber + 과거분사'로 표현해요.", example: 'Ya he terminado mi tarea.', answer: 'he terminado', hint: 'haber 동사 + 과거분사(-ado/-ido) 순서예요.' },
+    ],
+    french: [
+      { title: 'Présent progressif (être en train de)', explanation: "지금 진행 중인 동작은 'être en train de + 동사원형'으로 표현해요.", example: 'Elle est en train de lire un livre.', answer: 'est en train de lire', hint: 'être 동사 + en train de + 동사원형 순서예요.' },
+      { title: 'Passé composé (과거형)', explanation: "이미 끝난 과거의 일은 'avoir/être + 과거분사'로 표현해요.", example: 'Ils ont visité leurs grands-parents ce week-end.', answer: 'ont visité', hint: 'avoir 동사 + 과거분사(-é/-i/-u) 순서예요.' },
+      { title: 'Comparatif (plus ... que)', explanation: "두 대상을 비교할 때 'plus + 형용사 + que'를 사용해요.", example: 'Ce sac est plus lourd que celui-là.', answer: 'plus lourd que', hint: 'plus + 형용사 + que ~: ~보다 더 ...해요.' },
+      { title: 'Futur proche (aller + infinitif)', explanation: "가까운 미래의 계획은 'aller + 동사원형'으로 표현해요.", example: 'Nous allons voyager au Japon le mois prochain.', answer: 'allons voyager', hint: 'aller 동사 + 동사원형 순서예요.' },
+      { title: 'Passé récent (venir de)', explanation: "방금 끝난 일은 'venir de + 동사원형'으로 표현해요.", example: 'Je viens de finir mes devoirs.', answer: 'viens de finir', hint: 'venir 동사 + de + 동사원형 순서예요.' },
+    ],
+    korean: [
+      { title: '-고 있다 (present continuous)', explanation: 'Used for an action in progress: verb stem + 고 있다.', example: '그녀는 지금 책을 읽고 있다.', answer: '읽고 있다', hint: '동사 어간 + 고 있다 = ongoing action.' },
+      { title: '-았/었다 (past tense)', explanation: 'Used for actions already completed: verb stem + 았/었다.', example: '그들은 지난 주말에 할머니를 방문했다.', answer: '방문했다', hint: 'ㅏ/ㅗ stems take 았다, others take 었다.' },
+      { title: '더 ~ (comparative)', explanation: 'Used to compare two things: 더 + adjective.', example: '이 가방이 저것보다 더 무겁다.', answer: '더 무겁다', hint: "더 + adjective means 'more ~'." },
+      { title: '-(으)ㄹ 것이다 (future plan)', explanation: 'Used for future plans: verb stem + (으)ㄹ 것이다.', example: '우리는 다음 달에 일본에 갈 것이다.', answer: '갈 것이다', hint: '동사 어간 + (으)ㄹ 것이다 = future intention.' },
+      { title: '-아/어 본 적이 있다 (experience)', explanation: 'Used for past experience: verb stem + 아/어 본 적이 있다.', example: '나는 후지산에 올라 본 적이 있다.', answer: '올라 본 적이 있다', hint: "동사 어간 + 아/어 본 적이 있다 = 'have done ~ before'." },
+    ],
+    thai: [
+      { title: 'กำลัง + 동사 (진행형)', explanation: "지금 진행 중인 동작은 'กำลัง + 동사'로 표현해요.", example: 'เธอกำลังอ่านหนังสืออยู่ตอนนี้', answer: 'กำลังอ่าน', hint: 'กำลัง는 동사 앞에 붙어서 진행 중임을 나타내요.' },
+      { title: 'แล้ว (완료/과거)', explanation: '이미 끝난 일은 동사 뒤에 แล้ว를 붙여요.', example: 'เขาไปโรงเรียนแล้ว', answer: 'ไปโรงเรียนแล้ว', hint: '동사 + แล้ว는 완료·과거를 나타내요.' },
+      { title: 'กว่า (비교)', explanation: "두 가지를 비교할 때 '형용사 + กว่า'를 사용해요.", example: 'กระเป๋าใบนี้หนักกว่าใบนั้น', answer: 'หนักกว่า', hint: '형용사 + กว่า: ~보다 더 ~해요.' },
+      { title: 'จะ (미래)', explanation: '미래의 계획은 동사 앞에 จะ를 붙여요.', example: 'เราจะไปเที่ยวญี่ปุ่นเดือนหน้า', answer: 'จะไปเที่ยว', hint: 'จะ + 동사는 미래의 일을 나타내요.' },
+      { title: 'เคย (경험)', explanation: '과거의 경험은 동사 앞에 เคย를 붙여요.', example: 'ฉันเคยปีนภูเขาฟูจิ', answer: 'เคยปีน', hint: "เคย + 동사는 '~해 본 적이 있다'를 나타내요." },
+    ],
+  };
+
+  const CONVERSATION_BY_LANG = {
+    english: [
+      { situation: '카페에서 음료 주문하기', studySentence: 'Can I get a medium iced latte, please?', meaning: '아이스 라떼 미디엄 사이즈로 주문할게요.', reviewQuestion: 'The barista asks: "Hi, what can I get for you today?" How do you order an iced latte?', expectedAnswer: 'Can I get a medium iced latte, please?', hint: "'Can I get ... please?' 패턴을 사용해보세요." },
+      { situation: '새로운 사람에게 자기소개하기', studySentence: "Nice to meet you, I'm Jenny.", meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: 'Someone says: "Hi, I don\'t think we\'ve met before." How do you introduce yourself?', expectedAnswer: "Nice to meet you, I'm Jenny.", hint: "'Nice to meet you, I'm ___' 패턴을 써보세요." },
+      { situation: '길 물어보기', studySentence: 'Excuse me, how do I get to the subway station?', meaning: '실례합니다, 지하철역에 어떻게 가나요?', reviewQuestion: 'You are lost near a station. What do you ask a stranger?', expectedAnswer: 'Excuse me, how do I get to the subway station?', hint: "'Excuse me, how do I get to ...?' 패턴이에요." },
+      { situation: '약속 잡기', studySentence: 'Are you free this Friday evening?', meaning: '이번 주 금요일 저녁에 시간 있어요?', reviewQuestion: 'You want to invite a friend out this Friday. What do you ask?', expectedAnswer: 'Are you free this Friday evening?', hint: "'Are you free ...?'로 물어보세요." },
+      { situation: '사과하기', studySentence: "I'm really sorry for being late.", meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'You arrived 20 minutes late to meet a friend. What do you say?', expectedAnswer: "I'm really sorry for being late.", hint: "'I'm sorry for ...ing' 패턴을 써보세요." },
+    ],
+    japanese: [
+      { situation: '카페에서 주문하기', studySentence: 'アイスラテのMサイズをお願いします。', meaning: '아이스 라떼 M사이즈 주세요.', reviewQuestion: '店員が「ご注文は何になさいますか？」と聞きました。何と答えますか？', expectedAnswer: 'アイスラテのMサイズをお願いします。', hint: '「〜をお願いします」の形を使ってみましょう。' },
+      { situation: '자기소개하기', studySentence: 'はじめまして、ジェニーです。', meaning: '처음 뵙겠습니다, 제니예요.', reviewQuestion: '初めて会う人に自己紹介してください。', expectedAnswer: 'はじめまして、ジェニーです。', hint: '「はじめまして、〜です」を使いましょう。' },
+      { situation: '길 묻기', studySentence: 'すみません、駅までどう行きますか。', meaning: '실례합니다, 역까지 어떻게 가나요?', reviewQuestion: '道に迷ってしまいました。近くの人に何と聞きますか。', expectedAnswer: 'すみません、駅までどう行きますか。', hint: '「すみません、〜までどう行きますか」を使いましょう。' },
+      { situation: '약속 잡기', studySentence: '今度の金曜日の夜、空いていますか。', meaning: '이번 금요일 밤에 시간 있어요?', reviewQuestion: '友達を金曜日に誘いたいです。何と聞きますか。', expectedAnswer: '今度の金曜日の夜、空いていますか。', hint: '「〜空いていますか」で予定を聞けます。' },
+      { situation: '사과하기', studySentence: '遅れて本当にすみません。', meaning: '늦어서 정말 죄송해요.', reviewQuestion: '待ち合わせに20分遅れました。何と言いますか。', expectedAnswer: '遅れて本当にすみません。', hint: '「遅れてすみません」を使いましょう。' },
+    ],
+    chinese: [
+      { situation: '카페에서 주문하기', studySentence: '我要一杯中杯冰拿铁。', meaning: '아이스 라떼 미디엄 사이즈 주세요.', reviewQuestion: '服务员问："您要点什么？" 你怎么回答？', expectedAnswer: '我要一杯中杯冰拿铁。', hint: '用「我要...」来点餐。' },
+      { situation: '자기소개하기', studySentence: '很高兴认识你,我叫珍妮。', meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: '有人第一次见到你,你怎么自我介绍？', expectedAnswer: '很高兴认识你,我叫珍妮。', hint: '用「很高兴认识你,我叫...」。' },
+      { situation: '길 묻기', studySentence: '请问,地铁站怎么走？', meaning: '실례합니다, 지하철역 어떻게 가나요?', reviewQuestion: '你迷路了,你怎么问路人？', expectedAnswer: '请问,地铁站怎么走？', hint: '用「请问,...怎么走？」。' },
+      { situation: '약속 잡기', studySentence: '你这个星期五晚上有空吗？', meaning: '이번 주 금요일 저녁에 시간 있어요?', reviewQuestion: '你想约朋友星期五出去,你怎么问？', expectedAnswer: '你这个星期五晚上有空吗？', hint: '用「你...有空吗？」问时间。' },
+      { situation: '사과하기', studySentence: '对不起,我来晚了。', meaning: '늦어서 죄송해요.', reviewQuestion: '你迟到了20分钟,你怎么道歉？', expectedAnswer: '对不起,我来晚了。', hint: '用「对不起,我...」道歉。' },
+    ],
+    spanish: [
+      { situation: '카페에서 주문하기', studySentence: '¿Me da un latte helado mediano, por favor?', meaning: '아이스 라떼 미디엄 사이즈 주세요.', reviewQuestion: 'El barista pregunta: "¿Qué le puedo servir?" ¿Cómo pides un latte helado?', expectedAnswer: '¿Me da un latte helado mediano, por favor?', hint: "Usa '¿Me da ..., por favor?'" },
+      { situation: '자기소개하기', studySentence: 'Mucho gusto, soy Jenny.', meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: 'Alguien dice: "No creo que nos conozcamos." ¿Cómo te presentas?', expectedAnswer: 'Mucho gusto, soy Jenny.', hint: "Usa 'Mucho gusto, soy ...'" },
+      { situation: '길 묻기', studySentence: '¿Disculpe, cómo llego a la estación de metro?', meaning: '실례합니다, 지하철역 어떻게 가나요?', reviewQuestion: 'Estás perdido cerca de una estación. ¿Qué le preguntas a alguien?', expectedAnswer: '¿Disculpe, cómo llego a la estación de metro?', hint: "Usa '¿Disculpe, cómo llego a ...?'" },
+      { situation: '약속 잡기', studySentence: '¿Estás libre este viernes por la noche?', meaning: '이번 금요일 저녁에 시간 있어요?', reviewQuestion: 'Quieres invitar a un amigo el viernes. ¿Qué le preguntas?', expectedAnswer: '¿Estás libre este viernes por la noche?', hint: "Usa '¿Estás libre ...?'" },
+      { situation: '사과하기', studySentence: 'Lo siento mucho por llegar tarde.', meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'Llegaste 20 minutos tarde a ver a un amigo. ¿Qué dices?', expectedAnswer: 'Lo siento mucho por llegar tarde.', hint: "Usa 'Lo siento por ...'" },
+    ],
+    french: [
+      { situation: '카페에서 주문하기', studySentence: "Je voudrais un latte glacé moyen, s'il vous plaît.", meaning: '아이스 라떼 미디엄 사이즈 주세요.', reviewQuestion: "Le barista demande : \"Qu'est-ce que je vous sers ?\" Comment commandez-vous ?", expectedAnswer: "Je voudrais un latte glacé moyen, s'il vous plaît.", hint: "Utilisez 'Je voudrais ..., s'il vous plaît.'" },
+      { situation: '자기소개하기', studySentence: "Enchanté, je m'appelle Jenny.", meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: "Quelqu'un dit : \"Je ne crois pas qu'on se connaisse.\" Comment vous présentez-vous ?", expectedAnswer: "Enchanté, je m'appelle Jenny.", hint: "Utilisez 'Enchanté, je m'appelle ...'" },
+      { situation: '길 묻기', studySentence: 'Excusez-moi, comment aller à la station de métro ?', meaning: '실례합니다, 지하철역 어떻게 가나요?', reviewQuestion: "Vous êtes perdu près d'une station. Que demandez-vous ?", expectedAnswer: 'Excusez-moi, comment aller à la station de métro ?', hint: "Utilisez 'Excusez-moi, comment aller à ...?'" },
+      { situation: '약속 잡기', studySentence: 'Es-tu libre vendredi soir ?', meaning: '이번 금요일 저녁에 시간 있어요?', reviewQuestion: 'Vous voulez inviter un ami vendredi. Que demandez-vous ?', expectedAnswer: 'Es-tu libre vendredi soir ?', hint: "Utilisez 'Es-tu libre ...?'" },
+      { situation: '사과하기', studySentence: "Je suis vraiment désolé d'être en retard.", meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'Vous êtes arrivé 20 minutes en retard. Que dites-vous ?', expectedAnswer: "Je suis vraiment désolé d'être en retard.", hint: "Utilisez 'Je suis désolé de ...'" },
+    ],
+    korean: [
+      { situation: 'Ordering at a cafe', studySentence: '아이스 라떼 미디엄 사이즈로 주세요.', meaning: "I'd like a medium iced latte, please.", reviewQuestion: '바리스타가 "무엇을 드릴까요?"라고 물어봤어요. 어떻게 주문하나요?', expectedAnswer: '아이스 라떼 미디엄 사이즈로 주세요.', hint: "'~로 주세요' 패턴을 사용해보세요." },
+      { situation: 'Introducing yourself', studySentence: '만나서 반가워요, 저는 제니예요.', meaning: "Nice to meet you, I'm Jenny.", reviewQuestion: '누군가 "우리 처음 만나는 것 같아요"라고 했어요. 자기소개를 해보세요.', expectedAnswer: '만나서 반가워요, 저는 제니예요.', hint: "'만나서 반가워요, 저는 ~예요' 패턴이에요." },
+      { situation: 'Asking for directions', studySentence: '실례합니다, 지하철역에 어떻게 가나요?', meaning: 'Excuse me, how do I get to the subway station?', reviewQuestion: '역 근처에서 길을 잃었어요. 지나가는 사람에게 뭐라고 묻나요?', expectedAnswer: '실례합니다, 지하철역에 어떻게 가나요?', hint: "'실례합니다, ~에 어떻게 가나요?' 패턴이에요." },
+      { situation: 'Making plans', studySentence: '이번 주 금요일 저녁에 시간 있어요?', meaning: 'Are you free this Friday evening?', reviewQuestion: '금요일에 친구를 만나고 싶어요. 어떻게 물어보나요?', expectedAnswer: '이번 주 금요일 저녁에 시간 있어요?', hint: "'~에 시간 있어요?' 패턴이에요." },
+      { situation: 'Apologizing', studySentence: '늦어서 정말 죄송해요.', meaning: "I'm really sorry for being late.", reviewQuestion: '약속에 20분 늦었어요. 뭐라고 말하나요?', expectedAnswer: '늦어서 정말 죄송해요.', hint: "'~해서 죄송해요' 패턴이에요." },
+    ],
+    thai: [
+      { situation: '카페에서 음료 주문하기', studySentence: 'ขอลาเต้เย็นไซส์กลางค่ะ', meaning: '아이스 라떼 미디엄 사이즈 주세요.', reviewQuestion: 'พนักงานถามว่า "รับอะไรดีคะ" คุณจะสั่งลาเต้เย็นว่าอย่างไร?', expectedAnswer: 'ขอลาเต้เย็นไซส์กลางค่ะ', hint: "'ขอ...ค่ะ/ครับ' 패턴을 사용해보세요." },
+      { situation: '자기소개하기', studySentence: 'ยินดีที่ได้รู้จักค่ะ ฉันชื่อเจนนี่', meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: 'มีคนพูดว่า "เราไม่เคยเจอกันมาก่อนใช่ไหม" คุณจะแนะนำตัวอย่างไร?', expectedAnswer: 'ยินดีที่ได้รู้จักค่ะ ฉันชื่อเจนนี่', hint: "'ยินดีที่ได้รู้จัก...ฉันชื่อ...' 패턴이에요." },
+      { situation: '길 묻기', studySentence: 'ขอโทษค่ะ ไปสถานีรถไฟฟ้ายังไงคะ', meaning: '실례합니다, 지하철역에 어떻게 가나요?', reviewQuestion: 'คุณหลงทางใกล้สถานี คุณจะถามคนแปลกหน้าว่าอย่างไร?', expectedAnswer: 'ขอโทษค่ะ ไปสถานีรถไฟฟ้ายังไงคะ', hint: "'ขอโทษค่ะ ไป...ยังไงคะ' 패턴이에요." },
+      { situation: '약속 잡기', studySentence: 'วันศุกร์นี้ตอนเย็นว่างไหมคะ', meaning: '이번 주 금요일 저녁에 시간 있어요?', reviewQuestion: 'คุณอยากชวนเพื่อนออกไปวันศุกร์ คุณจะถามว่าอย่างไร?', expectedAnswer: 'วันศุกร์นี้ตอนเย็นว่างไหมคะ', hint: "'...ว่างไหมคะ' 패턴이에요." },
+      { situation: '사과하기', studySentence: 'ขอโทษจริงๆ ที่มาสาย', meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'คุณมาสาย 20 นาทีในการนัดพบเพื่อน คุณจะพูดว่าอย่างไร?', expectedAnswer: 'ขอโทษจริงๆ ที่มาสาย', hint: "'ขอโทษที่...' 패턴이에요." },
+    ],
+  };
+
+  const LISTENING_BY_LANG = {
+    english: [
+      { sentence: 'I usually drink a cup of coffee before I start work.', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'a cup of', meaning: '한 잔의' }, { term: 'before', meaning: '~하기 전에' }], quiz: { question: 'What does the speaker usually drink before work?', options: ['Tea', 'Coffee', 'Juice', 'Water'], answer: 'Coffee' } },
+      { sentence: 'The weather has been really nice this week, so I went for a walk.', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'went for a walk', meaning: '산책하러 갔다' }, { term: 'this week', meaning: '이번 주' }], quiz: { question: 'Why did the speaker go for a walk?', options: ['It was raining', 'The weather was nice', 'They were bored', 'They needed exercise'], answer: 'The weather was nice' } },
+      { sentence: 'Could you please send me the report by tomorrow morning?', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: 'Could you please', meaning: '~해 주실 수 있나요' }, { term: 'by tomorrow morning', meaning: '내일 아침까지' }], quiz: { question: 'When is the report needed?', options: ['Tonight', 'Tomorrow morning', 'Next week', 'Right now'], answer: 'Tomorrow morning' } },
+    ],
+    japanese: [
+      { sentence: '毎朝コーヒーを一杯飲んでから仕事を始めます。', translation: '저는 매일 아침 커피 한 잔을 마신 후에 일을 시작해요.', expressions: [{ term: '一杯', meaning: '한 잔' }, { term: '〜てから', meaning: '~하고 나서' }], quiz: { question: '何をしてから仕事を始めますか。', options: ['散歩する', 'コーヒーを飲む', '朝ごはんを食べる', '本を読む'], answer: 'コーヒーを飲む' } },
+      { sentence: '今週は天気がとてもいいので、散歩に行きました。', translation: '이번 주는 날씨가 정말 좋아서 산책을 갔어요.', expressions: [{ term: '散歩に行く', meaning: '산책하러 가다' }, { term: 'ので', meaning: '~이기 때문에' }], quiz: { question: 'なぜ散歩に行きましたか。', options: ['雨だったから', '天気が良かったから', '暇だったから', '運動したかったから'], answer: '天気が良かったから' } },
+      { sentence: '明日の朝までに報告書を送っていただけますか。', translation: '내일 아침까지 보고서를 보내주실 수 있나요?', expressions: [{ term: '〜ていただけますか', meaning: '~해 주실 수 있나요' }, { term: '明日の朝までに', meaning: '내일 아침까지' }], quiz: { question: '報告書はいつまでに必要ですか。', options: ['今夜', '明日の朝', '来週', '今すぐ'], answer: '明日の朝' } },
+    ],
+    chinese: [
+      { sentence: '我每天早上喝一杯咖啡再开始工作。', translation: '저는 매일 아침 커피 한 잔을 마신 후에 일을 시작해요.', expressions: [{ term: '一杯', meaning: '한 잔' }, { term: '再', meaning: '그 다음에' }], quiz: { question: '开始工作前她做什么？', options: ['散步', '喝咖啡', '吃早饭', '看书'], answer: '喝咖啡' } },
+      { sentence: '这个星期天气很好,所以我去散步了。', translation: '이번 주는 날씨가 좋아서 산책을 갔어요.', expressions: [{ term: '所以', meaning: '그래서' }, { term: '散步', meaning: '산책하다' }], quiz: { question: '她为什么去散步？', options: ['下雨了', '天气很好', '很无聊', '想运动'], answer: '天气很好' } },
+      { sentence: '你能在明天早上之前把报告发给我吗？', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: '能...吗', meaning: '~할 수 있나요' }, { term: '之前', meaning: '~하기 전에' }], quiz: { question: '报告什么时候需要？', options: ['今晚', '明天早上', '下周', '现在'], answer: '明天早上' } },
+    ],
+    spanish: [
+      { sentence: 'Normalmente tomo una taza de café antes de empezar a trabajar.', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'una taza de', meaning: '한 잔의' }, { term: 'antes de', meaning: '~하기 전에' }], quiz: { question: '¿Qué toma antes de trabajar?', options: ['Té', 'Café', 'Jugo', 'Agua'], answer: 'Café' } },
+      { sentence: 'El clima ha estado muy agradable esta semana, así que salí a caminar.', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'salir a caminar', meaning: '산책하러 가다' }, { term: 'así que', meaning: '그래서' }], quiz: { question: '¿Por qué salió a caminar?', options: ['Llovía', 'El clima era agradable', 'Estaba aburrido', 'Necesitaba ejercicio'], answer: 'El clima era agradable' } },
+      { sentence: '¿Podrías enviarme el informe para mañana por la mañana?', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: '¿Podrías...?', meaning: '~해 주실 수 있나요' }, { term: 'para mañana por la mañana', meaning: '내일 아침까지' }], quiz: { question: '¿Cuándo se necesita el informe?', options: ['Esta noche', 'Mañana por la mañana', 'La próxima semana', 'Ahora mismo'], answer: 'Mañana por la mañana' } },
+    ],
+    french: [
+      { sentence: 'Je bois généralement une tasse de café avant de commencer à travailler.', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'une tasse de', meaning: '한 잔의' }, { term: 'avant de', meaning: '~하기 전에' }], quiz: { question: 'Que boit-elle avant de travailler ?', options: ['Du thé', 'Du café', 'Du jus', "De l'eau"], answer: 'Du café' } },
+      { sentence: 'Il a fait très beau cette semaine, donc je suis allé me promener.', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'se promener', meaning: '산책하다' }, { term: 'donc', meaning: '그래서' }], quiz: { question: 'Pourquoi est-il allé se promener ?', options: ['Il pleuvait', 'Il faisait beau', "Il s'ennuyait", 'Il voulait faire du sport'], answer: 'Il faisait beau' } },
+      { sentence: "Pourriez-vous m'envoyer le rapport avant demain matin ?", translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: 'Pourriez-vous...?', meaning: '~해 주실 수 있나요' }, { term: 'avant demain matin', meaning: '내일 아침까지' }], quiz: { question: 'Quand le rapport est-il nécessaire ?', options: ['Ce soir', 'Demain matin', 'La semaine prochaine', 'Maintenant'], answer: 'Demain matin' } },
+    ],
+    korean: [
+      { sentence: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', translation: 'I usually drink a cup of coffee before I start work.', expressions: [{ term: '~하기 전에', meaning: 'before ~ing' }, { term: '한 잔', meaning: 'a cup of' }], quiz: { question: '화자는 일을 시작하기 전에 무엇을 마시나요?', options: ['차', '커피', '주스', '물'], answer: '커피' } },
+      { sentence: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', translation: 'The weather has been really nice this week, so I went for a walk.', expressions: [{ term: '~아서/어서', meaning: 'because ~ / so ~' }, { term: '산책을 다녀오다', meaning: 'to go for a walk' }], quiz: { question: '화자는 왜 산책을 했나요?', options: ['비가 와서', '날씨가 좋아서', '심심해서', '운동하려고'], answer: '날씨가 좋아서' } },
+      { sentence: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', translation: 'Could you please send me the report by tomorrow morning?', expressions: [{ term: '~아/어 주실 수 있나요?', meaning: 'could you please ~?' }, { term: '~까지', meaning: 'by ~' }], quiz: { question: '보고서는 언제까지 필요한가요?', options: ['오늘 밤', '내일 아침', '다음 주', '지금 당장'], answer: '내일 아침' } },
+    ],
+    thai: [
+      { sentence: 'ปกติฉันดื่มกาแฟหนึ่งแก้วก่อนเริ่มทำงาน', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'หนึ่งแก้ว', meaning: '한 잔' }, { term: 'ก่อน', meaning: '~하기 전에' }], quiz: { question: 'ผู้พูดดื่มอะไรก่อนทำงาน?', options: ['ชา', 'กาแฟ', 'น้ำผลไม้', 'น้ำเปล่า'], answer: 'กาแฟ' } },
+      { sentence: 'สัปดาห์นี้อากาศดีมาก ฉันเลยไปเดินเล่น', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'ไปเดินเล่น', meaning: '산책하러 가다' }, { term: 'เลย', meaning: '그래서' }], quiz: { question: 'ทำไมเธอไปเดินเล่น?', options: ['ฝนตก', 'อากาศดี', 'เบื่อ', 'อยากออกกำลังกาย'], answer: 'อากาศดี' } },
+      { sentence: 'คุณช่วยส่งรายงานให้ฉันภายในพรุ่งนี้เช้าได้ไหมคะ', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: 'ช่วย...ได้ไหม', meaning: '~해 주실 수 있나요' }, { term: 'ภายในพรุ่งนี้เช้า', meaning: '내일 아침까지' }], quiz: { question: 'ต้องการรายงานเมื่อไหร่?', options: ['คืนนี้', 'พรุ่งนี้เช้า', 'สัปดาห์หน้า', 'เดี๋ยวนี้'], answer: 'พรุ่งนี้เช้า' } },
+    ],
+  };
+
+  // ---------------- UI language (interface localization) ----------------
+
+  const UI_LANGUAGES = [
+    { key: 'korean', flag: '🇰🇷', label: '한국어' },
+    { key: 'japanese', flag: '🇯🇵', label: '日本語' },
+    { key: 'chinese', flag: '🇨🇳', label: '中文' },
+    { key: 'english', flag: '🇺🇸', label: 'English' },
+    { key: 'spanish', flag: '🇪🇸', label: 'Español' },
+    { key: 'italian', flag: '🇮🇹', label: 'Italiano' },
+    { key: 'french', flag: '🇫🇷', label: 'Français' },
+    { key: 'thai', flag: '🇹🇭', label: 'ภาษาไทย' },
+  ];
+
+  const TRANSLATIONS = {
+    korean: {
+      nav_home: '홈', nav_study: '학습', nav_progress: '진행률', nav_login: '로그인',
+      study_lang_label: '오늘 학습할 언어', level_label: '학습 레벨',
+      level_beginner: '입문', level_intermediate: '중급', level_advanced: '고급',
+      greeting_morning: '좋은 아침이에요! ☀️', greeting_afternoon: '좋은 오후예요! 🌤️', greeting_evening: '좋은 저녁이에요! 🌙',
+      greeting_subtext: '오늘도 조금씩 공부해봐요.',
+      today_progress: '오늘의 진행률', today_study: '오늘의 학습',
+      card_vocab_title: '단어', card_vocab_desc: '단어 10개',
+      card_grammar_title: '문법', card_grammar_desc: '패턴 5개',
+      card_conv_title: '회화', card_conv_desc: '문장 5개',
+      card_listen_title: '듣기', card_listen_desc: '클립 3개',
+      done_badge: '완료 ✓', tap_to_flip: '탭해서 뒤집기',
+      btn_listen: '듣기', btn_hint: '힌트', btn_review: '복습', btn_know: '알아요',
+      vocab_review_instruction: '빈칸에 오늘 배운 단어를 입력하세요.',
+      grammar_review_instruction: '빈칸에 오늘 배운 문법을 입력하세요.',
+      placeholder_answer: '정답 입력', placeholder_response: '답변 입력', check_btn: '확인',
+      correct_feedback: '정답이에요! 🌿', hint_prefix: '힌트: ', try_again_suffix: ' 다시 한 번 입력해보세요!',
+      answer_reveal_template: '아쉬워요! 정답은 "{a}" 예요.',
+      conv_good_feedback: '좋아요! 자연스러운 답변이에요 🌿', conv_wrong_reveal_template: '아쉬워요! 예시 답변: "{a}"',
+      review_complete_template: '{mode} 복습 완료!',
+      celeb_vocab_title: '단어 학습 완료!', celeb_vocab_text: '단어 복습에서 {c} / {t}개를 맞혔어요!',
+      celeb_grammar_title: '문법 학습 완료!', celeb_grammar_text: '문법 복습에서 {c} / {t}개를 맞혔어요!',
+      celeb_conv_title: '회화 학습 완료!', celeb_conv_text: '회화 복습에서 {c} / {t}개를 맞혔어요!',
+      celeb_listen_title: '듣기 학습 완료!', celeb_listen_text: '듣기 복습에서 {c} / {t}개를 맞혔어요!',
+      celeb_allDone_title: '최고예요!', celeb_allDone_text: '오늘 계획한 학습을 모두 끝냈어요. 정말 잘했어요!',
+      listen_hint_initial: '문장을 들어보세요.', listen_hint_1: '표현을 확인하고 다시 들어보세요. (2/4)',
+      listen_hint_2: '문장을 보며 다시 들어보세요. (3/4)', listen_hint_3: '마지막으로 한 번 더 들어보세요. (4/4)',
+      listen_hint_final: '잘 들었어요! 다음으로 넘어가세요.',
+      listen_expressions_title: '알아두면 좋은 표현', listen_translation_btn: '🌐 번역보기', listen_next_btn: '다음 →',
+      listen_wrong_feedback: '아쉬워요! 힌트를 보고 다시 선택해보세요.', listen_correct_feedback: '정답이에요! 잘 들으셨어요 🌿',
+      listen_hint_btn: '🔊 문장 다시 듣기', listen_reveal_template: '정답은 "{a}" 예요.',
+      progress_title: '나의 진행률', streak_label: '연속 학습', streak_value_template: '🔥 {n}일 연속',
+      words_label: '학습한 단어', accuracy_label: '정답률', time_label: '학습 시간', chart_title: '최근 7일',
+      weekdays: ['일', '월', '화', '수', '목', '금', '토'],
+      lang_switch_toast_template: '{flag} {label} 학습을 시작해요!', review_later_toast: '나중에 다시 복습할게요 ↻',
+      audio_not_supported: '이 브라우저는 음성 재생을 지원하지 않아요.',
+      login_modal_title: '로그인', login_modal_text: '로그인 기능은 준비 중이에요. 곧 만나요!', login_modal_close: '닫기',
+    },
+    japanese: {
+      nav_home: 'ホーム', nav_study: '学習', nav_progress: '進捗', nav_login: 'ログイン',
+      study_lang_label: '今日学ぶ言語', level_label: '学習レベル',
+      level_beginner: '初級', level_intermediate: '中級', level_advanced: '上級',
+      greeting_morning: 'おはようございます！☀️', greeting_afternoon: 'こんにちは！🌤️', greeting_evening: 'こんばんは！🌙',
+      greeting_subtext: '今日も少しずつ勉強しましょう。',
+      today_progress: '今日の進捗', today_study: '今日の学習',
+      card_vocab_title: '単語', card_vocab_desc: '単語10個',
+      card_grammar_title: '文法', card_grammar_desc: 'パターン5個',
+      card_conv_title: '会話', card_conv_desc: '文5個',
+      card_listen_title: 'リスニング', card_listen_desc: 'クリップ3個',
+      done_badge: '完了 ✓', tap_to_flip: 'タップして裏返す',
+      btn_listen: '聞く', btn_hint: 'ヒント', btn_review: '復習', btn_know: '分かる',
+      vocab_review_instruction: '空欄に今日学んだ単語を入力してください。',
+      grammar_review_instruction: '空欄に今日学んだ文法を入力してください。',
+      placeholder_answer: '答えを入力', placeholder_response: '返答を入力', check_btn: '確認',
+      correct_feedback: '正解です！🌿', hint_prefix: 'ヒント: ', try_again_suffix: ' もう一度入力してみましょう！',
+      answer_reveal_template: '残念！正解は "{a}" です。',
+      conv_good_feedback: 'いいですね！自然な答えです 🌿', conv_wrong_reveal_template: '残念！例の答え: "{a}"',
+      review_complete_template: '{mode}の復習完了！',
+      celeb_vocab_title: '単語学習完了！', celeb_vocab_text: '単語復習で {c} / {t} 問正解しました！',
+      celeb_grammar_title: '文法学習完了！', celeb_grammar_text: '文法復習で {c} / {t} 問正解しました！',
+      celeb_conv_title: '会話学習完了！', celeb_conv_text: '会話復習で {c} / {t} 問正解しました！',
+      celeb_listen_title: 'リスニング完了！', celeb_listen_text: 'リスニング復習で {c} / {t} 問正解しました！',
+      celeb_allDone_title: '素晴らしい！', celeb_allDone_text: '今日の学習をすべて終えました。よく頑張りました！',
+      listen_hint_initial: '文を聞いてみましょう。', listen_hint_1: '表現を確認して、もう一度聞きましょう。(2/4)',
+      listen_hint_2: '文を見ながら、もう一度聞きましょう。(3/4)', listen_hint_3: '最後にもう一度聞きましょう。(4/4)',
+      listen_hint_final: 'よく聞けました！次に進みましょう。',
+      listen_expressions_title: '覚えておきたい表現', listen_translation_btn: '🌐 翻訳を見る', listen_next_btn: '次へ →',
+      listen_wrong_feedback: '残念！ヒントを見てもう一度選びましょう。', listen_correct_feedback: '正解です！よく聞き取れました 🌿',
+      listen_hint_btn: '🔊 文をもう一度聞く', listen_reveal_template: '正解は "{a}" です。',
+      progress_title: '私の進捗', streak_label: '連続学習', streak_value_template: '🔥 {n}日連続',
+      words_label: '学んだ単語', accuracy_label: '正答率', time_label: '学習時間', chart_title: '過去7日間',
+      weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+      lang_switch_toast_template: '{flag} {label}の学習を始めましょう！', review_later_toast: '後でまた復習しますね ↻',
+      audio_not_supported: 'このブラウザは音声再生に対応していません。',
+      login_modal_title: 'ログイン', login_modal_text: 'ログイン機能は準備中です。もうすぐ公開します！', login_modal_close: '閉じる',
+    },
+    chinese: {
+      nav_home: '首页', nav_study: '学习', nav_progress: '进度', nav_login: '登录',
+      study_lang_label: '今天学习的语言', level_label: '学习等级',
+      level_beginner: '初级', level_intermediate: '中级', level_advanced: '高级',
+      greeting_morning: '早上好！☀️', greeting_afternoon: '下午好！🌤️', greeting_evening: '晚上好！🌙',
+      greeting_subtext: '今天也来学习一点点吧。',
+      today_progress: '今日进度', today_study: '今日学习',
+      card_vocab_title: '单词', card_vocab_desc: '10个单词',
+      card_grammar_title: '语法', card_grammar_desc: '5个句型',
+      card_conv_title: '会话', card_conv_desc: '5个句子',
+      card_listen_title: '听力', card_listen_desc: '3段音频',
+      done_badge: '已完成 ✓', tap_to_flip: '点击翻转',
+      btn_listen: '听', btn_hint: '提示', btn_review: '复习', btn_know: '我知道',
+      vocab_review_instruction: '请在空格中填写今天学的单词。',
+      grammar_review_instruction: '请在空格中填写今天学的语法。',
+      placeholder_answer: '输入答案', placeholder_response: '输入回答', check_btn: '确认',
+      correct_feedback: '答对了！🌿', hint_prefix: '提示: ', try_again_suffix: ' 请再试一次！',
+      answer_reveal_template: '可惜！正确答案是 "{a}"。',
+      conv_good_feedback: '很好！这是很自然的回答 🌿', conv_wrong_reveal_template: '可惜！参考答案: "{a}"',
+      review_complete_template: '{mode}复习完成！',
+      celeb_vocab_title: '单词学习完成！', celeb_vocab_text: '单词复习中答对了 {c} / {t} 题！',
+      celeb_grammar_title: '语法学习完成！', celeb_grammar_text: '语法复习中答对了 {c} / {t} 题！',
+      celeb_conv_title: '会话学习完成！', celeb_conv_text: '会话复习中答对了 {c} / {t} 题！',
+      celeb_listen_title: '听力学习完成！', celeb_listen_text: '听力复习中答对了 {c} / {t} 题！',
+      celeb_allDone_title: '太棒了！', celeb_allDone_text: '今天计划的学习全部完成了，做得很好！',
+      listen_hint_initial: '先听一遍句子。', listen_hint_1: '确认表达后再听一遍。(2/4)',
+      listen_hint_2: '看着句子再听一遍。(3/4)', listen_hint_3: '最后再听一遍。(4/4)',
+      listen_hint_final: '听得很好！继续下一步吧。',
+      listen_expressions_title: '值得注意的表达', listen_translation_btn: '🌐 查看翻译', listen_next_btn: '下一步 →',
+      listen_wrong_feedback: '可惜！看提示后再选一次。', listen_correct_feedback: '答对了！听得很棒 🌿',
+      listen_hint_btn: '🔊 再听一次句子', listen_reveal_template: '正确答案是 "{a}"。',
+      progress_title: '我的进度', streak_label: '连续学习', streak_value_template: '🔥 连续{n}天',
+      words_label: '已学单词', accuracy_label: '正确率', time_label: '学习时长', chart_title: '最近7天',
+      weekdays: ['日', '一', '二', '三', '四', '五', '六'],
+      lang_switch_toast_template: '{flag} 开始学习{label}吧！', review_later_toast: '稍后再复习 ↻',
+      audio_not_supported: '此浏览器不支持语音播放。',
+      login_modal_title: '登录', login_modal_text: '登录功能正在开发中,敬请期待！', login_modal_close: '关闭',
+    },
+    english: {
+      nav_home: 'Home', nav_study: 'Study', nav_progress: 'Progress', nav_login: 'Log in',
+      study_lang_label: "Today's study language", level_label: 'Study level',
+      level_beginner: 'Beginner', level_intermediate: 'Intermediate', level_advanced: 'Advanced',
+      greeting_morning: 'Good morning! ☀️', greeting_afternoon: 'Good afternoon! 🌤️', greeting_evening: 'Good evening! 🌙',
+      greeting_subtext: "Let's learn a little today.",
+      today_progress: "Today's Progress", today_study: "Today's Study",
+      card_vocab_title: 'Vocabulary', card_vocab_desc: '10 words',
+      card_grammar_title: 'Grammar', card_grammar_desc: '5 patterns',
+      card_conv_title: 'Conversation', card_conv_desc: '5 sentences',
+      card_listen_title: 'Listening', card_listen_desc: '3 clips',
+      done_badge: 'Done ✓', tap_to_flip: 'Tap to flip',
+      btn_listen: 'Listen', btn_hint: 'Hint', btn_review: 'Review', btn_know: 'I know',
+      vocab_review_instruction: 'Fill in the word you studied today.',
+      grammar_review_instruction: 'Fill in the grammar pattern you studied.',
+      placeholder_answer: 'Type your answer', placeholder_response: 'Type your response', check_btn: 'Check',
+      correct_feedback: 'Correct! 🌿', hint_prefix: 'Hint: ', try_again_suffix: ' Try once more!',
+      answer_reveal_template: 'Not quite! The answer was "{a}".',
+      conv_good_feedback: "Nice, that's a natural answer 🌿", conv_wrong_reveal_template: 'Not quite! Example answer: "{a}"',
+      review_complete_template: '{mode} review complete!',
+      celeb_vocab_title: 'Vocabulary complete!', celeb_vocab_text: 'You got {c} / {t} right in the vocabulary review!',
+      celeb_grammar_title: 'Grammar complete!', celeb_grammar_text: 'You got {c} / {t} right in the grammar review!',
+      celeb_conv_title: 'Conversation complete!', celeb_conv_text: 'You got {c} / {t} right in the conversation review!',
+      celeb_listen_title: 'Listening complete!', celeb_listen_text: 'You got {c} / {t} right in the listening review!',
+      celeb_allDone_title: 'Amazing!', celeb_allDone_text: 'You finished everything planned for today. Great job!',
+      listen_hint_initial: 'Listen to the sentence.', listen_hint_1: 'Check the expressions, then listen again. (2/4)',
+      listen_hint_2: 'Read along and listen again. (3/4)', listen_hint_3: 'Listen one more time. (4/4)',
+      listen_hint_final: 'Well listened! Move on to the next step.',
+      listen_expressions_title: 'Good expressions to know', listen_translation_btn: '🌐 Show translation', listen_next_btn: 'Next →',
+      listen_wrong_feedback: 'Not quite! Check the hint and pick again.', listen_correct_feedback: 'Correct! Nice listening 🌿',
+      listen_hint_btn: '🔊 Listen to the sentence again', listen_reveal_template: 'The answer was "{a}".',
+      progress_title: 'My Progress', streak_label: 'Streak', streak_value_template: '🔥 {n} day streak',
+      words_label: 'Words learned', accuracy_label: 'Quiz accuracy', time_label: 'Study time', chart_title: 'Last 7 days',
+      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      lang_switch_toast_template: "Let's start learning {label} {flag}!", review_later_toast: "I'll review this again later ↻",
+      audio_not_supported: 'This browser does not support audio playback.',
+      login_modal_title: 'Log in', login_modal_text: 'Login is coming soon. See you then!', login_modal_close: 'Close',
+    },
+    spanish: {
+      nav_home: 'Inicio', nav_study: 'Estudiar', nav_progress: 'Progreso', nav_login: 'Iniciar sesión',
+      study_lang_label: 'Idioma de estudio de hoy', level_label: 'Nivel de estudio',
+      level_beginner: 'Principiante', level_intermediate: 'Intermedio', level_advanced: 'Avanzado',
+      greeting_morning: '¡Buenos días! ☀️', greeting_afternoon: '¡Buenas tardes! 🌤️', greeting_evening: '¡Buenas noches! 🌙',
+      greeting_subtext: 'Aprendamos un poco hoy.',
+      today_progress: 'Progreso de hoy', today_study: 'Estudio de hoy',
+      card_vocab_title: 'Vocabulario', card_vocab_desc: '10 palabras',
+      card_grammar_title: 'Gramática', card_grammar_desc: '5 patrones',
+      card_conv_title: 'Conversación', card_conv_desc: '5 frases',
+      card_listen_title: 'Escucha', card_listen_desc: '3 clips',
+      done_badge: 'Hecho ✓', tap_to_flip: 'Toca para voltear',
+      btn_listen: 'Escuchar', btn_hint: 'Pista', btn_review: 'Repasar', btn_know: 'Lo sé',
+      vocab_review_instruction: 'Completa la palabra que estudiaste hoy.',
+      grammar_review_instruction: 'Completa la estructura que estudiaste hoy.',
+      placeholder_answer: 'Escribe tu respuesta', placeholder_response: 'Escribe tu respuesta', check_btn: 'Comprobar',
+      correct_feedback: '¡Correcto! 🌿', hint_prefix: 'Pista: ', try_again_suffix: ' ¡Inténtalo una vez más!',
+      answer_reveal_template: '¡Casi! La respuesta era "{a}".',
+      conv_good_feedback: '¡Bien! Es una respuesta natural 🌿', conv_wrong_reveal_template: '¡Casi! Respuesta de ejemplo: "{a}"',
+      review_complete_template: '¡Repaso de {mode} completo!',
+      celeb_vocab_title: '¡Vocabulario completo!', celeb_vocab_text: '¡Acertaste {c} / {t} en el repaso de vocabulario!',
+      celeb_grammar_title: '¡Gramática completa!', celeb_grammar_text: '¡Acertaste {c} / {t} en el repaso de gramática!',
+      celeb_conv_title: '¡Conversación completa!', celeb_conv_text: '¡Acertaste {c} / {t} en el repaso de conversación!',
+      celeb_listen_title: '¡Escucha completa!', celeb_listen_text: '¡Acertaste {c} / {t} en el repaso de escucha!',
+      celeb_allDone_title: '¡Increíble!', celeb_allDone_text: 'Terminaste todo lo planeado para hoy. ¡Muy bien hecho!',
+      listen_hint_initial: 'Escucha la frase.', listen_hint_1: 'Revisa las expresiones y escucha de nuevo. (2/4)',
+      listen_hint_2: 'Lee la frase y escucha de nuevo. (3/4)', listen_hint_3: 'Escucha una vez más. (4/4)',
+      listen_hint_final: '¡Bien escuchado! Continúa al siguiente paso.',
+      listen_expressions_title: 'Expresiones útiles', listen_translation_btn: '🌐 Ver traducción', listen_next_btn: 'Siguiente →',
+      listen_wrong_feedback: '¡Casi! Revisa la pista y elige de nuevo.', listen_correct_feedback: '¡Correcto! Buena escucha 🌿',
+      listen_hint_btn: '🔊 Escuchar la frase de nuevo', listen_reveal_template: 'La respuesta era "{a}".',
+      progress_title: 'Mi progreso', streak_label: 'Racha', streak_value_template: '🔥 Racha de {n} días',
+      words_label: 'Palabras aprendidas', accuracy_label: 'Precisión', time_label: 'Tiempo de estudio', chart_title: 'Últimos 7 días',
+      weekdays: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+      lang_switch_toast_template: '¡Vamos a aprender {label} {flag}!', review_later_toast: 'Lo repasaré más tarde ↻',
+      audio_not_supported: 'Este navegador no admite la reproducción de audio.',
+      login_modal_title: 'Iniciar sesión', login_modal_text: 'El inicio de sesión estará disponible pronto. ¡Nos vemos pronto!', login_modal_close: 'Cerrar',
+    },
+    italian: {
+      nav_home: 'Home', nav_study: 'Studia', nav_progress: 'Progressi', nav_login: 'Accedi',
+      study_lang_label: 'Lingua di studio di oggi', level_label: 'Livello di studio',
+      level_beginner: 'Principiante', level_intermediate: 'Intermedio', level_advanced: 'Avanzato',
+      greeting_morning: 'Buongiorno! ☀️', greeting_afternoon: 'Buon pomeriggio! 🌤️', greeting_evening: 'Buonasera! 🌙',
+      greeting_subtext: "Studiamo un po' anche oggi.",
+      today_progress: 'Progressi di oggi', today_study: 'Studio di oggi',
+      card_vocab_title: 'Vocabolario', card_vocab_desc: '10 parole',
+      card_grammar_title: 'Grammatica', card_grammar_desc: '5 schemi',
+      card_conv_title: 'Conversazione', card_conv_desc: '5 frasi',
+      card_listen_title: 'Ascolto', card_listen_desc: '3 clip',
+      done_badge: 'Fatto ✓', tap_to_flip: 'Tocca per girare',
+      btn_listen: 'Ascolta', btn_hint: 'Suggerimento', btn_review: 'Ripassa', btn_know: 'Lo so',
+      vocab_review_instruction: 'Completa la parola studiata oggi.',
+      grammar_review_instruction: 'Completa la struttura studiata oggi.',
+      placeholder_answer: 'Scrivi la risposta', placeholder_response: 'Scrivi la risposta', check_btn: 'Verifica',
+      correct_feedback: 'Corretto! 🌿', hint_prefix: 'Suggerimento: ', try_again_suffix: ' Riprova ancora una volta!',
+      answer_reveal_template: 'Quasi! La risposta era "{a}".',
+      conv_good_feedback: 'Bene! È una risposta naturale 🌿', conv_wrong_reveal_template: 'Quasi! Risposta di esempio: "{a}"',
+      review_complete_template: 'Ripasso di {mode} completato!',
+      celeb_vocab_title: 'Vocabolario completato!', celeb_vocab_text: 'Hai risposto correttamente a {c} / {t} nel ripasso del vocabolario!',
+      celeb_grammar_title: 'Grammatica completata!', celeb_grammar_text: 'Hai risposto correttamente a {c} / {t} nel ripasso di grammatica!',
+      celeb_conv_title: 'Conversazione completata!', celeb_conv_text: 'Hai risposto correttamente a {c} / {t} nel ripasso di conversazione!',
+      celeb_listen_title: 'Ascolto completato!', celeb_listen_text: 'Hai risposto correttamente a {c} / {t} nel ripasso di ascolto!',
+      celeb_allDone_title: 'Fantastico!', celeb_allDone_text: 'Hai completato tutto ciò che avevi pianificato per oggi. Ottimo lavoro!',
+      listen_hint_initial: 'Ascolta la frase.', listen_hint_1: 'Controlla le espressioni e ascolta di nuovo. (2/4)',
+      listen_hint_2: 'Leggi la frase e ascolta di nuovo. (3/4)', listen_hint_3: "Ascolta un'ultima volta. (4/4)",
+      listen_hint_final: 'Ben ascoltato! Passa al prossimo passo.',
+      listen_expressions_title: 'Espressioni utili da conoscere', listen_translation_btn: '🌐 Mostra traduzione', listen_next_btn: 'Avanti →',
+      listen_wrong_feedback: 'Quasi! Controlla il suggerimento e scegli di nuovo.', listen_correct_feedback: 'Corretto! Ottimo ascolto 🌿',
+      listen_hint_btn: '🔊 Riascolta la frase', listen_reveal_template: 'La risposta era "{a}".',
+      progress_title: 'I miei progressi', streak_label: 'Serie', streak_value_template: '🔥 Serie di {n} giorni',
+      words_label: 'Parole apprese', accuracy_label: 'Precisione', time_label: 'Tempo di studio', chart_title: 'Ultimi 7 giorni',
+      weekdays: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+      lang_switch_toast_template: 'Iniziamo a studiare {label} {flag}!', review_later_toast: 'Lo ripasserò più tardi ↻',
+      audio_not_supported: 'Questo browser non supporta la riproduzione audio.',
+      login_modal_title: 'Accedi', login_modal_text: "L'accesso sarà disponibile presto. A presto!", login_modal_close: 'Chiudi',
+    },
+    french: {
+      nav_home: 'Accueil', nav_study: 'Étudier', nav_progress: 'Progrès', nav_login: 'Connexion',
+      study_lang_label: "Langue étudiée aujourd'hui", level_label: "Niveau d'étude",
+      level_beginner: 'Débutant', level_intermediate: 'Intermédiaire', level_advanced: 'Avancé',
+      greeting_morning: 'Bonjour ! ☀️', greeting_afternoon: 'Bon après-midi ! 🌤️', greeting_evening: 'Bonsoir ! 🌙',
+      greeting_subtext: "Étudions un peu aujourd'hui.",
+      today_progress: 'Progrès du jour', today_study: 'Étude du jour',
+      card_vocab_title: 'Vocabulaire', card_vocab_desc: '10 mots',
+      card_grammar_title: 'Grammaire', card_grammar_desc: '5 structures',
+      card_conv_title: 'Conversation', card_conv_desc: '5 phrases',
+      card_listen_title: 'Écoute', card_listen_desc: '3 extraits',
+      done_badge: 'Terminé ✓', tap_to_flip: 'Touchez pour retourner',
+      btn_listen: 'Écouter', btn_hint: 'Indice', btn_review: 'Réviser', btn_know: 'Je sais',
+      vocab_review_instruction: "Complétez le mot étudié aujourd'hui.",
+      grammar_review_instruction: "Complétez la structure étudiée aujourd'hui.",
+      placeholder_answer: 'Tapez votre réponse', placeholder_response: 'Tapez votre réponse', check_btn: 'Vérifier',
+      correct_feedback: 'Correct ! 🌿', hint_prefix: 'Indice : ', try_again_suffix: ' Réessayez une fois !',
+      answer_reveal_template: 'Pas tout à fait ! La réponse était "{a}".',
+      conv_good_feedback: "Bien ! C'est une réponse naturelle 🌿", conv_wrong_reveal_template: 'Pas tout à fait ! Exemple de réponse : "{a}"',
+      review_complete_template: 'Révision de {mode} terminée !',
+      celeb_vocab_title: 'Vocabulaire terminé !', celeb_vocab_text: 'Vous avez obtenu {c} / {t} bonnes réponses en révision de vocabulaire !',
+      celeb_grammar_title: 'Grammaire terminée !', celeb_grammar_text: 'Vous avez obtenu {c} / {t} bonnes réponses en révision de grammaire !',
+      celeb_conv_title: 'Conversation terminée !', celeb_conv_text: 'Vous avez obtenu {c} / {t} bonnes réponses en révision de conversation !',
+      celeb_listen_title: 'Écoute terminée !', celeb_listen_text: "Vous avez obtenu {c} / {t} bonnes réponses en révision d'écoute !",
+      celeb_allDone_title: 'Formidable !', celeb_allDone_text: 'Vous avez terminé tout le programme du jour. Bravo !',
+      listen_hint_initial: 'Écoutez la phrase.', listen_hint_1: 'Vérifiez les expressions puis réécoutez. (2/4)',
+      listen_hint_2: 'Lisez la phrase et réécoutez. (3/4)', listen_hint_3: 'Écoutez une dernière fois. (4/4)',
+      listen_hint_final: "Bien écouté ! Passez à l'étape suivante.",
+      listen_expressions_title: 'Expressions utiles à connaître', listen_translation_btn: '🌐 Voir la traduction', listen_next_btn: 'Suivant →',
+      listen_wrong_feedback: 'Pas tout à fait ! Regardez l\'indice et choisissez à nouveau.', listen_correct_feedback: 'Correct ! Bien écouté 🌿',
+      listen_hint_btn: '🔊 Réécouter la phrase', listen_reveal_template: 'La réponse était "{a}".',
+      progress_title: 'Mes progrès', streak_label: 'Série', streak_value_template: '🔥 Série de {n} jours',
+      words_label: 'Mots appris', accuracy_label: 'Précision', time_label: "Temps d'étude", chart_title: '7 derniers jours',
+      weekdays: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+      lang_switch_toast_template: 'Commençons à étudier {label} {flag} !', review_later_toast: 'Je réviserai cela plus tard ↻',
+      audio_not_supported: "Ce navigateur ne prend pas en charge la lecture audio.",
+      login_modal_title: 'Connexion', login_modal_text: 'La connexion arrive bientôt. À très vite !', login_modal_close: 'Fermer',
+    },
+    thai: {
+      nav_home: 'หน้าแรก', nav_study: 'เรียน', nav_progress: 'ความคืบหน้า', nav_login: 'เข้าสู่ระบบ',
+      study_lang_label: 'ภาษาที่เรียนวันนี้', level_label: 'ระดับการเรียน',
+      level_beginner: 'เริ่มต้น', level_intermediate: 'ปานกลาง', level_advanced: 'ขั้นสูง',
+      greeting_morning: 'อรุณสวัสดิ์! ☀️', greeting_afternoon: 'สวัสดีตอนบ่าย! 🌤️', greeting_evening: 'สวัสดีตอนเย็น! 🌙',
+      greeting_subtext: 'มาเรียนกันอีกนิดวันนี้นะ',
+      today_progress: 'ความคืบหน้าวันนี้', today_study: 'การเรียนวันนี้',
+      card_vocab_title: 'คำศัพท์', card_vocab_desc: '10 คำ',
+      card_grammar_title: 'ไวยากรณ์', card_grammar_desc: '5 รูปแบบ',
+      card_conv_title: 'บทสนทนา', card_conv_desc: '5 ประโยค',
+      card_listen_title: 'การฟัง', card_listen_desc: '3 คลิป',
+      done_badge: 'เสร็จแล้ว ✓', tap_to_flip: 'แตะเพื่อพลิก',
+      btn_listen: 'ฟัง', btn_hint: 'คำใบ้', btn_review: 'ทบทวน', btn_know: 'รู้แล้ว',
+      vocab_review_instruction: 'เติมคำศัพท์ที่เรียนวันนี้ลงในช่องว่าง',
+      grammar_review_instruction: 'เติมไวยากรณ์ที่เรียนวันนี้ลงในช่องว่าง',
+      placeholder_answer: 'พิมพ์คำตอบ', placeholder_response: 'พิมพ์คำตอบ', check_btn: 'ตรวจสอบ',
+      correct_feedback: 'ถูกต้อง! 🌿', hint_prefix: 'คำใบ้: ', try_again_suffix: ' ลองอีกครั้งนะ!',
+      answer_reveal_template: 'เสียใจด้วย! คำตอบคือ "{a}"',
+      conv_good_feedback: 'เยี่ยม! เป็นคำตอบที่เป็นธรรมชาติดี 🌿', conv_wrong_reveal_template: 'เสียใจด้วย! ตัวอย่างคำตอบ: "{a}"',
+      review_complete_template: 'ทบทวน{mode}เสร็จแล้ว!',
+      celeb_vocab_title: 'เรียนคำศัพท์เสร็จแล้ว!', celeb_vocab_text: 'คุณตอบถูก {c} / {t} ข้อในการทบทวนคำศัพท์!',
+      celeb_grammar_title: 'เรียนไวยากรณ์เสร็จแล้ว!', celeb_grammar_text: 'คุณตอบถูก {c} / {t} ข้อในการทบทวนไวยากรณ์!',
+      celeb_conv_title: 'เรียนบทสนทนาเสร็จแล้ว!', celeb_conv_text: 'คุณตอบถูก {c} / {t} ข้อในการทบทวนบทสนทนา!',
+      celeb_listen_title: 'เรียนการฟังเสร็จแล้ว!', celeb_listen_text: 'คุณตอบถูก {c} / {t} ข้อในการทบทวนการฟัง!',
+      celeb_allDone_title: 'สุดยอดมาก!', celeb_allDone_text: 'คุณเรียนครบตามแผนของวันนี้แล้ว เก่งมาก!',
+      listen_hint_initial: 'ลองฟังประโยคดูนะ', listen_hint_1: 'ดูคำศัพท์แล้วลองฟังอีกครั้ง (2/4)',
+      listen_hint_2: 'อ่านประโยคไปด้วยแล้วฟังอีกครั้ง (3/4)', listen_hint_3: 'ฟังอีกครั้งสุดท้าย (4/4)',
+      listen_hint_final: 'ฟังได้ดีมาก! ไปขั้นตอนต่อไปกันเลย',
+      listen_expressions_title: 'สำนวนที่ควรรู้', listen_translation_btn: '🌐 ดูคำแปล', listen_next_btn: 'ถัดไป →',
+      listen_wrong_feedback: 'เสียใจด้วย! ดูคำใบ้แล้วลองเลือกอีกครั้ง', listen_correct_feedback: 'ถูกต้อง! ฟังได้ดีมาก 🌿',
+      listen_hint_btn: '🔊 ฟังประโยคอีกครั้ง', listen_reveal_template: 'คำตอบคือ "{a}"',
+      progress_title: 'ความคืบหน้าของฉัน', streak_label: 'ต่อเนื่อง', streak_value_template: '🔥 ต่อเนื่อง {n} วัน',
+      words_label: 'คำศัพท์ที่เรียนแล้ว', accuracy_label: 'ความแม่นยำ', time_label: 'เวลาที่เรียน', chart_title: '7 วันล่าสุด',
+      weekdays: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+      lang_switch_toast_template: 'เริ่มเรียน{label}กันเลย {flag}!', review_later_toast: 'จะกลับมาทบทวนทีหลังนะ ↻',
+      audio_not_supported: 'เบราว์เซอร์นี้ไม่รองรับการเล่นเสียง',
+      login_modal_title: 'เข้าสู่ระบบ', login_modal_text: 'ฟีเจอร์เข้าสู่ระบบกำลังจะมาเร็วๆ นี้!', login_modal_close: 'ปิด',
+    },
+  };
+
+  function t(key, vars) {
+    const dict = TRANSLATIONS[state.uiLanguage] || TRANSLATIONS.korean;
+    let str = dict[key] !== undefined ? dict[key] : (TRANSLATIONS.korean[key] !== undefined ? TRANSLATIONS.korean[key] : key);
+    if (vars) {
+      Object.entries(vars).forEach(([k, v]) => { str = str.split('{' + k + '}').join(v); });
+    }
+    return str;
+  }
+
+  const STORAGE_KEY = 'daily_english_state_v1';
+
+  function todayISO() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function defaultState() {
+    return {
+      lastActiveDate: todayISO(),
+      language: 'english',
+      uiLanguage: 'korean',
+      level: 'beginner',
+      vocabIndex: 0,
+      grammarIndex: 0,
+      convIndex: 0,
+      listenIndex: 0,
+      todayTasks: { vocabulary: false, grammar: false, conversation: false, listening: false },
+      streak: 6, // becomes 7 once today's first task is completed
+      wordsLearnedTotal: 248,
+      quizCorrectTotal: 43,
+      quizAttemptTotal: 50,
+      studyMinutesTotal: 755, // 12h 35m
+      weekLog: [12, 18, 9, 22, 15, 20, 0], // minutes per day, today = last slot
+    };
+  }
+
+  let state = loadState();
+  let VOCAB = VOCAB_BY_LANG[state.language];
+
+  function loadState() {
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { saved = null; }
+    if (!saved) return defaultState();
+    if (!saved.language || !VOCAB_BY_LANG[saved.language]) saved.language = 'english';
+    if (!saved.uiLanguage || !TRANSLATIONS[saved.uiLanguage]) saved.uiLanguage = 'korean';
+    if (!['beginner', 'intermediate', 'advanced'].includes(saved.level)) saved.level = 'beginner';
+    if (typeof saved.grammarIndex !== 'number') saved.grammarIndex = 0;
+    if (typeof saved.convIndex !== 'number') saved.convIndex = 0;
+    if (typeof saved.listenIndex !== 'number') saved.listenIndex = 0;
+    saved.todayTasks = {
+      vocabulary: !!(saved.todayTasks && saved.todayTasks.vocabulary),
+      grammar: !!(saved.todayTasks && saved.todayTasks.grammar),
+      conversation: !!(saved.todayTasks && saved.todayTasks.conversation),
+      listening: !!(saved.todayTasks && saved.todayTasks.listening),
+    };
+
+    const today = todayISO();
+    if (saved.lastActiveDate !== today) {
+      const gapDays = Math.round((new Date(today) - new Date(saved.lastActiveDate)) / 86400000);
+      if (gapDays > 1) saved.streak = 0;
+      saved.todayTasks = { vocabulary: false, grammar: false, conversation: false, listening: false };
+      saved.vocabIndex = 0;
+      saved.grammarIndex = 0;
+      saved.convIndex = 0;
+      saved.listenIndex = 0;
+      saved.weekLog.shift();
+      saved.weekLog.push(0);
+      saved.lastActiveDate = today;
+    }
+    return saved;
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function addStudyMinutes(mins) {
+    state.studyMinutesTotal += mins;
+    state.weekLog[state.weekLog.length - 1] += mins;
+  }
+
+  function markTaskDone(task) {
+    if (state.todayTasks[task]) return;
+    state.todayTasks[task] = true;
+    if (state.streak === 6 && !Object.values(state.todayTasks).some((v, i) => i !== Object.keys(state.todayTasks).indexOf(task) && v)) {
+      // first task completed today bumps the streak forward
+    }
+    const anyDoneBefore = Object.values(state.todayTasks).filter(Boolean).length > 1;
+    if (!anyDoneBefore) state.streak += 1;
+    saveState();
+    updateHomeProgress();
+    renderStudyCardBadges();
+    checkFullDayCelebration();
+  }
+
+  // ---------------- Navigation ----------------
+
+  const views = ['home', 'study', 'progress'];
+
+  function goToView(view, opts = {}) {
+    views.forEach(v => {
+      document.getElementById('view-' + v).classList.toggle('active', v === view);
+    });
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === view);
+    });
+    if (view === 'study' && opts.subtab) {
+      setStudySubtab(opts.subtab);
+    }
+    if (view === 'progress') renderProgressView();
+  }
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goToView(btn.dataset.view));
+  });
+
+  document.querySelectorAll('.study-card').forEach(card => {
+    card.addEventListener('click', () => {
+      goToView(card.dataset.goto, { subtab: card.dataset.subtab });
+    });
+  });
+
+  // ---------------- Greeting ----------------
+
+  function setGreeting() {
+    const hour = new Date().getHours();
+    let key = 'greeting_evening';
+    if (hour < 12) key = 'greeting_morning';
+    else if (hour < 18) key = 'greeting_afternoon';
+    document.getElementById('greetingText').textContent = t(key);
+    document.getElementById('greetingSubtext').textContent = t('greeting_subtext');
+  }
+
+  // ---------------- Language selector ----------------
+
+  function renderLanguageSelector() {
+    const wrap = document.getElementById('langPills');
+    wrap.innerHTML = '';
+    LANGUAGES.forEach(lang => {
+      const btn = document.createElement('button');
+      btn.className = 'lang-pill' + (lang.key === state.language ? ' active' : '');
+      btn.textContent = `${lang.flag} ${lang.label}`;
+      btn.addEventListener('click', () => setLanguage(lang.key));
+      wrap.appendChild(btn);
+    });
+
+    const select = document.getElementById('langSelectMobile');
+    select.innerHTML = '';
+    LANGUAGES.forEach(lang => {
+      const opt = document.createElement('option');
+      opt.value = lang.key;
+      opt.textContent = `${lang.flag} ${lang.label}`;
+      if (lang.key === state.language) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.onchange = () => setLanguage(select.value);
+  }
+
+  function setLanguage(langKey) {
+    if (langKey === state.language) return;
+    state.language = langKey;
+    VOCAB = VOCAB_BY_LANG[langKey];
+    state.vocabIndex = 0;
+    state.grammarIndex = 0;
+    state.convIndex = 0;
+    state.listenIndex = 0;
+    saveState();
+    renderLanguageSelector();
+    resetAllModesForLanguage();
+    const lang = LANGUAGES.find(l => l.key === langKey);
+    showToast(t('lang_switch_toast_template', { flag: lang.flag, label: lang.label }));
+  }
+
+  // ---------------- Level selector ----------------
+
+  const LEVELS = ['beginner', 'intermediate', 'advanced'];
+
+  function renderLevelSelector() {
+    const wrap = document.getElementById('levelPills');
+    wrap.innerHTML = '';
+    LEVELS.forEach(level => {
+      const btn = document.createElement('button');
+      btn.className = 'lang-pill' + (level === state.level ? ' active' : '');
+      btn.textContent = t('level_' + level);
+      btn.addEventListener('click', () => setLevel(level));
+      wrap.appendChild(btn);
+    });
+
+    const select = document.getElementById('levelSelectMobile');
+    select.innerHTML = '';
+    LEVELS.forEach(level => {
+      const opt = document.createElement('option');
+      opt.value = level;
+      opt.textContent = t('level_' + level);
+      if (level === state.level) opt.selected = true;
+      select.appendChild(opt);
+    });
+    select.onchange = () => setLevel(select.value);
+  }
+
+  function setLevel(level) {
+    if (level === state.level) return;
+    state.level = level;
+    saveState();
+    renderLevelSelector();
+  }
+
+  // ---------------- UI language (interface) selector ----------------
+
+  function renderUILanguageMenu() {
+    document.getElementById('uiLangBtn').textContent = UI_LANGUAGES.find(l => l.key === state.uiLanguage).flag;
+    const menu = document.getElementById('uiLangMenu');
+    menu.innerHTML = '';
+    UI_LANGUAGES.forEach(lang => {
+      const btn = document.createElement('button');
+      btn.className = 'ui-lang-option' + (lang.key === state.uiLanguage ? ' active' : '');
+      btn.innerHTML = `<span>${lang.flag}</span><span>${lang.label}</span>`;
+      btn.addEventListener('click', () => setUILanguage(lang.key));
+      menu.appendChild(btn);
+    });
+  }
+
+  function setUILanguage(langKey) {
+    state.uiLanguage = langKey;
+    saveState();
+    document.getElementById('uiLangMenu').classList.remove('open');
+    renderUILanguageMenu();
+    applyTranslations();
+  }
+
+  document.getElementById('uiLangBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('uiLangMenu').classList.toggle('open');
+  });
+  document.addEventListener('click', () => document.getElementById('uiLangMenu').classList.remove('open'));
+
+  // ---------------- Login (placeholder UI) ----------------
+
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    document.getElementById('loginModal').classList.add('show');
+  });
+  document.getElementById('loginModalCloseBtn').addEventListener('click', () => {
+    document.getElementById('loginModal').classList.remove('show');
+  });
+
+  // ---------------- Apply UI translations ----------------
+
+  const SUBTAB_EMOJI = { vocabulary: '📖', grammar: '📝', conversation: '💬', listening: '🎧' };
+  const SUBTAB_KEY = { vocabulary: 'card_vocab_title', grammar: 'card_grammar_title', conversation: 'card_conv_title', listening: 'card_listen_title' };
+  const NAV_KEY = { home: 'nav_home', study: 'nav_study', progress: 'nav_progress' };
+
+  function applyTranslations() {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      const label = btn.querySelector('.nav-label');
+      if (label) label.textContent = t(NAV_KEY[btn.dataset.view]);
+    });
+    document.getElementById('loginBtn').textContent = t('nav_login');
+    document.getElementById('loginModalTitle').textContent = t('login_modal_title');
+    document.getElementById('loginModalText').textContent = t('login_modal_text');
+    document.getElementById('loginModalCloseBtn').textContent = t('login_modal_close');
+
+    document.getElementById('studyLangLabel').textContent = t('study_lang_label');
+    document.getElementById('levelLabel').textContent = t('level_label');
+    renderLevelSelector();
+
+    setGreeting();
+    document.getElementById('todayProgressLabel').textContent = t('today_progress');
+    document.getElementById('todayStudyLabel').textContent = t('today_study');
+    document.getElementById('cardVocabTitle').textContent = t('card_vocab_title');
+    document.getElementById('cardGrammarTitle').textContent = t('card_grammar_title');
+    document.getElementById('cardConvTitle').textContent = t('card_conv_title');
+    document.getElementById('cardListenTitle').textContent = t('card_listen_title');
+    document.querySelectorAll('.done-badge').forEach(el => { el.textContent = t('done_badge'); });
+
+    document.querySelectorAll('.subtab-btn').forEach(btn => {
+      const key = btn.dataset.subtab;
+      btn.textContent = SUBTAB_EMOJI[key] + ' ' + t(SUBTAB_KEY[key]);
+    });
+
+    document.querySelectorAll('.tap-hint').forEach(el => { el.textContent = t('tap_to_flip'); });
+    document.getElementById('btnListen').textContent = '🔊 ' + t('btn_listen');
+    document.getElementById('btnHint').textContent = '💡 ' + t('btn_hint');
+    document.getElementById('btnReview').textContent = '↻ ' + t('btn_review');
+    document.getElementById('btnKnow').textContent = '✓ ' + t('btn_know');
+    document.getElementById('grammarBtnListen').textContent = '🔊 ' + t('btn_listen');
+    document.getElementById('grammarBtnHint').textContent = '💡 ' + t('btn_hint');
+    document.getElementById('grammarBtnReview').textContent = '↻ ' + t('btn_review');
+    document.getElementById('grammarBtnKnow').textContent = '✓ ' + t('btn_know');
+    document.getElementById('convBtnListen').textContent = '🔊 ' + t('btn_listen');
+    document.getElementById('convBtnHint').textContent = '💡 ' + t('btn_hint');
+    document.getElementById('convBtnReview').textContent = '↻ ' + t('btn_review');
+    document.getElementById('convBtnKnow').textContent = '✓ ' + t('btn_know');
+
+    document.getElementById('vocabReviewInstruction').textContent = t('vocab_review_instruction');
+    document.getElementById('vocabReviewInput').placeholder = t('placeholder_answer');
+    document.getElementById('vocabReviewCheckBtn').textContent = t('check_btn');
+    document.getElementById('vocabReviewResultTitle').textContent = t('review_complete_template', { mode: t('card_vocab_title') });
+
+    document.getElementById('grammarReviewInstruction').textContent = t('grammar_review_instruction');
+    document.getElementById('grammarReviewInput').placeholder = t('placeholder_answer');
+    document.getElementById('grammarReviewCheckBtn').textContent = t('check_btn');
+    document.getElementById('grammarReviewResultTitle').textContent = t('review_complete_template', { mode: t('card_grammar_title') });
+
+    document.getElementById('convReviewInput').placeholder = t('placeholder_response');
+    document.getElementById('convReviewCheckBtn').textContent = t('check_btn');
+    document.getElementById('convReviewResultTitle').textContent = t('review_complete_template', { mode: t('card_conv_title') });
+
+    document.getElementById('listenExpressionsTitle').textContent = t('listen_expressions_title');
+    document.getElementById('listenShowTranslationBtn').textContent = t('listen_translation_btn');
+    document.getElementById('listenNextBtn').textContent = t('listen_next_btn');
+    document.getElementById('listenReviewHintBtn').textContent = t('listen_hint_btn');
+    document.getElementById('listenReviewResultTitle').textContent = t('review_complete_template', { mode: t('card_listen_title') });
+
+    renderVocabCard();
+    renderGrammarCard();
+    renderConvCard();
+    if (document.getElementById('listen-review-phase').style.display === 'none') {
+      resetListeningStudy();
+    }
+    renderProgressView();
+  }
+
+  // ---------------- Home progress ----------------
+
+  function updateHomeProgress() {
+    const tasks = Object.values(state.todayTasks);
+    const percent = Math.round((tasks.filter(Boolean).length / tasks.length) * 100);
+    document.getElementById('homeProgressPercent').textContent = percent + '%';
+    requestAnimationFrame(() => {
+      document.getElementById('homeProgressFill').style.width = percent + '%';
+    });
+  }
+
+  function renderStudyCardBadges() {
+    document.querySelectorAll('.study-card').forEach(card => {
+      const key = card.dataset.subtab || card.dataset.goto;
+      const done = state.todayTasks[key];
+      card.classList.toggle('done', !!done);
+    });
+  }
+
+  function checkFullDayCelebration() {
+    const allDone = Object.values(state.todayTasks).every(Boolean);
+    if (allDone) {
+      showCelebration('🌟', t('celeb_allDone_title'), t('celeb_allDone_text'));
+    }
+  }
+
+  // ---------------- Toast & Celebration ----------------
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  function showCelebration(emoji, title, text) {
+    document.getElementById('celebrationEmoji').textContent = emoji;
+    document.getElementById('celebrationTitle').textContent = title;
+    document.getElementById('celebrationText').textContent = text;
+    document.getElementById('celebrationOverlay').classList.add('show');
+  }
+
+  document.getElementById('celebrationCloseBtn').addEventListener('click', () => {
+    document.getElementById('celebrationOverlay').classList.remove('show');
+  });
+
+  // ---------------- Study subtabs ----------------
+
+  function setStudySubtab(name) {
+    ['vocabulary', 'grammar', 'conversation', 'listening'].forEach(key => {
+      document.getElementById('study-' + key).style.display = key === name ? 'block' : 'none';
+    });
+    document.querySelectorAll('.subtab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.subtab === name);
+    });
+  }
+
+  document.querySelectorAll('.subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => setStudySubtab(btn.dataset.subtab));
+  });
+
+  // ---------------- Vocabulary flashcards ----------------
+
+  function renderVocabCard() {
+    const item = VOCAB[state.vocabIndex];
+    document.getElementById('cardWord').textContent = item.word;
+    document.getElementById('cardWordBack').textContent = item.word;
+    document.getElementById('cardIpa').textContent = item.ipa;
+    document.getElementById('cardMeaning').textContent = item.meaning;
+    document.getElementById('cardExample').textContent = '"' + item.example + '"';
+    const hintEl = document.getElementById('cardHint');
+    hintEl.textContent = item.hint;
+    hintEl.classList.remove('show');
+    document.getElementById('flashcard').classList.remove('flipped');
+    document.getElementById('vocabProgressLabel').textContent = (state.vocabIndex + 1) + ' / ' + VOCAB.length;
+    document.getElementById('vocabCardDesc').textContent = t('card_vocab_desc');
+  }
+
+  function nextVocabCard() {
+    if (state.vocabIndex < VOCAB.length - 1) {
+      state.vocabIndex += 1;
+      renderVocabCard();
+      saveState();
+    } else {
+      addStudyMinutes(2);
+      state.vocabIndex = 0;
+      saveState();
+      startVocabReview();
+    }
+  }
+
+  document.getElementById('flashcard').addEventListener('click', () => {
+    document.getElementById('flashcard').classList.toggle('flipped');
+  });
+
+  document.getElementById('btnListen').addEventListener('click', (e) => {
+    e.stopPropagation();
+    speak(VOCAB[state.vocabIndex].word);
+  });
+
+  document.getElementById('btnHint').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('cardHint').classList.add('show');
+  });
+
+  document.getElementById('btnKnow').addEventListener('click', (e) => {
+    e.stopPropagation();
+    state.wordsLearnedTotal += 1;
+    nextVocabCard();
+  });
+
+  document.getElementById('btnReview').addEventListener('click', (e) => {
+    e.stopPropagation();
+    showToast(t('review_later_toast'));
+    nextVocabCard();
+  });
+
+  // ---------------- Shared helpers ----------------
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function normalizeAnswer(str) {
+    return str.toLowerCase().trim().replace(/[.,!?！？。、，"'’]/g, '').replace(/\s+/g, ' ');
+  }
+
+  function exactMatch(input, expected) {
+    return !!input.trim() && normalizeAnswer(input) === normalizeAnswer(expected);
+  }
+
+  function lenientMatch(input, expected) {
+    const inputNorm = normalizeAnswer(input);
+    if (!inputNorm) return false;
+    if (inputNorm === normalizeAnswer(expected)) return true;
+    const expectedWords = normalizeAnswer(expected).split(' ').filter(Boolean);
+    if (expectedWords.length === 0) return false;
+    const hits = expectedWords.filter(w => inputNorm.includes(w)).length;
+    return hits / expectedWords.length >= 0.7;
+  }
+
+  function blankSentence(sentence, target, replacement) {
+    const blank = replacement || '_____';
+    if (sentence.includes(target)) return sentence.split(target).join(blank);
+    const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return sentence.replace(new RegExp(escaped, 'i'), blank);
+  }
+
+  function shapedBlank(answer) {
+    return answer.split(' ').map(word => '_'.repeat(word.length)).join('  ');
+  }
+
+  function speak(text, langKey) {
+    if (!('speechSynthesis' in window)) {
+      showToast(t('audio_not_supported'));
+      return;
+    }
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = LANG_TTS[langKey || state.language];
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  }
+
+  function recordReviewAnswer(isCorrect) {
+    state.quizAttemptTotal += 1;
+    if (isCorrect) state.quizCorrectTotal += 1;
+    saveState();
+  }
+
+  function resetAllModesForLanguage() {
+    renderVocabCard();
+    document.getElementById('vocab-study-phase').style.display = 'block';
+    document.getElementById('vocab-review-phase').style.display = 'none';
+
+    renderGrammarCard();
+    document.getElementById('grammar-study-phase').style.display = 'block';
+    document.getElementById('grammar-review-phase').style.display = 'none';
+
+    renderConvCard();
+    document.getElementById('conv-study-phase').style.display = 'block';
+    document.getElementById('conv-review-phase').style.display = 'none';
+
+    resetListeningStudy();
+    document.getElementById('listen-study-phase').style.display = 'block';
+    document.getElementById('listen-review-phase').style.display = 'none';
+  }
+
+  // ---------------- Vocabulary review (fill-in-the-blank) ----------------
+
+  let vocabReviewIdx = 0, vocabReviewAttempt = 0, vocabReviewCorrect = 0;
+
+  function startVocabReview() {
+    document.getElementById('vocab-study-phase').style.display = 'none';
+    document.getElementById('vocab-review-phase').style.display = 'block';
+    document.getElementById('vocabReviewCard').style.display = 'block';
+    document.getElementById('vocabReviewResult').style.display = 'none';
+    vocabReviewIdx = 0; vocabReviewAttempt = 0; vocabReviewCorrect = 0;
+    renderVocabReviewItem();
+  }
+
+  function renderVocabReviewItem() {
+    const item = VOCAB[vocabReviewIdx];
+    document.getElementById('vocabReviewProgress').textContent = (vocabReviewIdx + 1) + ' / ' + VOCAB.length;
+    document.getElementById('vocabReviewSentence').textContent = blankSentence(item.example, item.word);
+    const input = document.getElementById('vocabReviewInput');
+    input.value = ''; input.disabled = false; input.className = '';
+    document.getElementById('vocabReviewFeedback').textContent = '';
+    input.focus();
+  }
+
+  function checkVocabReview() {
+    const item = VOCAB[vocabReviewIdx];
+    const input = document.getElementById('vocabReviewInput');
+    const feedback = document.getElementById('vocabReviewFeedback');
+    const isCorrect = exactMatch(input.value, item.word);
+    if (isCorrect) {
+      input.className = 'correct'; input.disabled = true;
+      feedback.textContent = t('correct_feedback');
+      vocabReviewCorrect += 1;
+      recordReviewAnswer(true);
+      setTimeout(advanceVocabReview, 900);
+    } else if (vocabReviewAttempt === 0) {
+      vocabReviewAttempt = 1;
+      input.className = 'incorrect';
+      feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
+      input.value = ''; input.focus();
+    } else {
+      input.className = 'incorrect'; input.disabled = true;
+      feedback.textContent = t('answer_reveal_template', { a: item.word });
+      recordReviewAnswer(false);
+      setTimeout(advanceVocabReview, 1400);
+    }
+  }
+
+  function advanceVocabReview() {
+    if (vocabReviewIdx < VOCAB.length - 1) {
+      vocabReviewIdx += 1; vocabReviewAttempt = 0;
+      renderVocabReviewItem();
+    } else {
+      addStudyMinutes(3);
+      document.getElementById('vocabReviewCard').style.display = 'none';
+      document.getElementById('vocabReviewResult').style.display = 'block';
+      document.getElementById('vocabReviewScore').textContent = vocabReviewCorrect + ' / ' + VOCAB.length;
+      markTaskDone('vocabulary');
+      showCelebration('📖', t('celeb_vocab_title'), t('celeb_vocab_text', { c: vocabReviewCorrect, t: VOCAB.length }));
+    }
+  }
+
+  document.getElementById('vocabReviewCheckBtn').addEventListener('click', checkVocabReview);
+  document.getElementById('vocabReviewInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkVocabReview(); });
+  document.getElementById('vocabReviewListenBtn').addEventListener('click', () => speak(VOCAB[vocabReviewIdx].word));
+
+  // ---------------- Grammar (study + fill-in-the-blank review) ----------------
+
+  function GRAMMAR() { return GRAMMAR_BY_LANG[state.language]; }
+
+  function renderGrammarCard() {
+    const item = GRAMMAR()[state.grammarIndex];
+    document.getElementById('grammarCardTitle').textContent = item.title;
+    document.getElementById('grammarCardExplanation').textContent = item.explanation;
+    document.getElementById('grammarCardExample').textContent = '"' + item.example + '"';
+    const hintEl = document.getElementById('grammarCardHint');
+    hintEl.textContent = item.hint;
+    hintEl.classList.remove('show');
+    document.getElementById('grammarProgressLabel').textContent = (state.grammarIndex + 1) + ' / ' + GRAMMAR().length;
+    document.getElementById('grammarCardDesc').textContent = t('card_grammar_desc');
+  }
+
+  function nextGrammarCard() {
+    if (state.grammarIndex < GRAMMAR().length - 1) {
+      state.grammarIndex += 1;
+      renderGrammarCard();
+      saveState();
+    } else {
+      addStudyMinutes(2);
+      state.grammarIndex = 0;
+      saveState();
+      startGrammarReview();
+    }
+  }
+
+  document.getElementById('grammarBtnListen').addEventListener('click', (e) => {
+    e.stopPropagation();
+    speak(GRAMMAR()[state.grammarIndex].example);
+  });
+  document.getElementById('grammarBtnHint').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('grammarCardHint').classList.add('show');
+  });
+  document.getElementById('grammarBtnKnow').addEventListener('click', (e) => { e.stopPropagation(); nextGrammarCard(); });
+  document.getElementById('grammarBtnReview').addEventListener('click', (e) => {
+    e.stopPropagation();
+    showToast(t('review_later_toast'));
+    nextGrammarCard();
+  });
+
+  let grammarReviewIdx = 0, grammarReviewAttempt = 0, grammarReviewCorrect = 0;
+
+  function startGrammarReview() {
+    document.getElementById('grammar-study-phase').style.display = 'none';
+    document.getElementById('grammar-review-phase').style.display = 'block';
+    document.getElementById('grammarReviewCard').style.display = 'block';
+    document.getElementById('grammarReviewResult').style.display = 'none';
+    grammarReviewIdx = 0; grammarReviewAttempt = 0; grammarReviewCorrect = 0;
+    renderGrammarReviewItem();
+  }
+
+  function renderGrammarReviewItem() {
+    const item = GRAMMAR()[grammarReviewIdx];
+    document.getElementById('grammarReviewProgress').textContent = (grammarReviewIdx + 1) + ' / ' + GRAMMAR().length;
+    document.getElementById('grammarReviewSentence').textContent = blankSentence(item.example, item.answer, shapedBlank(item.answer));
+    const input = document.getElementById('grammarReviewInput');
+    input.value = ''; input.disabled = false; input.className = 'underline-input';
+    document.getElementById('grammarReviewFeedback').textContent = '';
+    input.focus();
+  }
+
+  function checkGrammarReview() {
+    const item = GRAMMAR()[grammarReviewIdx];
+    const input = document.getElementById('grammarReviewInput');
+    const feedback = document.getElementById('grammarReviewFeedback');
+    const isCorrect = exactMatch(input.value, item.answer);
+    if (isCorrect) {
+      input.className = 'underline-input correct'; input.disabled = true;
+      feedback.textContent = t('correct_feedback');
+      grammarReviewCorrect += 1;
+      recordReviewAnswer(true);
+      setTimeout(advanceGrammarReview, 900);
+    } else if (grammarReviewAttempt === 0) {
+      grammarReviewAttempt = 1;
+      input.className = 'underline-input incorrect';
+      feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
+      input.value = ''; input.focus();
+    } else {
+      input.className = 'underline-input incorrect'; input.disabled = true;
+      feedback.textContent = t('answer_reveal_template', { a: item.answer });
+      recordReviewAnswer(false);
+      setTimeout(advanceGrammarReview, 1400);
+    }
+  }
+
+  function advanceGrammarReview() {
+    if (grammarReviewIdx < GRAMMAR().length - 1) {
+      grammarReviewIdx += 1; grammarReviewAttempt = 0;
+      renderGrammarReviewItem();
+    } else {
+      addStudyMinutes(3);
+      document.getElementById('grammarReviewCard').style.display = 'none';
+      document.getElementById('grammarReviewResult').style.display = 'block';
+      document.getElementById('grammarReviewScore').textContent = grammarReviewCorrect + ' / ' + GRAMMAR().length;
+      markTaskDone('grammar');
+      showCelebration('📝', t('celeb_grammar_title'), t('celeb_grammar_text', { c: grammarReviewCorrect, t: GRAMMAR().length }));
+    }
+  }
+
+  document.getElementById('grammarReviewCheckBtn').addEventListener('click', checkGrammarReview);
+  document.getElementById('grammarReviewInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkGrammarReview(); });
+  document.getElementById('grammarReviewListenBtn').addEventListener('click', () => speak(GRAMMAR()[grammarReviewIdx].example));
+
+  // ---------------- Conversation (study + Q&A review) ----------------
+
+  function CONV() { return CONVERSATION_BY_LANG[state.language]; }
+
+  function renderConvCard() {
+    const item = CONV()[state.convIndex];
+    document.getElementById('convCardSituation').textContent = item.situation;
+    document.getElementById('convCardMeaning').textContent = item.meaning;
+    document.getElementById('convCardSentence').textContent = '"' + item.studySentence + '"';
+    const hintEl = document.getElementById('convCardHint');
+    hintEl.textContent = item.hint;
+    hintEl.classList.remove('show');
+    document.getElementById('convProgressLabel').textContent = (state.convIndex + 1) + ' / ' + CONV().length;
+    document.getElementById('convCardDesc').textContent = t('card_conv_desc');
+  }
+
+  function nextConvCard() {
+    if (state.convIndex < CONV().length - 1) {
+      state.convIndex += 1;
+      renderConvCard();
+      saveState();
+    } else {
+      addStudyMinutes(2);
+      state.convIndex = 0;
+      saveState();
+      startConvReview();
+    }
+  }
+
+  document.getElementById('convBtnListen').addEventListener('click', (e) => {
+    e.stopPropagation();
+    speak(CONV()[state.convIndex].studySentence);
+  });
+  document.getElementById('convBtnHint').addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.getElementById('convCardHint').classList.add('show');
+  });
+  document.getElementById('convBtnKnow').addEventListener('click', (e) => { e.stopPropagation(); nextConvCard(); });
+  document.getElementById('convBtnReview').addEventListener('click', (e) => {
+    e.stopPropagation();
+    showToast(t('review_later_toast'));
+    nextConvCard();
+  });
+
+  let convReviewIdx = 0, convReviewAttempt = 0, convReviewCorrect = 0;
+
+  function startConvReview() {
+    document.getElementById('conv-study-phase').style.display = 'none';
+    document.getElementById('conv-review-phase').style.display = 'block';
+    document.getElementById('convReviewCard').style.display = 'block';
+    document.getElementById('convReviewResult').style.display = 'none';
+    convReviewIdx = 0; convReviewAttempt = 0; convReviewCorrect = 0;
+    renderConvReviewItem();
+  }
+
+  function renderConvReviewItem() {
+    const item = CONV()[convReviewIdx];
+    document.getElementById('convReviewProgress').textContent = (convReviewIdx + 1) + ' / ' + CONV().length;
+    document.getElementById('convReviewSituation').textContent = '상황: ' + item.situation;
+    document.getElementById('convReviewQuestion').textContent = item.reviewQuestion;
+    const input = document.getElementById('convReviewInput');
+    input.value = ''; input.disabled = false; input.className = 'underline-input';
+    document.getElementById('convReviewFeedback').textContent = '';
+    input.focus();
+  }
+
+  function checkConvReview() {
+    const item = CONV()[convReviewIdx];
+    const input = document.getElementById('convReviewInput');
+    const feedback = document.getElementById('convReviewFeedback');
+    const isCorrect = lenientMatch(input.value, item.expectedAnswer);
+    if (isCorrect) {
+      input.className = 'underline-input correct'; input.disabled = true;
+      feedback.textContent = t('conv_good_feedback');
+      convReviewCorrect += 1;
+      recordReviewAnswer(true);
+      setTimeout(advanceConvReview, 900);
+    } else if (convReviewAttempt === 0) {
+      convReviewAttempt = 1;
+      input.className = 'underline-input incorrect';
+      feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
+      input.value = ''; input.focus();
+    } else {
+      input.className = 'underline-input incorrect'; input.disabled = true;
+      feedback.textContent = t('conv_wrong_reveal_template', { a: item.expectedAnswer });
+      recordReviewAnswer(false);
+      setTimeout(advanceConvReview, 1600);
+    }
+  }
+
+  function advanceConvReview() {
+    if (convReviewIdx < CONV().length - 1) {
+      convReviewIdx += 1; convReviewAttempt = 0;
+      renderConvReviewItem();
+    } else {
+      addStudyMinutes(3);
+      document.getElementById('convReviewCard').style.display = 'none';
+      document.getElementById('convReviewResult').style.display = 'block';
+      document.getElementById('convReviewScore').textContent = convReviewCorrect + ' / ' + CONV().length;
+      markTaskDone('conversation');
+      showCelebration('💬', t('celeb_conv_title'), t('celeb_conv_text', { c: convReviewCorrect, t: CONV().length }));
+    }
+  }
+
+  document.getElementById('convReviewCheckBtn').addEventListener('click', checkConvReview);
+  document.getElementById('convReviewInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkConvReview(); });
+  document.getElementById('convReviewListenBtn').addEventListener('click', () => speak(CONV()[convReviewIdx].studySentence));
+
+  // ---------------- Listening (staged reveal + review) ----------------
+
+  function LISTEN() { return LISTENING_BY_LANG[state.language]; }
+
+  let listenStage = 0; // 0..4 listens counted
+
+  function resetListeningStudy() {
+    listenStage = 0;
+    document.getElementById('listenSentenceBlock').style.display = 'none';
+    document.getElementById('listenExpressionsBlock').style.display = 'none';
+    document.getElementById('listenTranslationBlock').style.display = 'none';
+    document.getElementById('listenTranslationText').style.display = 'none';
+    document.getElementById('listenNextBtn').style.display = 'none';
+    document.getElementById('listenStageHint').textContent = t('listen_hint_initial');
+    document.getElementById('listenProgressLabel').textContent = (state.listenIndex + 1) + ' / ' + LISTEN().length;
+    document.getElementById('listenCardDesc').textContent = t('card_listen_desc');
+  }
+
+  function renderListenExpressions() {
+    const item = LISTEN()[state.listenIndex];
+    const body = document.getElementById('listenExpressionsBody');
+    body.innerHTML = '';
+    item.expressions.forEach(exp => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td class="term">${exp.term}</td><td class="meaning">${exp.meaning}</td>`;
+      body.appendChild(row);
+    });
+  }
+
+  document.getElementById('listenPlayBtn').addEventListener('click', () => {
+    const item = LISTEN()[state.listenIndex];
+    speak(item.sentence);
+    if (listenStage < 4) listenStage += 1;
+
+    if (listenStage === 1) {
+      renderListenExpressions();
+      document.getElementById('listenExpressionsBlock').style.display = 'block';
+      document.getElementById('listenStageHint').textContent = t('listen_hint_1');
+    } else if (listenStage === 2) {
+      document.getElementById('listenSentenceText').textContent = item.sentence;
+      document.getElementById('listenSentenceBlock').style.display = 'block';
+      document.getElementById('listenStageHint').textContent = t('listen_hint_2');
+    } else if (listenStage === 3) {
+      document.getElementById('listenTranslationBlock').style.display = 'flex';
+      document.getElementById('listenStageHint').textContent = t('listen_hint_3');
+    } else if (listenStage >= 4) {
+      document.getElementById('listenStageHint').textContent = t('listen_hint_final');
+      document.getElementById('listenNextBtn').style.display = 'inline-flex';
+    }
+  });
+
+  document.getElementById('listenShowTranslationBtn').addEventListener('click', () => {
+    const item = LISTEN()[state.listenIndex];
+    document.getElementById('listenTranslationText').textContent = item.translation;
+    document.getElementById('listenTranslationText').style.display = 'block';
+  });
+
+  document.getElementById('listenNextBtn').addEventListener('click', () => {
+    addStudyMinutes(1);
+    if (state.listenIndex < LISTEN().length - 1) {
+      state.listenIndex += 1;
+      saveState();
+      resetListeningStudy();
+    } else {
+      state.listenIndex = 0;
+      saveState();
+      startListenReview();
+    }
+  });
+
+  let listenReviewIdx = 0, listenReviewCorrect = 0, listenReviewAttempt = 0;
+
+  function startListenReview() {
+    document.getElementById('listen-study-phase').style.display = 'none';
+    document.getElementById('listen-review-phase').style.display = 'block';
+    document.getElementById('listenReviewCard').style.display = 'block';
+    document.getElementById('listenReviewResult').style.display = 'none';
+    listenReviewIdx = 0; listenReviewCorrect = 0;
+    renderListenReviewItem();
+  }
+
+  function renderListenReviewItem() {
+    const item = LISTEN()[listenReviewIdx];
+    listenReviewAttempt = 0;
+    document.getElementById('listenReviewProgress').textContent = (listenReviewIdx + 1) + ' / ' + LISTEN().length;
+    document.getElementById('listenReviewQuestion').textContent = item.quiz.question;
+    document.getElementById('listenReviewFeedback').textContent = '';
+    document.getElementById('listenReviewHintBtn').style.display = 'none';
+    const optWrap = document.getElementById('listenReviewOptions');
+    optWrap.innerHTML = '';
+    item.quiz.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.innerHTML = `<span class="num">${i + 1}</span><span>${opt}</span>`;
+      btn.addEventListener('click', () => handleListenReviewAnswer(btn, opt, item.quiz.answer, item.sentence));
+      optWrap.appendChild(btn);
+    });
+  }
+
+  function advanceListenReview() {
+    if (listenReviewIdx < LISTEN().length - 1) {
+      listenReviewIdx += 1;
+      renderListenReviewItem();
+    } else {
+      finishListenReview();
+    }
+  }
+
+  function handleListenReviewAnswer(btn, chosen, correctAnswer, sentence) {
+    const isCorrect = chosen === correctAnswer;
+    if (isCorrect) {
+      document.querySelectorAll('#listenReviewOptions .quiz-option').forEach(b => b.disabled = true);
+      btn.classList.add('correct');
+      listenReviewCorrect += 1;
+      recordReviewAnswer(true);
+      document.getElementById('listenReviewFeedback').textContent = t('listen_correct_feedback');
+      setTimeout(advanceListenReview, 1000);
+    } else if (listenReviewAttempt === 0) {
+      listenReviewAttempt = 1;
+      btn.disabled = true;
+      btn.classList.add('incorrect');
+      document.getElementById('listenReviewFeedback').textContent = t('listen_wrong_feedback');
+      const hintBtn = document.getElementById('listenReviewHintBtn');
+      hintBtn.style.display = 'inline-flex';
+      hintBtn.onclick = () => speak(sentence);
+    } else {
+      document.querySelectorAll('#listenReviewOptions .quiz-option').forEach(b => {
+        b.disabled = true;
+        if (b.textContent.includes(correctAnswer)) b.classList.add('correct');
+      });
+      btn.classList.add('incorrect');
+      recordReviewAnswer(false);
+      document.getElementById('listenReviewFeedback').textContent = t('listen_reveal_template', { a: correctAnswer });
+      setTimeout(advanceListenReview, 1600);
+    }
+  }
+
+  function finishListenReview() {
+    addStudyMinutes(2);
+    document.getElementById('listenReviewCard').style.display = 'none';
+    document.getElementById('listenReviewResult').style.display = 'block';
+    document.getElementById('listenReviewScore').textContent = listenReviewCorrect + ' / ' + LISTEN().length;
+    markTaskDone('listening');
+    showCelebration('🎧', t('celeb_listen_title'), t('celeb_listen_text', { c: listenReviewCorrect, t: LISTEN().length }));
+  }
+
+  // ---------------- Progress view ----------------
+
+  function renderProgressView() {
+    document.getElementById('progressTitle').textContent = t('progress_title');
+    document.getElementById('streakLabel').textContent = t('streak_label');
+    document.getElementById('wordsLabel').textContent = t('words_label');
+    document.getElementById('accuracyLabel').textContent = t('accuracy_label');
+    document.getElementById('timeLabel').textContent = t('time_label');
+    document.getElementById('chartTitle').textContent = t('chart_title');
+    document.getElementById('statStreak').textContent = t('streak_value_template', { n: state.streak });
+    document.getElementById('statWords').textContent = state.wordsLearnedTotal;
+    const accuracy = state.quizAttemptTotal > 0
+      ? Math.round((state.quizCorrectTotal / state.quizAttemptTotal) * 100)
+      : 0;
+    document.getElementById('statAccuracy').textContent = accuracy + '%';
+    const h = Math.floor(state.studyMinutesTotal / 60);
+    const m = state.studyMinutesTotal % 60;
+    document.getElementById('statTime').textContent = `${h}h ${m}m`;
+
+    const weekdayLabels = t('weekdays');
+    const labels = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      labels.push(weekdayLabels[d.getDay()]);
+    }
+    const max = Math.max(...state.weekLog, 1);
+    const bars = document.getElementById('chartBars');
+    bars.innerHTML = '';
+    state.weekLog.forEach((val, i) => {
+      const col = document.createElement('div');
+      col.className = 'chart-col' + (i === state.weekLog.length - 1 ? ' today' : '');
+      const barHeightPct = Math.max((val / max) * 100, 4);
+      col.innerHTML = `<div class="chart-bar" style="height:0%" data-h="${barHeightPct}"></div><div class="chart-col-label">${labels[i]}</div>`;
+      bars.appendChild(col);
+    });
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.chart-bar').forEach(bar => {
+        bar.style.height = bar.dataset.h + '%';
+      });
+    });
+  }
+
+  // ---------------- Init ----------------
+
+  function init() {
+    renderLanguageSelector();
+    renderUILanguageMenu();
+    applyTranslations();
+    updateHomeProgress();
+    renderStudyCardBadges();
+    saveState();
+  }
+
+  init();
+</script>
+</body>
+</html>
