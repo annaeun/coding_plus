@@ -776,10 +776,25 @@
       .replace(/？/g, '?');
   }
 
+  // Numbered section/scene markers ("7.", "8." on their own, between two
+  // paragraphs) don't always carry punctuation stripLeadingIndex can key
+  // off of, and being their own paragraph means nothing ever splits them
+  // away from the sentence that follows either - so unlike a real number
+  // inside a sentence ("I have 3 apples"), one of these sits *directly*
+  // between a sentence-ending punctuation mark (or the very start of the
+  // text) and the capital-letter/Hangul start of the next sentence. That
+  // position is the tell: it's what this strips, and only that.
+  function stripBareSectionMarkers(text) {
+    return text
+      .replace(/^\s*\d{1,3}\.?\s+(?=[A-Z가-힣])/, '')
+      .replace(/([.!?…」』"'”’])\s+\d{1,3}\.?\s+(?=[A-Z가-힣])/g, '$1 ');
+  }
+
   // PDF text is walked page 1 -> last in order, so the very first extracted
   // sentence is always the start of the document's body text.
   function extractSentences(rawText) {
-    const flat = rawText.replace(/\r/g, '').replace(/[ \t]+/g, ' ').replace(/\n+/g, ' ').trim();
+    let flat = rawText.replace(/\r/g, '').replace(/[ \t]+/g, ' ').replace(/\n+/g, ' ').trim();
+    flat = stripBareSectionMarkers(flat);
     const parts = flat.split(/(?<=[.!?…」』"'”’])\s+/);
     return parts
       .map(s => normalizeTypography(stripLeadingIndex(s.trim())))
