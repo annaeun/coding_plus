@@ -447,12 +447,13 @@
       scroll-snap-type:x proximity;
       overscroll-behavior-x:contain;
     }
-    .book::after{
+    .page-left::after{
       content:"";
       position:absolute;
-      left:var(--page-w);top:0;bottom:0;
+      top:0;bottom:0;
+      right:0;
       width:26px;
-      transform:translateX(-50%);
+      transform:translateX(50%);
       background:linear-gradient(90deg, transparent, var(--shadow), transparent);
       opacity:.55;
       pointer-events:none;
