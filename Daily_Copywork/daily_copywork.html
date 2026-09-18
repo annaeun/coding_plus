@@ -1324,28 +1324,42 @@
   // Keeps the source page and the notebook scrolling together - matched by
   // *line index* rather than raw pixels or scroll fraction, since a source
   // row (padded, ~44px) and a notebook line (--line-h, 34px) aren't the same
-  // height, and the two sides' content lengths usually differ too. A guard
-  // flag stops the two listeners from bouncing off each other.
+  // height, and the two sides' content lengths usually differ too.
+  //
+  // Setting scrollTop programmatically still fires that element's own
+  // 'scroll' event - but asynchronously (after this handler returns), not
+  // during it. A guard flag reset synchronously (at the end of this same
+  // handler) is already back to false by the time that echo arrives, so it
+  // does nothing to stop it: the echo goes on to re-sync the *other* side
+  // again, and on some browsers' event timing that round trip repeats and
+  // the two sides visibly fight/drift instead of just following each other.
+  // Holding the guard through a requestAnimationFrame instead ensures it's
+  // still true when the echo actually fires, so the echo is the one that's
+  // correctly ignored.
   let scrollSyncing = false;
+  function withScrollGuard(fn) {
+    if (scrollSyncing) return;
+    scrollSyncing = true;
+    fn();
+    requestAnimationFrame(() => { scrollSyncing = false; });
+  }
   function avgSourceRowHeight() {
     const rows = sourceList.children.length;
     return rows ? sourceList.scrollHeight / rows : 1;
   }
   writeInput.addEventListener('scroll', () => {
     writeOverlay.scrollTop = writeInput.scrollTop;
-    if (scrollSyncing) return;
-    scrollSyncing = true;
-    const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
-    sourceList.scrollTop = (writeInput.scrollTop / lineHeight) * avgSourceRowHeight();
-    scrollSyncing = false;
+    withScrollGuard(() => {
+      const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
+      sourceList.scrollTop = (writeInput.scrollTop / lineHeight) * avgSourceRowHeight();
+    });
   });
   sourceList.addEventListener('scroll', () => {
-    if (scrollSyncing) return;
-    scrollSyncing = true;
-    const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
-    writeInput.scrollTop = (sourceList.scrollTop / avgSourceRowHeight()) * lineHeight;
-    writeOverlay.scrollTop = writeInput.scrollTop;
-    scrollSyncing = false;
+    withScrollGuard(() => {
+      const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
+      writeInput.scrollTop = (sourceList.scrollTop / avgSourceRowHeight()) * lineHeight;
+      writeOverlay.scrollTop = writeInput.scrollTop;
+    });
   });
 
   finishBtn.addEventListener('click', () => {
