@@ -77,17 +77,23 @@
     --shadow-book: 0 20px 44px rgba(58, 53, 50, 0.16);
     --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
 
-    --page-w: clamp(300px, 44vw, 380px);
+    /* 1.3x the previous width tiers, per feedback - the book itself reads
+       wider, not the gap between its two pages. */
+    --page-w: clamp(390px, 57.2vw, 494px);
     --page-pad: 22px 24px;
-    --line-h: 32px;
-    --book-h: min(66vh, 600px);
+    --line-h: 34px;
+    /* 980px is exactly tall enough to show all 20 source lines with no
+       internal scroll at this font/line-height (measured: 20 rows x ~44px +
+       header/padding ~= 956px, +buffer) - past that, extra screen just
+       becomes margin around the book instead of growing it further. */
+    --book-h: clamp(420px, 70vh, 980px);
   }
 
   @media (min-width: 900px) {
-    :root { --page-w: clamp(340px, 34vw, 460px); }
+    :root { --page-w: clamp(442px, 44.2vw, 598px); }
   }
   @media (min-width: 1280px) {
-    :root { --page-w: clamp(380px, 27vw, 520px); }
+    :root { --page-w: clamp(494px, 35.1vw, 728px); }
   }
 
   * { box-sizing: border-box; }
@@ -117,7 +123,8 @@
     top: 0;
     z-index: 20;
   }
-  .logo { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; font-weight: 700; }
+  .logo { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; font-weight: 700; color: var(--text); transition: opacity 0.15s var(--ease); }
+  .logo:hover { opacity: 0.75; }
   .logo .emoji { font-size: 1.3rem; }
 
   .header-right { display: flex; align-items: center; gap: 10px; }
@@ -164,6 +171,11 @@
   .auth-email { color: var(--subtext); font-size: 0.8rem; }
 
   main { max-width: 920px; margin: 0 auto; padding: 32px 24px 40px; }
+  /* The book's pages don't shrink (flex: none), so main's max-width has to
+     grow to fit them at their new, wider max (2 x 728px) or they'd overflow
+     past it - scoped to only when the book view is actually showing, so the
+     home screen's own layout width is untouched. */
+  main:has(#bookView.active) { max-width: 1560px; }
 
   .view { display: none; animation: fadeIn 0.35s var(--ease); }
   .view.active { display: block; }
@@ -334,6 +346,14 @@
   .complete-actions { display: flex; gap: 10px; margin-top: 6px; }
 
   /* ---------- Book view ---------- */
+  /* Scoped to the copywork page only - the home screen keeps the original
+     Poppins-led body font, but the book page (source text + notebook, plus
+     everything else in here that doesn't set its own font-family) renders
+     Gothic, and on Mac/iPhone specifically that resolves to the system's
+     own Apple SD Gothic Neo rather than the Noto Sans KR webfont. */
+  #bookView {
+    font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  }
   .book-toolbar {
     display: flex;
     align-items: center;
@@ -420,13 +440,19 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .source-row {
     display: flex;
     gap: 10px;
     padding: 8px 0;
     border-bottom: 1px dashed var(--rule);
-    line-height: 1.55;
+    /* Same --line-h as the notebook (not a relative 1.55) so a line of
+       source text and a line of notebook text take up the same vertical
+       space - needed for the two pages to read as genuinely aligned, not
+       just close. */
+    line-height: var(--line-h);
   }
   .source-row .num {
     font-family: 'Fraunces', serif;
@@ -436,7 +462,12 @@
     flex-shrink: 0;
     width: 22px;
   }
-  .source-row .txt { font-size: 0.92rem; }
+  .source-row .txt {
+    /* No font-family override - inherits the body's Gothic stack, same as
+       .write-layer, so the two pages always render text identically. */
+    font-size: 1.08rem;
+    word-spacing: 0.35em;
+  }
 
   .write-surface {
     position: relative;
@@ -447,14 +478,20 @@
     position: absolute;
     inset: 0;
     margin: 0;
-    padding: 6px 0 0;
+    /* Bottom padding of a full line, on both layers so they stay pixel-
+       matched, keeps one ruled line always blank below whatever's typed -
+       there's always visible room to keep writing, not just once it happens
+       to overflow. */
+    padding: 6px 0 var(--line-h);
     border: none;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 0.92rem;
+    font-size: 1.08rem;
+    word-spacing: 0.35em;
     line-height: var(--line-h);
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .write-overlay {
     color: var(--text);
@@ -479,12 +516,12 @@
     /* --book-h now gives the stacked pages a real height to split, instead
        of "auto" - each .page is flex:1 in that column, so the screen is cut
        cleanly in half: top = source text, bottom = the input note. */
-    :root { --page-w: min(92vw, 430px); --line-h: 30px; --book-h: min(72vh, 640px); }
+    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: min(72vh, 640px); }
     .book { flex-direction: column; width: 100%; }
     .page { width: 100%; height: auto; flex: 1; min-height: 0; }
+    .page-left::after { display: none; }
     .page-left { border-radius: 12px 12px 0 0; }
     .page-right { border-radius: 0 0 12px 12px; }
-    .page-left::after { display: none; }
     .source-list { flex: 1; min-height: 0; }
     .write-surface { flex: 1; min-height: 0; }
     .app-header { padding: 16px 18px; }
@@ -495,7 +532,7 @@
 <body>
 
 <header class="app-header">
-  <div class="logo"><span class="emoji">📖</span><span>매일 필사</span></div>
+  <button class="logo" id="logoHomeBtn" type="button"><span class="emoji">📖</span><span>매일 필사</span></button>
   <div class="header-right">
     <button class="login-trigger-btn" id="loginTriggerBtn">로그인</button>
     <div class="profile-wrap" id="profileWrap" hidden>
@@ -718,13 +755,36 @@
       .trim();
   }
 
+  // PDFs often carry "typographic" punctuation (curly quotes, em/en dashes,
+  // the single-character ellipsis, non-breaking spaces, full-width forms)
+  // that a normal keyboard can't type identically - so the char-by-char
+  // accuracy check would mark an otherwise-correct line wrong forever. This
+  // folds those into their plain, keyboard-typable equivalents up front, on
+  // both the displayed source text and the comparison target (same string).
+  function normalizeTypography(s) {
+    return s
+      .replace(/[‘’ʼ´]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, '-')
+      .replace(/…/g, '...')
+      .replace(/[  -   　]/g, ' ')
+      .replace(/，/g, ',')
+      .replace(/．/g, '.')
+      .replace(/：/g, ':')
+      .replace(/；/g, ';')
+      .replace(/（/g, '(')
+      .replace(/）/g, ')')
+      .replace(/！/g, '!')
+      .replace(/？/g, '?');
+  }
+
   // PDF text is walked page 1 -> last in order, so the very first extracted
   // sentence is always the start of the document's body text.
   function extractSentences(rawText) {
     const flat = rawText.replace(/\r/g, '').replace(/[ \t]+/g, ' ').replace(/\n+/g, ' ').trim();
     const parts = flat.split(/(?<=[.!?…」』"'”’])\s+/);
     return parts
-      .map(s => stripLeadingIndex(s.trim()))
+      .map(s => normalizeTypography(stripLeadingIndex(s.trim())))
       .filter(s => s.length >= 3 && /[가-힣a-zA-Z0-9]/.test(s));
   }
 
@@ -1204,16 +1264,89 @@
     finishBtn.textContent = doneToday ? '다시 완료하기' : '오늘 필사 완료하기';
   }
 
+  // Finds where character offset `pos` actually renders inside writeOverlay
+  // (which always mirrors writeInput's text exactly), as a position within
+  // the full scrollable content - not just the currently visible slice.
+  // Measuring real layout like this (rather than counting '\n' characters)
+  // is what makes this correct for a sentence that *wraps* onto more than
+  // one visual line, which is the common case here, not the exception.
+  function measureCaretOffset(pos) {
+    const walker = document.createTreeWalker(writeOverlay, NodeFilter.SHOW_TEXT);
+    let remaining = pos;
+    let node = null, offset = 0, n;
+    while ((n = walker.nextNode())) {
+      const len = n.textContent.length;
+      if (remaining <= len) { node = n; offset = remaining; break; }
+      remaining -= len;
+    }
+    if (!node) return null;
+    const range = document.createRange();
+    range.setStart(node, offset);
+    range.collapse(true);
+    const rect = range.getBoundingClientRect();
+    const overlayTop = writeOverlay.getBoundingClientRect().top;
+    const top = rect.top - overlayTop + writeOverlay.scrollTop;
+    const bottom = rect.bottom - overlayTop + writeOverlay.scrollTop;
+    return { top, bottom };
+  }
+
+  // The browser's own "scroll the caret into view" for a plain textarea
+  // doesn't leave any buffer past the caret's own line, so on the last
+  // visible line it can look like the caret has stopped moving even as new
+  // lines are added below it. This scrolls manually instead, always leaving
+  // one full blank line visible under the caret (and scrolls back up if the
+  // caret moves above the visible area, e.g. after Backspace).
+  function ensureCaretVisible() {
+    const pos = measureCaretOffset(writeInput.selectionStart);
+    if (!pos) return;
+    const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
+    const viewTop = writeInput.scrollTop;
+    const viewBottom = viewTop + writeInput.clientHeight;
+    const maxScrollTop = Math.max(0, writeInput.scrollHeight - writeInput.clientHeight);
+    if (pos.bottom + lineHeight > viewBottom) {
+      writeInput.scrollTop = Math.min(pos.bottom + lineHeight - writeInput.clientHeight, maxScrollTop);
+    } else if (pos.top < viewTop) {
+      writeInput.scrollTop = pos.top;
+    }
+    writeOverlay.scrollTop = writeInput.scrollTop;
+  }
+
   let saveTimer = null;
   writeInput.addEventListener('input', () => {
     renderOverlay();
+    ensureCaretVisible();
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       state.draft = writeInput.value;
       saveState();
     }, 300);
   });
-  writeInput.addEventListener('scroll', () => { writeOverlay.scrollTop = writeInput.scrollTop; });
+  // Keeps the source page and the notebook scrolling together - matched by
+  // *line index* rather than raw pixels or scroll fraction, since a source
+  // row (padded, ~44px) and a notebook line (--line-h, 34px) aren't the same
+  // height, and the two sides' content lengths usually differ too. A guard
+  // flag stops the two listeners from bouncing off each other.
+  let scrollSyncing = false;
+  function avgSourceRowHeight() {
+    const rows = sourceList.children.length;
+    return rows ? sourceList.scrollHeight / rows : 1;
+  }
+  writeInput.addEventListener('scroll', () => {
+    writeOverlay.scrollTop = writeInput.scrollTop;
+    if (scrollSyncing) return;
+    scrollSyncing = true;
+    const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
+    sourceList.scrollTop = (writeInput.scrollTop / lineHeight) * avgSourceRowHeight();
+    scrollSyncing = false;
+  });
+  sourceList.addEventListener('scroll', () => {
+    if (scrollSyncing) return;
+    scrollSyncing = true;
+    const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
+    writeInput.scrollTop = (sourceList.scrollTop / avgSourceRowHeight()) * lineHeight;
+    writeOverlay.scrollTop = writeInput.scrollTop;
+    scrollSyncing = false;
+  });
 
   finishBtn.addEventListener('click', () => {
     // Completion is never gated on accuracy or how much was typed - the
@@ -1251,6 +1384,7 @@
   });
 
   backBtn.addEventListener('click', closeBook);
+  document.getElementById('logoHomeBtn').addEventListener('click', closeBook);
 
   renderHome();
 })();
