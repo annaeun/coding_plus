@@ -1,0 +1,13 @@
+{
+  "name": "온기 다이어리",
+  "short_name": "온기 다이어리",
+  "description": "한 줄 일기와 이달의 습관을 기록하는 다이어리",
+  "start_url": "./ongidiary.html",
+  "display": "standalone",
+  "background_color": "#efe2ce",
+  "theme_color": "#e8748f",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
