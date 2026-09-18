@@ -4,6 +4,7 @@ PDF로 매일 20문장씩 필사(베껴 쓰기) 연습을 할 수 있는 웹 앱
 설치나 서버 없이 브라우저에서 파일만 열면 바로 사용할 수 있습니다.
 
 - **사용할 파일**: `daily_copywork.html` (이 파일을 열어서 사용하세요)
+[Daily Copywork 바로가기](https://annaeun.github.io/coding_plus/Daily_Copywork/daily_copywork.html)
 - `index.html`은 예전 버전을 보관해둔 백업용 파일입니다. 사용하지 않아도 됩니다.
 
 ## 시작하기
