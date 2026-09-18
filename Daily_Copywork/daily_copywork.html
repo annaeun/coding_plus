@@ -440,7 +440,6 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
   .source-row {
@@ -476,7 +475,7 @@
   }
   .write-layer {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     margin: 0;
     /* Bottom padding of a full line, on both layers so they stay pixel-
        matched, keeps one ruled line always blank below whatever's typed -
@@ -490,7 +489,6 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
   }
   .write-overlay {
@@ -1148,7 +1146,16 @@
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const content = await page.getTextContent();
-        fullText += content.items.map(it => it.str).join(' ') + '\n';
+        const pageText = content.items.map(it => it.str).join(' ');
+        // A page number header/footer (e.g. "8", "- 8 -") sits right at the
+        // start or end of a page's own text stream, exactly where two pages
+        // get concatenated - left in, it silently glues onto the sentence
+        // that starts or ends there. Stripping it here, before joining, is
+        // what keeps it from becoming (invisibly) part of that sentence.
+        fullText += pageText
+          .replace(/^\s*[-–—]?\s*\d{1,4}\s*[-–—]?\s+/, '')
+          .replace(/\s+[-–—]?\s*\d{1,4}\s*[-–—]?\s*$/, '')
+          + '\n';
       }
       const sentences = extractSentences(fullText);
       if (!sentences.length) {
