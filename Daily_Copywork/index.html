@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>✍️ 매일 필사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root {
+    --bg: #FBF6EE;
+    --card: #FFFFFF;
+    --card-alt: #FFF9F0;
+    --primary: #8CAF97;
+    --primary-light: #DCEBDE;
+    --primary-dark: #729C7E;
+    --secondary: #C7C3EA;
+    --secondary-light: #ECEAF9;
+    --accent: #F3B79C;
+    --accent-light: #FBE6DA;
+    --text: #3A3532;
+    --subtext: #948C86;
+    --border: #ECE4D8;
+    --success: #6E9C79;
+    --success-light: #E1EEE3;
+    --error: #D98C7A;
+    --error-light: #F8E4DD;
+    --wrong: #D2503A;
+
+    --paper: #FFFCF5;
+    --paper-edge: #ECE1CC;
+    --rule: #E4D9BE;
+
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 4px 18px rgba(58, 53, 50, 0.06);
+    --shadow-hover: 0 10px 26px rgba(58, 53, 50, 0.10);
+    --shadow-book: 0 20px 44px rgba(58, 53, 50, 0.16);
+    --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    --page-w: clamp(300px, 44vw, 380px);
+    --page-pad: 22px 24px;
+    --line-h: 32px;
+    --book-h: min(66vh, 600px);
+  }
+
+  @media (min-width: 900px) {
+    :root { --page-w: clamp(340px, 34vw, 460px); }
+  }
+  @media (min-width: 1280px) {
+    :root { --page-w: clamp(380px, 27vw, 520px); }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', 'Noto Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  h1, h2, h3, h4 { font-weight: 600; margin: 0; }
+  p { margin: 0; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  /* ---------- Header ---------- */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .logo { display: flex; align-items: center; gap: 8px; font-size: 1.15rem; font-weight: 700; }
+  .logo .emoji { font-size: 1.3rem; }
+
+  .header-right { display: flex; align-items: center; gap: 10px; }
+  .login-trigger-btn {
+    border: 1px solid var(--border);
+    background: var(--card-alt);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 9px 18px;
+    border-radius: var(--radius-pill);
+    transition: background 0.15s var(--ease);
+  }
+  .login-trigger-btn:hover { background: var(--primary-light); }
+
+  main { max-width: 920px; margin: 0 auto; padding: 32px 24px 40px; }
+
+  .view { display: none; animation: fadeIn 0.35s var(--ease); }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 24px;
+  }
+
+  /* ---------- Home ---------- */
+  .greeting-card {
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+    border-radius: var(--radius-lg);
+    padding: 28px 30px;
+    margin-bottom: 20px;
+  }
+  .greeting-card h1 { font-size: 1.5rem; }
+  .greeting-card p { color: var(--subtext); margin-top: 6px; font-size: 0.95rem; }
+
+  .progress-block { margin-top: 22px; }
+  .progress-block .progress-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--subtext); margin-bottom: 8px; }
+  .progress-block .progress-percent { font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); }
+  .progress-bar-track { background: rgba(255,255,255,0.6); border-radius: var(--radius-pill); height: 12px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: var(--radius-pill); background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; transition: width 0.6s var(--ease); }
+
+  .status-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+
+  .status-card {
+    flex: 1;
+    min-width: 220px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .status-card #redoBtn { flex-shrink: 0; white-space: nowrap; }
+  .status-card .icon {
+    font-size: 1.5rem;
+    width: 46px; height: 46px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--primary-light);
+    flex-shrink: 0;
+  }
+  .status-card.done .icon { background: var(--success-light); }
+  .streak-card .icon { background: var(--accent-light); }
+  .streak-card.broken .icon { background: var(--error-light); }
+  .status-card h3 { font-size: 0.95rem; margin-bottom: 2px; }
+  .status-card p { font-size: 0.82rem; color: var(--subtext); }
+
+  .start-btn-wrap { text-align: center; margin: 28px 0; }
+  .start-btn {
+    padding: 16px 42px;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .start-hint { margin-top: 10px; font-size: 0.85rem; color: var(--subtext); }
+
+  .section-title { font-size: 1.02rem; font-weight: 600; margin: 30px 0 14px; }
+
+  /* upload dropzone */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px 20px;
+    text-align: center;
+    background: var(--card-alt);
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    cursor: pointer;
+  }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: var(--primary); background: var(--primary-light); }
+  .upload-zone .icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .upload-zone .title { font-weight: 500; font-size: 0.95rem; }
+  .upload-zone .sub { color: var(--subtext); font-size: 0.82rem; margin-top: 4px; }
+
+  .pdf-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: var(--card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .pdf-info .name { font-size: 0.88rem; font-weight: 500; }
+  .pdf-info .meta { font-size: 0.78rem; color: var(--subtext); margin-top: 2px; }
+
+  /* ---------- Buttons ---------- */
+  .btn { padding: 11px 22px; border-radius: var(--radius-pill); font-size: 0.9rem; font-weight: 500;
+    transition: transform 0.15s var(--ease), background 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-hover); }
+  .btn-primary:disabled { background: var(--border); color: var(--subtext); cursor: not-allowed; box-shadow: none; }
+  .btn-soft { background: var(--primary-light); color: var(--primary-dark); }
+  .btn-soft:hover { background: var(--primary); color: #fff; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary-dark); }
+  .btn:active { transform: scale(0.96); }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  /* ---------- Modals (login / complete) ---------- */
+  .modal-overlay[hidden] { display: none; }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58, 53, 50, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+  }
+  .modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: 30px 24px 24px;
+    box-shadow: var(--shadow-hover);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--subtext);
+    font-size: 13px;
+  }
+  .modal-close:hover { background: var(--primary-light); color: var(--text); }
+
+  .google-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid var(--border); background: #fff; color: #3c4043;
+    font-weight: 600; font-size: 0.88rem;
+    transition: box-shadow 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .google-btn:hover { background: #f8f8f8; box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+  .auth-divider { display: flex; align-items: center; gap: 10px; color: var(--subtext); font-size: 0.72rem; }
+  .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .auth-email-form { display: flex; flex-direction: column; gap: 8px; }
+  .auth-input {
+    width: 100%; border: 1px solid var(--border); background: var(--card-alt); color: var(--text);
+    font-family: inherit; font-size: 0.88rem; padding: 10px 12px; border-radius: 10px; outline: none;
+  }
+  .auth-input:focus { border-color: var(--primary); }
+  .auth-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .auth-btn-text { color: var(--primary-dark); font-weight: 600; font-size: 0.78rem; padding: 6px 10px; border-radius: 999px; }
+  .auth-btn-text:hover { background: var(--primary-light); }
+  .auth-error { color: var(--wrong); font-size: 0.8rem; line-height: 1.5; min-height: 0; }
+
+  .complete-card { text-align: center; align-items: center; }
+  .complete-card .emoji { font-size: 2.2rem; }
+  .complete-card h3 { font-size: 1.1rem; }
+  .complete-card p { color: var(--subtext); font-size: 0.88rem; }
+  .complete-actions { display: flex; gap: 10px; margin-top: 6px; }
+
+  /* ---------- Book view ---------- */
+  .book-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .book-toolbar .left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: background 0.15s var(--ease);
+  }
+  .back-btn:hover { background: var(--primary-light); }
+  .day-label { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; }
+  .day-sub { font-size: 0.8rem; color: var(--subtext); margin-top: 2px; }
+  .accuracy-pill {
+    font-size: 0.82rem; font-weight: 600; color: var(--primary-dark);
+    background: var(--primary-light); padding: 6px 14px; border-radius: var(--radius-pill);
+  }
+  .done-pill {
+    font-size: 0.82rem; font-weight: 600; color: var(--success);
+    background: var(--success-light); padding: 6px 14px; border-radius: var(--radius-pill);
+    display: none;
+  }
+  .done-pill.show { display: inline-flex; }
+
+  .book {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    height: var(--book-h);
+    margin: 0 auto;
+    background: linear-gradient(90deg, var(--paper-edge), var(--paper) 6%, var(--paper) 94%, var(--paper-edge));
+    border-radius: 12px;
+    box-shadow: var(--shadow-book), 0 2px 0 var(--paper-edge) inset;
+    position: relative;
+  }
+  .page {
+    position: relative;
+    width: var(--page-w);
+    min-width: 0;
+    height: 100%;
+    flex: none;
+    padding: var(--page-pad);
+    background-color: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.18' intercept='0.86'/%3E%3CfeFuncG type='linear' slope='0.18' intercept='0.86'/%3E%3CfeFuncB type='linear' slope='0.18' intercept='0.86'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
+    background-size: 140px 140px;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-left { border-radius: 12px 0 0 12px; }
+  .page-right { border-radius: 0 12px 12px 0; }
+  .page-left::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; right: 0;
+    width: 26px;
+    transform: translateX(50%);
+    background: linear-gradient(90deg, transparent, rgba(58,53,50,0.14), transparent);
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .page-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--subtext);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+
+  .source-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .source-row {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+    line-height: 1.55;
+  }
+  .source-row .num {
+    font-family: 'Fraunces', serif;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    width: 22px;
+  }
+  .source-row .txt { font-size: 0.92rem; }
+
+  .write-surface {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+  .write-layer {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 6px 0 0;
+    border: none;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.92rem;
+    line-height: var(--line-h);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-y: auto;
+  }
+  .write-overlay {
+    color: var(--text);
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .write-overlay .wrong { color: var(--wrong); }
+  .write-input {
+    background-color: transparent;
+    background-image: repeating-linear-gradient(transparent, transparent calc(var(--line-h) - 1px), var(--rule) calc(var(--line-h) - 1px), var(--rule) var(--line-h));
+    background-attachment: local;
+    color: transparent;
+    caret-color: var(--text);
+    resize: none;
+    outline: none;
+  }
+
+  .book-footer { display: flex; justify-content: center; margin-top: 24px; }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 780px) {
+    :root { --page-w: min(92vw, 430px); --line-h: 30px; --book-h: auto; }
+    .book { flex-direction: column; width: 100%; }
+    .page { width: 100%; height: auto; }
+    .page-left { border-radius: 12px 12px 0 0; }
+    .page-right { border-radius: 0 0 12px 12px; }
+    .page-left::after { display: none; }
+    .source-list { flex: none; max-height: 40vh; }
+    /* .write-surface's own children are all position:absolute (the overlay +
+       textarea), so they never contribute to its auto height - it needs an
+       explicit height here, not just a cap, or it collapses to 0. */
+    .write-surface { flex: none; height: 40vh; }
+    .app-header { padding: 16px 18px; }
+    main { padding: 22px 14px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo"><span class="emoji">📖</span><span>매일 필사</span></div>
+  <div class="header-right">
+    <button class="login-trigger-btn" id="loginTriggerBtn">로그인</button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HOME ============ -->
+  <div id="homeView" class="view active">
+    <div class="greeting-card">
+      <h1 id="greetingTitle">오늘도 한 문장, 필사해볼까요?</h1>
+      <p id="greetingDate"></p>
+
+      <div class="progress-block">
+        <div class="progress-label">
+          <span id="progressCountLabel">0 / 0 문장</span>
+          <span class="progress-percent" id="progressPercentLabel">0%</span>
+        </div>
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBarFill"></div></div>
+      </div>
+    </div>
+
+    <div class="status-row">
+      <div class="card status-card streak-card" id="streakCard">
+        <div class="icon" id="streakIcon">🔥</div>
+        <div>
+          <h3 id="streakTitle">아직 필사 기록이 없어요</h3>
+          <p id="streakSub">오늘부터 시작해볼까요?</p>
+        </div>
+      </div>
+      <div class="card status-card" id="todayStatusCard">
+        <div class="icon" id="todayStatusIcon">✍️</div>
+        <div>
+          <h3 id="todayStatusTitle">아직 오늘의 필사를 시작하지 않았어요</h3>
+          <p id="todayStatusSub">하루 20문장씩 천천히 채워가요</p>
+        </div>
+        <button class="btn btn-outline" id="redoBtn" style="display:none;margin-left:auto;">오늘 필사 다시하기</button>
+      </div>
+    </div>
+
+    <div class="start-btn-wrap">
+      <button class="btn btn-primary start-btn" id="startBtn">오늘 필사 시작하기</button>
+      <div class="start-hint" id="startHint" style="display:none;">먼저 아래에서 PDF를 업로드해주세요</div>
+    </div>
+
+    <div class="section-title">필사 원본 PDF</div>
+    <div class="upload-zone" id="uploadZone">
+      <div class="icon">📄</div>
+      <div class="title">PDF를 여기로 끌어오거나 클릭해서 업로드하세요</div>
+      <div class="sub">매일 20문장씩 이 PDF에서 필사 문장을 가져와요</div>
+      <input type="file" accept="application/pdf" id="pdfInput" style="display:none;">
+    </div>
+    <div class="pdf-info" id="pdfInfo" style="display:none;">
+      <div>
+        <div class="name" id="pdfName"></div>
+        <div class="meta" id="pdfMeta"></div>
+      </div>
+      <button class="btn btn-outline" id="replacePdfBtn">다른 PDF로 교체</button>
+    </div>
+    <div class="pdf-info" id="pdfLoading" style="display:none;justify-content:center;">
+      <div class="meta">📖 PDF에서 문장을 추출하고 있어요...</div>
+    </div>
+  </div>
+
+  <!-- ============ BOOK ============ -->
+  <div id="bookView" class="view">
+    <div class="book-toolbar">
+      <div class="left">
+        <button class="back-btn" id="backBtn">←</button>
+        <div>
+          <div class="day-label" id="dayLabel">Day 1</div>
+          <div class="day-sub" id="daySub"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="done-pill" id="donePill">✅ 오늘 완료</span>
+        <span class="accuracy-pill" id="accuracyPill">정확도 0%</span>
+      </div>
+    </div>
+
+    <div class="book">
+      <div class="page page-left">
+        <div class="page-head">오늘의 필사 원문</div>
+        <div class="source-list" id="sourceList"></div>
+      </div>
+      <div class="page page-right">
+        <div class="page-head">나의 노트</div>
+        <div class="write-surface">
+          <div class="write-layer write-overlay" id="writeOverlay"></div>
+          <textarea class="write-layer write-input" id="writeInput" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="왼쪽 원문을 보며 이곳에 옮겨 적어보세요..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-footer">
+      <button class="btn btn-primary" id="finishBtn">오늘 필사 완료하기</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-overlay" id="loginModal" hidden>
+  <div class="modal-card">
+    <button class="modal-close" id="loginModalClose">✕</button>
+    <h3 style="text-align:center;">로그인</h3>
+    <button class="google-btn" id="googleLoginBtn">
+      <span style="font-weight:700;color:#4285F4;">G</span> Google로 계속하기
+    </button>
+    <div class="auth-divider">또는</div>
+    <form class="auth-email-form" id="emailLoginForm">
+      <input class="auth-input" type="email" id="loginEmail" placeholder="이메일" autocomplete="email" required>
+      <input class="auth-input" type="password" id="loginPassword" placeholder="비밀번호" autocomplete="current-password" required>
+      <div class="auth-actions">
+        <button type="button" class="auth-btn-text" id="toggleAuthModeBtn">계정이 없으신가요? 회원가입</button>
+        <button type="submit" class="btn btn-primary" id="emailSubmitBtn" style="padding:8px 18px;font-size:0.85rem;">로그인</button>
+      </div>
+    </form>
+    <p class="auth-error" id="authError"></p>
+  </div>
+</div>
+
+<!-- ============ COMPLETE MODAL ============ -->
+<div class="modal-overlay" id="completeModal" hidden>
+  <div class="modal-card complete-card">
+    <div class="emoji">🎉</div>
+    <h3>오늘도 필사 완료!</h3>
+    <p id="completeSub"></p>
+    <div class="complete-actions">
+      <button class="btn btn-outline" id="completeConfirmBtn">확인</button>
+      <button class="btn btn-primary" id="completeNextBtn">다음 필사하기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const BATCH_SIZE = 20;
+  const STORAGE_KEY = 'dailyBookState_v1';
+
+  const defaultState = () => ({
+    pdfName: '',
+    pdfSignature: '',
+    sentences: [],
+    completedCount: 0,
+    batchStart: 0,
+    batchDate: null,
+    batchDone: false,
+    draft: '',
+    streak: 0,
+    lastCompletedDate: null
+  });
+
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      return Object.assign(defaultState(), parsed);
+    } catch (e) {
+      return defaultState();
+    }
+  }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function fmtDate(d) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  function todayStr() {
+    return fmtDate(new Date());
+  }
+
+  // Whole calendar days from dateStr A to dateStr B (B - A), ignoring time of day.
+  function daysBetween(dateStrA, dateStrB) {
+    const [ay, am, ad] = dateStrA.split('-').map(Number);
+    const [by, bm, bd] = dateStrB.split('-').map(Number);
+    const a = new Date(ay, am - 1, ad);
+    const b = new Date(by, bm - 1, bd);
+    return Math.round((b - a) / 86400000);
+  }
+
+  // Strips a leading list-numbering marker ("1.", "1)", "(1)", "①" ...) so
+  // numbered-list index labels in the source PDF don't end up as part of the
+  // transcription content. A bare marker with nothing after it (e.g. the "12."
+  // left over once our sentence split already cut it away from its sentence)
+  // strips down to "" and is dropped by the length filter below.
+  function stripLeadingIndex(s) {
+    return s
+      .replace(/^\(?\d{1,3}[.)\]]\)?\s*/, '')
+      .replace(/^[①-⑳]\s*/, '')
+      .trim();
+  }
+
+  // PDF text is walked page 1 -> last in order, so the very first extracted
+  // sentence is always the start of the document's body text.
+  function extractSentences(rawText) {
+    const flat = rawText.replace(/\r/g, '').replace(/[ \t]+/g, ' ').replace(/\n+/g, ' ').trim();
+    const parts = flat.split(/(?<=[.!?…」』"'”’])\s+/);
+    return parts
+      .map(s => stripLeadingIndex(s.trim()))
+      .filter(s => s.length >= 3 && /[가-힣a-zA-Z0-9]/.test(s));
+  }
+
+  // Doing extra batches ahead in one sitting still only ever counts as
+  // *today's* portion (advanceToNextBatch always stamps batchDate as today,
+  // never a future date) - the goal is a daily habit, not a stockpile. So the
+  // only time this actually resets anything is the first time today's batch
+  // is touched: if yesterday's (or an older) batch was finished, roll
+  // straight to a fresh batch from wherever completedCount left off. If it
+  // was left unfinished, leave batchStart/batchDate alone - see
+  // missedDaysCount()/currentBatchLength(), which fold the missed day(s)
+  // into today's batch instead of silently discarding them.
+  function ensureTodayBatch() {
+    if (!state.sentences.length) return;
+    const t = todayStr();
+    if (!state.batchDate) {
+      state.batchStart = state.completedCount;
+      state.batchDate = t;
+      state.batchDone = false;
+      state.draft = '';
+      saveState();
+      return;
+    }
+    if (state.batchDate !== t && state.batchDone) {
+      state.batchStart = state.completedCount;
+      state.batchDate = t;
+      state.batchDone = false;
+      state.draft = '';
+      saveState();
+    }
+  }
+
+  // How many whole days have gone by with that batch still unfinished (0 if
+  // it's today's batch, or already done).
+  function missedDaysCount() {
+    if (!state.batchDate || state.batchDone) return 0;
+    const gap = daysBetween(state.batchDate, todayStr());
+    return gap > 0 ? gap : 0;
+  }
+
+  // Folds any missed day(s) directly into today's batch (one combined batch
+  // to catch up on, rather than a separate backlog) instead of just moving on.
+  function currentBatchLength() {
+    return BATCH_SIZE * (missedDaysCount() + 1);
+  }
+
+  // "필사 더 하기": moves on to the next chunk, but keeps it dated *today* -
+  // several done in one sitting are still just today's practice, not a
+  // reserve of future days already banked.
+  function advanceToNextBatch() {
+    state.batchStart = state.completedCount;
+    state.batchDate = todayStr();
+    state.batchDone = false;
+    state.draft = '';
+    saveState();
+    openBook();
+  }
+
+  function currentBatchSentences() {
+    return state.sentences.slice(state.batchStart, state.batchStart + currentBatchLength());
+  }
+
+  function updateStreakOnCompletion() {
+    const t = todayStr();
+    if (state.lastCompletedDate === t) {
+      // already counted today (e.g. finishing a second batch same day)
+    } else if (state.lastCompletedDate && daysBetween(state.lastCompletedDate, t) === 1) {
+      state.streak += 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastCompletedDate = t;
+  }
+
+  // Run on every home render so a broken streak shows up the moment the app
+  // is reopened, even before the user does anything.
+  function checkStreakBreak() {
+    if (state.streak > 0 && state.lastCompletedDate) {
+      if (daysBetween(state.lastCompletedDate, todayStr()) > 1) {
+        state.streak = 0;
+        saveState();
+      }
+    }
+  }
+
+  // ---------------- Login (UI only for now; Firebase project wiring is planned) ----------------
+
+  const loginTriggerBtn = document.getElementById('loginTriggerBtn');
+  const loginModal = document.getElementById('loginModal');
+  const loginModalClose = document.getElementById('loginModalClose');
+  const googleLoginBtn = document.getElementById('googleLoginBtn');
+  const emailLoginForm = document.getElementById('emailLoginForm');
+  const emailSubmitBtn = document.getElementById('emailSubmitBtn');
+  const toggleAuthModeBtn = document.getElementById('toggleAuthModeBtn');
+  const authError = document.getElementById('authError');
+
+  let authMode = 'login';
+
+  loginTriggerBtn.addEventListener('click', () => {
+    authError.textContent = '';
+    loginModal.hidden = false;
+  });
+  loginModalClose.addEventListener('click', () => { loginModal.hidden = true; });
+  loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.hidden = true; });
+
+  toggleAuthModeBtn.addEventListener('click', () => {
+    authMode = authMode === 'login' ? 'signup' : 'login';
+    toggleAuthModeBtn.textContent = authMode === 'login' ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인';
+    emailSubmitBtn.textContent = authMode === 'login' ? '로그인' : '회원가입';
+    authError.textContent = '';
+  });
+
+  googleLoginBtn.addEventListener('click', () => {
+    authError.textContent = 'Firebase 로그인 연동은 준비 중이에요. 곧 만나요! 🙂';
+  });
+  emailLoginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    authError.textContent = 'Firebase 로그인 연동은 준비 중이에요. 곧 만나요! 🙂';
+  });
+
+  // ---------------- Home rendering ----------------
+
+  const homeView = document.getElementById('homeView');
+  const bookView = document.getElementById('bookView');
+  const greetingDate = document.getElementById('greetingDate');
+  const progressCountLabel = document.getElementById('progressCountLabel');
+  const progressPercentLabel = document.getElementById('progressPercentLabel');
+  const progressBarFill = document.getElementById('progressBarFill');
+  const todayStatusCard = document.getElementById('todayStatusCard');
+  const todayStatusIcon = document.getElementById('todayStatusIcon');
+  const todayStatusTitle = document.getElementById('todayStatusTitle');
+  const todayStatusSub = document.getElementById('todayStatusSub');
+  const redoBtn = document.getElementById('redoBtn');
+  const streakCard = document.getElementById('streakCard');
+  const streakIcon = document.getElementById('streakIcon');
+  const streakTitle = document.getElementById('streakTitle');
+  const streakSub = document.getElementById('streakSub');
+  const startBtn = document.getElementById('startBtn');
+  const startHint = document.getElementById('startHint');
+  const uploadZone = document.getElementById('uploadZone');
+  const pdfInput = document.getElementById('pdfInput');
+  const pdfInfo = document.getElementById('pdfInfo');
+  const pdfLoading = document.getElementById('pdfLoading');
+  const pdfName = document.getElementById('pdfName');
+  const pdfMeta = document.getElementById('pdfMeta');
+  const replacePdfBtn = document.getElementById('replacePdfBtn');
+
+  const weekday = ['일', '월', '화', '수', '목', '금', '토'][new Date().getDay()];
+  greetingDate.textContent = `${todayStr().replace(/-/g, '.')} (${weekday})`;
+
+  function renderHome() {
+    ensureTodayBatch();
+    checkStreakBreak();
+
+    const total = state.sentences.length;
+    const pct = total ? Math.min(100, Math.round(state.completedCount / total * 100)) : 0;
+    progressCountLabel.textContent = `${Math.min(state.completedCount, total)} / ${total} 문장`;
+    progressPercentLabel.textContent = `${pct}%`;
+    progressBarFill.style.width = pct + '%';
+
+    // batchDone is only ever true for *today's* batch - a rollover to a new
+    // day (see ensureTodayBatch) always flips it back to false first.
+    const doneToday = state.batchDone;
+    const allDone = total > 0 && state.completedCount >= total;
+    const missedDays = missedDaysCount();
+
+    todayStatusCard.classList.toggle('done', doneToday);
+    if (allDone) {
+      todayStatusIcon.textContent = '🎉';
+      todayStatusTitle.textContent = '이 책의 모든 문장을 필사했어요!';
+      todayStatusSub.textContent = '새 PDF를 올리면 다시 시작할 수 있어요';
+    } else if (missedDays >= 1) {
+      todayStatusIcon.textContent = '😥';
+      todayStatusTitle.textContent = missedDays === 1 ? '어제 필사를 놓쳤어요' : `${missedDays}일치 필사를 놓쳤어요`;
+      todayStatusSub.textContent = `밀린 분량까지 오늘 ${currentBatchSentences().length}문장을 채워봐요`;
+    } else if (doneToday) {
+      todayStatusIcon.textContent = '✅';
+      todayStatusTitle.textContent = '오늘의 필사를 완료했어요';
+      todayStatusSub.textContent = '내일 다시 만나요';
+    } else {
+      todayStatusIcon.textContent = '✍️';
+      todayStatusTitle.textContent = '아직 오늘의 필사를 시작하지 않았어요';
+      todayStatusSub.textContent = '하루 20문장씩 천천히 채워가요';
+    }
+
+    streakCard.classList.toggle('broken', state.lastCompletedDate && state.streak === 0);
+    if (state.streak > 0) {
+      streakIcon.textContent = '🔥';
+      streakTitle.textContent = `오늘까지 ${state.streak}일째 필사를 이어가고 있어요!`;
+      streakSub.textContent = '이 기세로 계속 가봐요';
+    } else if (state.lastCompletedDate) {
+      streakIcon.textContent = '💧';
+      streakTitle.textContent = '연속 기록이 끊겼어요';
+      streakSub.textContent = '괜찮아요, 다시 처음부터 힘내봐요';
+    } else {
+      streakIcon.textContent = '🔥';
+      streakTitle.textContent = '아직 필사 기록이 없어요';
+      streakSub.textContent = '오늘부터 시작해볼까요?';
+    }
+
+    const hasPdf = total > 0;
+    startBtn.disabled = !hasPdf || allDone;
+    startBtn.textContent = missedDays >= 1 ? '놓친 필사 채우기' : (doneToday ? '오늘 필사 다시 보기' : '오늘 필사 시작하기');
+    startHint.style.display = hasPdf ? 'none' : 'block';
+    redoBtn.style.display = doneToday ? 'inline-flex' : 'none';
+
+    if (hasPdf) {
+      pdfInfo.style.display = 'flex';
+      pdfName.textContent = state.pdfName;
+      pdfMeta.textContent = `총 ${total}문장 · 하루 ${BATCH_SIZE}문장씩`;
+    } else {
+      pdfInfo.style.display = 'none';
+    }
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (startBtn.disabled) return;
+    openBook();
+  });
+
+  redoBtn.addEventListener('click', () => {
+    // Only clears today's draft so they can retype from scratch - batchDone
+    // and completedCount stay put, since this batch was already counted.
+    state.draft = '';
+    saveState();
+    openBook();
+  });
+
+  uploadZone.addEventListener('click', () => pdfInput.click());
+  replacePdfBtn.addEventListener('click', () => pdfInput.click());
+
+  ['dragover', 'dragenter'].forEach(evt =>
+    uploadZone.addEventListener(evt, e => { e.preventDefault(); uploadZone.classList.add('drag-over'); })
+  );
+  ['dragleave', 'dragend', 'drop'].forEach(evt =>
+    uploadZone.addEventListener(evt, () => uploadZone.classList.remove('drag-over'))
+  );
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (file) handlePdfFile(file);
+  });
+  pdfInput.addEventListener('change', () => {
+    const file = pdfInput.files && pdfInput.files[0];
+    if (file) handlePdfFile(file);
+    pdfInput.value = '';
+  });
+
+  async function handlePdfFile(file) {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('PDF 파일만 업로드할 수 있어요.');
+      return;
+    }
+    const signature = `${file.name}_${file.size}_${file.lastModified}`;
+    const isSamePdf = signature === state.pdfSignature;
+
+    if (state.sentences.length && !isSamePdf) {
+      const ok = confirm('새 PDF로 교체하면 지금까지의 필사 진행률이 초기화돼요. 계속할까요?');
+      if (!ok) return;
+    }
+
+    pdfLoading.style.display = 'flex';
+    pdfInfo.style.display = 'none';
+    try {
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      let fullText = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        fullText += content.items.map(it => it.str).join(' ') + '\n';
+      }
+      const sentences = extractSentences(fullText);
+      if (!sentences.length) {
+        alert('PDF에서 문장을 추출하지 못했어요. 텍스트 기반 PDF인지 확인해주세요.');
+        return;
+      }
+
+      if (!isSamePdf) {
+        // The daily streak is about the habit, not this particular book -
+        // it survives switching PDFs even though everything else resets.
+        const keepStreak = state.streak;
+        const keepLastCompletedDate = state.lastCompletedDate;
+        state = defaultState();
+        state.pdfName = file.name;
+        state.pdfSignature = signature;
+        state.sentences = sentences;
+        state.streak = keepStreak;
+        state.lastCompletedDate = keepLastCompletedDate;
+        saveState();
+      }
+    } catch (err) {
+      alert('PDF를 읽는 중 문제가 발생했어요.');
+      console.error(err);
+    } finally {
+      pdfLoading.style.display = 'none';
+      renderHome();
+    }
+  }
+
+  // ---------------- Book rendering ----------------
+
+  const dayLabel = document.getElementById('dayLabel');
+  const daySub = document.getElementById('daySub');
+  const donePill = document.getElementById('donePill');
+  const accuracyPill = document.getElementById('accuracyPill');
+  const sourceList = document.getElementById('sourceList');
+  const writeOverlay = document.getElementById('writeOverlay');
+  const writeInput = document.getElementById('writeInput');
+  const finishBtn = document.getElementById('finishBtn');
+  const backBtn = document.getElementById('backBtn');
+  const completeModal = document.getElementById('completeModal');
+  const completeSub = document.getElementById('completeSub');
+  const completeConfirmBtn = document.getElementById('completeConfirmBtn');
+  const completeNextBtn = document.getElementById('completeNextBtn');
+
+  let batchTarget = '';
+
+  function openBook() {
+    ensureTodayBatch();
+    const batch = currentBatchSentences();
+    batchTarget = batch.join('\n');
+
+    const dayNum = Math.floor(state.batchStart / BATCH_SIZE) + 1;
+    const missedDays = missedDaysCount();
+    dayLabel.textContent = `Day ${dayNum}`;
+    daySub.textContent = `${state.batchStart + 1}~${state.batchStart + batch.length}번째 문장`
+      + (missedDays >= 1 ? ` · ${missedDays === 1 ? '어제' : `${missedDays}일치`} 놓친 분량 포함` : '');
+
+    sourceList.innerHTML = batch.map((s, i) =>
+      `<div class="source-row"><span class="num">${i + 1}</span><span class="txt"></span></div>`
+    ).join('');
+    [...sourceList.querySelectorAll('.txt')].forEach((el, i) => { el.textContent = batch[i]; });
+
+    writeInput.value = state.draft || '';
+    renderOverlay();
+    updateDonePill();
+
+    homeView.classList.remove('active');
+    bookView.classList.add('active');
+    window.scrollTo(0, 0);
+    writeInput.focus();
+  }
+
+  function closeBook() {
+    bookView.classList.remove('active');
+    homeView.classList.add('active');
+    renderHome();
+  }
+
+  function escapeHtml(ch) {
+    if (ch === '&') return '&amp;';
+    if (ch === '<') return '&lt;';
+    if (ch === '>') return '&gt;';
+    return ch;
+  }
+
+  // The overlay is a separate, non-editable layer stacked behind the real
+  // (transparent-text) textarea, which stays the single source of truth for
+  // the caret - a plain textarea's native caret always tracks its own text
+  // exactly, so there is nothing here that can desync it.
+  function renderOverlay() {
+    const typed = writeInput.value;
+    let html = '';
+    let correct = 0;
+    for (let i = 0; i < typed.length; i++) {
+      const ch = typed[i];
+      const ok = i < batchTarget.length && ch === batchTarget[i];
+      if (ok) correct++;
+      html += ok ? escapeHtml(ch) : `<span class="wrong">${escapeHtml(ch)}</span>`;
+    }
+    writeOverlay.innerHTML = html;
+    const acc = typed.length ? Math.round((correct / typed.length) * 100) : 0;
+    accuracyPill.textContent = `정확도 ${acc}%`;
+    writeOverlay.scrollTop = writeInput.scrollTop;
+  }
+
+  function updateDonePill() {
+    // ensureTodayBatch()/openBook() already guarantee batchDate is never
+    // behind today by this point, so a plain batchDone check is enough -
+    // it may be dated ahead of today if the user got ahead of schedule.
+    const doneToday = state.batchDone;
+    donePill.classList.toggle('show', doneToday);
+    finishBtn.textContent = doneToday ? '다시 완료하기' : '오늘 필사 완료하기';
+  }
+
+  let saveTimer = null;
+  writeInput.addEventListener('input', () => {
+    renderOverlay();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      state.draft = writeInput.value;
+      saveState();
+    }, 300);
+  });
+  writeInput.addEventListener('scroll', () => { writeOverlay.scrollTop = writeInput.scrollTop; });
+
+  finishBtn.addEventListener('click', () => {
+    // Completion is never gated on accuracy or how much was typed - the
+    // button always works, and accuracy stays a purely informational stat.
+    state.draft = writeInput.value;
+    if (!state.batchDone) {
+      state.batchDone = true;
+      state.batchDate = todayStr();
+      const batch = currentBatchSentences();
+      state.completedCount = state.batchStart + batch.length;
+      updateStreakOnCompletion();
+    }
+    saveState();
+    updateDonePill();
+    showCompleteModal();
+  });
+
+  function showCompleteModal() {
+    const total = state.sentences.length;
+    const hasNext = state.completedCount < total;
+    completeSub.textContent = hasNext
+      ? `지금까지 ${state.completedCount} / ${total}문장을 채웠어요.`
+      : '이 책의 모든 문장을 필사했어요!';
+    completeNextBtn.style.display = hasNext ? 'inline-flex' : 'none';
+    completeModal.hidden = false;
+  }
+
+  completeConfirmBtn.addEventListener('click', () => {
+    completeModal.hidden = true;
+    closeBook();
+  });
+  completeNextBtn.addEventListener('click', () => {
+    completeModal.hidden = true;
+    advanceToNextBatch();
+  });
+
+  backBtn.addEventListener('click', closeBook);
+
+  renderHome();
+})();
+</script>
+
+</body>
+</html>
