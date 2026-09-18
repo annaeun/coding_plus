@@ -433,6 +433,7 @@
 
     .book{
       display:flex;
+      align-items:flex-start;
       width:fit-content;
       min-width:0;
       max-width:100%;
@@ -441,7 +442,7 @@
       box-shadow:0 18px 40px var(--shadow), 0 2px 0 var(--paper-edge) inset;
       position:relative;
       overflow-x:auto;
-      overflow-y:hidden;
+      overflow-y:auto;
       -webkit-overflow-scrolling:touch;
       scroll-snap-type:x proximity;
       overscroll-behavior-x:contain;
@@ -480,6 +481,10 @@
       padding-bottom:9px;
       border-bottom:2px solid var(--rule-solid);
       margin-bottom:2px;
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:var(--paper);
     }
     .month-num{
       font-family:'Fraunces',serif;
@@ -501,7 +506,7 @@
       display:flex;
       flex-direction:column;
       overflow-x:auto;
-      overflow-y:hidden;
+      overflow-y:clip;
       -webkit-overflow-scrolling:touch;
     }
     .day-row{
@@ -560,7 +565,10 @@
       border-bottom:2px solid var(--rule-solid);
       align-items:flex-end;
       padding-bottom:8px;
-      position:relative;
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:var(--paper);
       overflow:visible;
     }
 
@@ -1158,11 +1166,26 @@
     applyTheme(now === 'dark' ? 'light' : 'dark');
   });
 
+  // Make .book its own vertical scroll container (bounded to the space
+  // left below it in the viewport) so the sticky month/habit headers
+  // stick to ITS scroll rather than needing the whole document to
+  // scroll — a position:sticky descendant only sticks relative to its
+  // nearest scroll container, and .book already has to be one for the
+  // page-flip horizontal scroll (overflow-x:auto), so sticky elsewhere
+  // in the document can never reach past it anyway.
+  function updateBookMaxHeight(){
+    const top = bookEl.getBoundingClientRect().top;
+    const margin = 24;
+    const maxH = Math.max(240, window.innerHeight - top - margin);
+    bookEl.style.maxHeight = maxH + 'px';
+  }
+
   let resizeTimer = null;
   window.addEventListener('resize', ()=>{
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(()=>{ recomputeDiaryWidth(); renderRight(); }, 150);
+    resizeTimer = setTimeout(()=>{ recomputeDiaryWidth(); renderRight(); updateBookMaxHeight(); }, 150);
   });
+  updateBookMaxHeight();
 
   // 로그인 바 — Google/이메일 로그인, 회원가입, 로그아웃, 첫 방문 안내.
   // 로그인 전에는 로컬 저장소로 바로 체험할 수 있고, 로그인하면 그 데이터를
