@@ -4,6 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>✍️ 매일 필사</title>
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#8CAF97">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -470,17 +476,17 @@
 
   /* ---------- Mobile ---------- */
   @media (max-width: 780px) {
-    :root { --page-w: min(92vw, 430px); --line-h: 30px; --book-h: auto; }
+    /* --book-h now gives the stacked pages a real height to split, instead
+       of "auto" - each .page is flex:1 in that column, so the screen is cut
+       cleanly in half: top = source text, bottom = the input note. */
+    :root { --page-w: min(92vw, 430px); --line-h: 30px; --book-h: min(72vh, 640px); }
     .book { flex-direction: column; width: 100%; }
-    .page { width: 100%; height: auto; }
+    .page { width: 100%; height: auto; flex: 1; min-height: 0; }
     .page-left { border-radius: 12px 12px 0 0; }
     .page-right { border-radius: 0 0 12px 12px; }
     .page-left::after { display: none; }
-    .source-list { flex: none; max-height: 40vh; }
-    /* .write-surface's own children are all position:absolute (the overlay +
-       textarea), so they never contribute to its auto height - it needs an
-       explicit height here, not just a cap, or it collapses to 0. */
-    .write-surface { flex: none; height: 40vh; }
+    .source-list { flex: 1; min-height: 0; }
+    .write-surface { flex: 1; min-height: 0; }
     .app-header { padding: 16px 18px; }
     main { padding: 22px 14px 40px; }
   }
