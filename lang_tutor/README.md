@@ -5,7 +5,7 @@
 
 ## 💻 바로가기
 
-👉 [언어 공부 프로그램 바로가기](https://lang-tutor-2fe70.web.app/lang_tutor.html)
+👉 [언어 공부 프로그램 바로가기](https://langtutor-d9342.web.app/lang_tutor.html)
 
 ## 파일 구성
 
