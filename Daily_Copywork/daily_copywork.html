@@ -534,13 +534,22 @@
     #bookView.typing-compact .page { height: auto; flex: none; }
     #bookView.typing-compact .source-list {
       flex: none;
-      max-height: calc(var(--line-h) + 18px);
+      /* +33px reclaimed from hiding .book-footer below (~66px: the button's
+         own ~42px plus its 24px margin-top), split evenly with the
+         notebook. */
+      max-height: calc(var(--line-h) + 18px + 33px);
       overflow-y: auto;
     }
     #bookView.typing-compact .write-surface {
       flex: none;
-      height: calc(var(--line-h) * 2 + 16px);
+      height: calc(var(--line-h) * 2 + 16px + 33px);
     }
+    /* Hidden while typing so its ~66px goes to the source/notebook areas
+       above instead of sitting under the keyboard where it can't be tapped
+       anyway - .footer-peek (toggled in JS on scroll) brings it back
+       on-demand without giving up that space permanently. */
+    #bookView.typing-compact .book-footer { display: none; }
+    #bookView.typing-compact.footer-peek .book-footer { display: flex; }
     /* The toolbar (Day N / accuracy) and the "오늘의 필사 원문" / "나의 노트"
        labels were taking a fixed chunk of the little vertical room left
        above the keyboard, regardless of how small the book below them got -
@@ -1404,6 +1413,10 @@
   writeInput.addEventListener('input', () => {
     renderOverlay();
     ensureCaretVisible();
+    // Typing again means they're back to writing, not checking the finish
+    // button they scrolled to peek at - hide it again so the source/
+    // notebook areas get their reclaimed space back.
+    bookView.classList.remove('footer-peek');
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
       state.draft = writeInput.value;
@@ -1430,7 +1443,20 @@
   });
   writeInput.addEventListener('blur', () => {
     bookView.classList.remove('typing-compact');
+    bookView.classList.remove('footer-peek');
   });
+  // "오늘 필사 완료하기" sits under the keyboard while typing-compact is on
+  // (see CSS) so the source/notebook areas can use its space instead - any
+  // scroll (the page itself, or either panel) is read as "let me see it",
+  // and it's re-hidden the moment typing resumes (above).
+  function peekFooter() {
+    if (bookView.classList.contains('typing-compact')) {
+      bookView.classList.add('footer-peek');
+    }
+  }
+  window.addEventListener('scroll', peekFooter, { passive: true });
+  sourceList.addEventListener('scroll', peekFooter, { passive: true });
+  writeInput.addEventListener('scroll', peekFooter, { passive: true });
 
   finishBtn.addEventListener('click', () => {
     // Completion is never gated on accuracy or how much was typed - the
