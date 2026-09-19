@@ -477,6 +477,14 @@
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     margin: 0;
+    /* A <textarea>'s default UA stylesheet gives it its own special font
+       value, not plain inheritance - unlike writeOverlay (a div), writeInput
+       could silently render Korean text in the OS's system UI font instead
+       of the #bookView Gothic stack. Different font = different character
+       widths = different wrap points between the two layers, which is what
+       walks the real (invisible) caret away from the visible overlay text
+       over the course of a note, worse the more has been typed. */
+    font-family: inherit;
     /* Bottom padding of a full line, on both layers so they stay pixel-
        matched, keeps one ruled line always blank below whatever's typed -
        there's always visible room to keep writing, not just once it happens
@@ -552,11 +560,12 @@
     /* --book-h now gives the stacked pages a real height to split, instead
        of "auto" - each .page is flex:1 in that column, so the screen is cut
        cleanly in half: top = source text, bottom = the input note. The
-       + 64px (two lines' worth: one for the source page, one for the
+       + 128px (four lines' worth: two for the source page, two for the
        notebook, since they split this height evenly) is the requested
-       "grow both by one line, downward" - it's added on top of the vh/px
-       cap rather than inside it, so it doesn't get clamped away. */
-    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: calc(min(72vh, 640px) + 64px); }
+       "grow both by one line, downward", applied twice - it's added on top
+       of the vh/px cap rather than inside it, so it doesn't get clamped
+       away. */
+    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: calc(min(72vh, 640px) + 128px); }
     .book { flex-direction: column; width: 100%; }
     .page { width: 100%; height: auto; flex: 1; min-height: 0; }
     .page-left::after { display: none; }
