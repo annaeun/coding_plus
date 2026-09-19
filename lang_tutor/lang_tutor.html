@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🌱 Daily English</title>
+<title>🌱 Daily Lang_study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -966,7 +966,7 @@
 <body>
 
   <header class="app-header">
-    <div class="logo"><span class="emoji">🌱</span> Daily English</div>
+    <div class="logo"><span class="emoji">🌱</span> Daily Lang_study</div>
     <div class="header-right">
       <nav class="top-nav" id="topNav">
         <button class="nav-btn active" data-view="home"><span class="nav-label">Home</span></button>
@@ -977,6 +977,7 @@
         <button class="icon-btn" id="uiLangBtn" title="Interface language">🇰🇷</button>
         <div class="ui-lang-menu" id="uiLangMenu"></div>
       </div>
+      <button class="icon-btn" id="aiSettingsBtn" title="AI settings">⚙️</button>
       <button class="btn btn-outline login-btn" id="loginBtn"></button>
     </div>
   </header>
@@ -1050,6 +1051,7 @@
       <!-- Vocabulary sub-view -->
       <div id="study-vocabulary">
         <div id="vocab-study-phase">
+          <p class="ai-loading-label" id="vocabLoading" style="display:none;text-align:center;color:var(--subtext);padding:40px 0;">🤖 AI가 오늘의 단어를 만들고 있어요...</p>
           <p class="study-progress-label" id="vocabProgressLabel">1 / 10</p>
           <div class="flashcard-stage">
             <div class="flashcard" id="flashcard">
@@ -1099,6 +1101,7 @@
       <!-- Grammar sub-view -->
       <div id="study-grammar" style="display:none">
         <div id="grammar-study-phase">
+          <p class="ai-loading-label" id="grammarLoading" style="display:none;text-align:center;color:var(--subtext);padding:40px 0;">🤖 AI가 오늘의 문법을 만들고 있어요...</p>
           <p class="study-progress-label" id="grammarProgressLabel">1 / 5</p>
           <div class="content-stage">
             <div class="content-card">
@@ -1174,13 +1177,31 @@
             <div class="big-emoji">🎉</div>
             <h3 id="convReviewResultTitle">Conversation review complete!</h3>
             <div class="score" id="convReviewScore">0 / 5</div>
+            <button class="btn btn-primary" id="practiceStartBtn" style="display:none;margin-top:14px;">🗣️ AI와 대화 연습하기</button>
           </div>
+        </div>
+      </div>
+
+      <!-- AI Conversation Practice -->
+      <div id="conv-practice-phase" class="review-phase" style="display:none">
+        <p class="study-progress-label" id="practiceTitle">오늘 배운 표현으로 대화 연습하기</p>
+        <div class="chat-window" id="practiceChatWindow" style="height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card-alt);max-width:520px;margin:0 auto 14px;"></div>
+        <div style="display:flex;gap:8px;max-width:520px;margin:0 auto;">
+          <button class="btn btn-outline" id="practiceMicBtn" style="display:none;">🎤</button>
+          <input type="text" id="practiceInput" placeholder="메시지를 입력하세요..." autocomplete="off"
+            style="flex:1;padding:11px 14px;border-radius:var(--radius-md);border:1.5px solid var(--border);font-family:inherit;font-size:0.9rem;" />
+          <button class="btn btn-primary" id="practiceSendBtn">전송</button>
+        </div>
+        <div style="text-align:center;margin-top:14px;">
+          <button class="btn btn-outline" id="practiceRestartBtn" style="display:none;">다시 시작</button>
+          <button class="btn btn-outline" id="practiceCloseBtn">닫기</button>
         </div>
       </div>
 
       <!-- Listening sub-view -->
       <div id="study-listening" style="display:none">
         <div id="listen-study-phase">
+          <p class="ai-loading-label" id="listenLoading" style="display:none;text-align:center;color:var(--subtext);padding:40px 0;">🤖 AI가 오늘의 듣기 콘텐츠를 만들고 있어요...</p>
           <p class="study-progress-label" id="listenProgressLabel">1 / 3</p>
           <div class="listening-card">
             <div class="listen-hero">
@@ -1275,12 +1296,51 @@
 
   <div class="celebration-overlay" id="loginModal">
     <div class="celebration-card">
-      <div class="emoji">🔐</div>
+      <div class="emoji" id="loginModalEmoji">🔐</div>
       <h3 id="loginModalTitle">로그인</h3>
-      <p id="loginModalText">로그인 기능은 준비 중이에요. 곧 만나요!</p>
-      <button class="btn btn-primary" id="loginModalCloseBtn">닫기</button>
+      <p id="loginModalText">구글 계정으로 로그인하면 학습 진행률이 저장되어, 다른 기기에서도 이어서 공부할 수 있어요.</p>
+
+      <div id="loginSignedOutView">
+        <button class="btn btn-primary" id="googleSignInBtn">🔵 Google로 로그인</button>
+      </div>
+
+      <div id="loginSignedInView" style="display:none">
+        <img id="loginUserPhoto" src="" alt="" style="width:56px;height:56px;border-radius:50%;margin-bottom:10px;display:none;" />
+        <p id="loginUserName" style="font-weight:600;margin-bottom:4px;"></p>
+        <p id="loginUserEmail" style="color:var(--subtext);font-size:0.85rem;margin-bottom:16px;"></p>
+        <button class="btn btn-outline" id="signOutBtn">로그아웃</button>
+      </div>
+
+      <p id="loginSyncStatus" style="color:var(--subtext);font-size:0.8rem;margin-top:14px;"></p>
+
+      <button class="btn btn-outline" id="loginModalCloseBtn" style="margin-top:10px;">닫기</button>
     </div>
   </div>
+
+  <div class="celebration-overlay" id="aiSettingsModal">
+    <div class="celebration-card">
+      <div class="emoji">🤖</div>
+      <h3 id="aiSettingsTitle">AI 설정</h3>
+      <p id="aiSettingsText">본인의 Gemini API 키를 입력하면 이 브라우저에만 저장돼요. 서버나 깃허브 코드에는 절대 저장되지 않습니다.</p>
+
+      <label style="display:block;text-align:left;margin:14px 0 6px;font-size:0.85rem;color:var(--subtext);" id="aiSettingsInputLabel">Gemini API Key</label>
+      <input type="password" id="aiApiKeyInput" placeholder="AIzaSy..." autocomplete="off"
+        style="width:100%;padding:11px 14px;border-radius:var(--radius-md);border:1.5px solid var(--border);font-family:inherit;font-size:0.9rem;box-sizing:border-box;" />
+
+      <p id="aiKeyStatus" style="color:var(--subtext);font-size:0.8rem;margin-top:10px;min-height:18px;"></p>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-outline" id="aiKeyTestBtn">연결 테스트</button>
+        <button class="btn btn-primary" id="aiKeySaveBtn">저장</button>
+      </div>
+      <button class="btn btn-outline" id="aiKeyRemoveBtn" style="margin-top:10px;">키 삭제</button>
+      <button class="btn btn-outline" id="aiSettingsCloseBtn" style="margin-top:10px;">닫기</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 
 <script>
   // ---------------- Data ----------------
@@ -1413,7 +1473,20 @@
       weekdays: ['일', '월', '화', '수', '목', '금', '토'],
       lang_switch_toast_template: '{flag} {label} 학습을 시작해요!', review_later_toast: '나중에 다시 복습할게요 ↻',
       audio_not_supported: '이 브라우저는 음성 재생을 지원하지 않아요.',
-      login_modal_title: '로그인', login_modal_text: '로그인 기능은 준비 중이에요. 곧 만나요!', login_modal_close: '닫기',
+      login_modal_title: '로그인', login_modal_text: '구글 계정으로 로그인하면 학습 진행률이 저장되어, 다른 기기에서도 이어서 공부할 수 있어요.', login_modal_close: '닫기',
+      google_signin_btn: '🔵 Google로 로그인', sign_out_btn: '로그아웃',
+      sync_status_syncing: '동기화 중...', sync_status_synced: '☁️ 클라우드에 저장됨', sync_status_error: '동기화 오류가 발생했어요',
+      ai_settings_title: 'AI 설정', ai_settings_text: '본인의 Gemini API 키를 입력하면 이 브라우저에만 저장돼요. 서버나 깃허브 코드에는 절대 저장되지 않습니다. (Google AI Studio에서 무료로 발급받을 수 있어요)',
+      ai_settings_input_label: 'Gemini API Key', ai_key_test_btn: '연결 테스트', ai_key_save_btn: '저장', ai_key_remove_btn: '키 삭제', ai_settings_close_btn: '닫기',
+      ai_key_saved_status: '✓ 키가 저장되어 있어요', ai_key_testing_status: '테스트 중...', ai_key_valid_status: '✓ 연결 성공! 정상적으로 사용할 수 있어요',
+      ai_key_invalid_status: '✗ 연결에 실패했어요. 키를 다시 확인해주세요', ai_key_empty_toast: 'API 키를 입력해주세요', ai_key_saved_toast: 'API 키가 저장되었어요',
+      ai_key_removed_toast: 'API 키를 삭제했어요',
+      ai_loading_vocab: '🤖 AI가 오늘의 단어를 만들고 있어요...', ai_loading_grammar: '🤖 AI가 오늘의 문법을 만들고 있어요...', ai_loading_listen: '🤖 AI가 오늘의 듣기 콘텐츠를 만들고 있어요...',
+      ai_fallback_toast: 'AI 생성에 실패해서 기본 콘텐츠로 보여드려요.',
+      ai_grading_status: 'AI가 답변을 확인하고 있어요...',
+      practice_intro_title: '오늘 배운 표현으로 대화 연습하기', practice_start_btn: '🗣️ AI와 대화 연습하기', practice_end_message: '오늘 연습은 여기까지예요! 정말 잘하셨어요 🎉',
+      practice_input_placeholder: '메시지를 입력하세요...', practice_send_btn: '전송', practice_restart_btn: '다시 시작', practice_close_btn: '닫기', practice_mic_btn: '🎤',
+      practice_thinking: 'AI가 답변을 준비하고 있어요...',
     },
     english: {
       nav_home: 'Home', nav_study: 'Study', nav_progress: 'Progress', nav_login: 'Log in',
@@ -1451,7 +1524,20 @@
       weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       lang_switch_toast_template: "Let's start learning {label} {flag}!", review_later_toast: "I'll review this again later ↻",
       audio_not_supported: 'This browser does not support audio playback.',
-      login_modal_title: 'Log in', login_modal_text: 'Login is coming soon. See you then!', login_modal_close: 'Close',
+      login_modal_title: 'Log in', login_modal_text: 'Sign in with Google to save your progress and continue on other devices.', login_modal_close: 'Close',
+      google_signin_btn: '🔵 Sign in with Google', sign_out_btn: 'Sign out',
+      sync_status_syncing: 'Syncing...', sync_status_synced: '☁️ Saved to cloud', sync_status_error: 'Sync error occurred',
+      ai_settings_title: 'AI Settings', ai_settings_text: "Enter your own Gemini API key — it's stored only in this browser, never saved to any server or GitHub code. (Get a free key at Google AI Studio)",
+      ai_settings_input_label: 'Gemini API Key', ai_key_test_btn: 'Test connection', ai_key_save_btn: 'Save', ai_key_remove_btn: 'Remove key', ai_settings_close_btn: 'Close',
+      ai_key_saved_status: '✓ Key is saved', ai_key_testing_status: 'Testing...', ai_key_valid_status: '✓ Connected successfully!',
+      ai_key_invalid_status: '✗ Connection failed. Please check your key', ai_key_empty_toast: 'Please enter an API key', ai_key_saved_toast: 'API key saved',
+      ai_key_removed_toast: 'API key removed',
+      ai_loading_vocab: '🤖 AI is creating today\'s words...', ai_loading_grammar: '🤖 AI is creating today\'s grammar...', ai_loading_listen: '🤖 AI is creating today\'s listening content...',
+      ai_fallback_toast: 'AI generation failed, showing default content instead.',
+      ai_grading_status: 'AI is checking your answer...',
+      practice_intro_title: "Practice today's expressions in conversation", practice_start_btn: '🗣️ Practice with AI', practice_end_message: "That's it for today's practice! Great job 🎉",
+      practice_input_placeholder: 'Type a message...', practice_send_btn: 'Send', practice_restart_btn: 'Restart', practice_close_btn: 'Close', practice_mic_btn: '🎤',
+      practice_thinking: 'AI is thinking...',
     },
   };
 
@@ -1492,6 +1578,8 @@
 
   let state = loadState();
   let VOCAB = VOCAB_BY_LANG[state.language];
+  let DAILY_GRAMMAR = null;
+  let DAILY_LISTEN = null;
 
   function loadState() {
     let saved;
@@ -1528,6 +1616,7 @@
 
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    syncStateToCloud();
   }
 
   function addStudyMinutes(mins) {
@@ -1616,6 +1705,8 @@
     if (langKey === state.language) return;
     state.language = langKey;
     VOCAB = VOCAB_BY_LANG[langKey];
+    DAILY_GRAMMAR = null;
+    DAILY_LISTEN = null;
     state.vocabIndex = 0;
     state.grammarIndex = 0;
     state.convIndex = 0;
@@ -1657,8 +1748,11 @@
   function setLevel(level) {
     if (level === state.level) return;
     state.level = level;
+    DAILY_GRAMMAR = null;
+    DAILY_LISTEN = null;
     saveState();
     renderLevelSelector();
+    resetAllModesForLanguage();
   }
 
   // ---------------- UI language (interface) selector ----------------
@@ -1690,13 +1784,336 @@
   });
   document.addEventListener('click', () => document.getElementById('uiLangMenu').classList.remove('open'));
 
-  // ---------------- Login (placeholder UI) ----------------
+  // ---------------- Firebase (login + cloud sync) ----------------
+  // TODO: firebaseConfig 값을 실제 Firebase 프로젝트 설정으로 교체하세요.
+  // Firebase 콘솔 > 프로젝트 설정 > 내 앱 > SDK 설정 및 구성 에서 복사할 수 있어요.
+  const firebaseConfig = {
+    apiKey: 'AIzaSyALgiWDSbcvCSMjvkFPR3gJPj1RJWoKJ-0',
+    authDomain: 'langtutor-d9342.firebaseapp.com',
+    projectId: 'langtutor-d9342',
+    storageBucket: 'langtutor-d9342.firebasestorage.app',
+    messagingSenderId: '465235596299',
+    appId: '1:465235596299:web:feb8a5887c8ef4ec61e30e',
+  };
+
+  let fbAuth = null;
+  let fbDb = null;
+  let currentUser = null;
+  let cloudSyncTimer = null;
+
+  (function initFirebase() {
+    if (firebaseConfig.apiKey.startsWith('REPLACE_WITH')) {
+      console.warn('firebaseConfig가 아직 설정되지 않았어요. 로그인 기능은 비활성화됩니다.');
+      return;
+    }
+    try {
+      firebase.initializeApp(firebaseConfig);
+      fbAuth = firebase.auth();
+      fbDb = firebase.firestore();
+      fbAuth.onAuthStateChanged(handleAuthStateChanged);
+    } catch (e) {
+      console.error('Firebase 초기화 실패:', e);
+    }
+  })();
+
+  function setSyncStatus(key) {
+    const el = document.getElementById('loginSyncStatus');
+    if (el) el.textContent = key ? t(key) : '';
+  }
+
+  function renderAuthUI() {
+    const signedOutView = document.getElementById('loginSignedOutView');
+    const signedInView = document.getElementById('loginSignedInView');
+    const loginBtn = document.getElementById('loginBtn');
+    if (currentUser) {
+      signedOutView.style.display = 'none';
+      signedInView.style.display = 'block';
+      document.getElementById('loginUserName').textContent = currentUser.displayName || currentUser.email || '';
+      document.getElementById('loginUserEmail').textContent = currentUser.email || '';
+      const photo = document.getElementById('loginUserPhoto');
+      if (currentUser.photoURL) {
+        photo.src = currentUser.photoURL;
+        photo.style.display = 'inline-block';
+      } else {
+        photo.style.display = 'none';
+      }
+      const firstName = (currentUser.displayName || currentUser.email || '').split(' ')[0];
+      loginBtn.textContent = '👤 ' + firstName;
+    } else {
+      signedOutView.style.display = 'block';
+      signedInView.style.display = 'none';
+      loginBtn.textContent = t('nav_login');
+    }
+  }
+
+  async function handleAuthStateChanged(user) {
+    currentUser = user;
+    renderAuthUI();
+    if (!user) { setSyncStatus(''); return; }
+
+    setSyncStatus('sync_status_syncing');
+    try {
+      const docRef = fbDb.collection('users').doc(user.uid);
+      const snap = await docRef.get();
+      if (snap.exists) {
+        state = Object.assign(defaultState(), snap.data());
+        VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        renderLanguageSelector();
+        renderUILanguageMenu();
+        applyTranslations();
+        resetAllModesForLanguage();
+        updateHomeProgress();
+        renderStudyCardBadges();
+      } else {
+        await docRef.set(state);
+      }
+      setSyncStatus('sync_status_synced');
+    } catch (e) {
+      console.error('클라우드 동기화 실패:', e);
+      setSyncStatus('sync_status_error');
+    }
+  }
+
+  function syncStateToCloud() {
+    if (!currentUser || !fbDb) return;
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(() => {
+      setSyncStatus('sync_status_syncing');
+      fbDb.collection('users').doc(currentUser.uid).set(state)
+        .then(() => setSyncStatus('sync_status_synced'))
+        .catch(e => { console.error('클라우드 저장 실패:', e); setSyncStatus('sync_status_error'); });
+    }, 800);
+  }
+
+  document.getElementById('googleSignInBtn').addEventListener('click', () => {
+    if (!fbAuth) { showToast('Firebase 설정이 아직 연결되지 않았어요.'); return; }
+    const provider = new firebase.auth.GoogleAuthProvider();
+    fbAuth.signInWithPopup(provider).catch(e => {
+      console.error(e);
+      showToast('로그인에 실패했어요: ' + e.message);
+    });
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', () => {
+    if (fbAuth) fbAuth.signOut();
+  });
 
   document.getElementById('loginBtn').addEventListener('click', () => {
     document.getElementById('loginModal').classList.add('show');
   });
   document.getElementById('loginModalCloseBtn').addEventListener('click', () => {
     document.getElementById('loginModal').classList.remove('show');
+  });
+
+  // ---------------- Gemini API (user-supplied key, stored locally only) ----------------
+
+  const AI_KEY_STORAGE = 'gemini_api_key_v1';
+  const GEMINI_MODEL = 'gemini-2.0-flash';
+
+  function getGeminiKey() {
+    return localStorage.getItem(AI_KEY_STORAGE) || '';
+  }
+
+  async function callGeminiAPI(systemPrompt, userMessageOrHistory, opts) {
+    const apiKey = getGeminiKey();
+    if (!apiKey) throw new Error('NO_API_KEY');
+    const history = typeof userMessageOrHistory === 'string'
+      ? [{ role: 'user', content: userMessageOrHistory }]
+      : userMessageOrHistory;
+    const contents = history.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemPrompt }] },
+        contents: contents,
+        generationConfig: { maxOutputTokens: (opts && opts.maxTokens) || 300 },
+      }),
+    });
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '');
+      throw new Error('API_ERROR_' + res.status + (errBody ? ': ' + errBody.slice(0, 200) : ''));
+    }
+    const data = await res.json();
+    const candidate = (data.candidates || [])[0];
+    const parts = (candidate && candidate.content && candidate.content.parts) || [];
+    return parts.map(p => p.text || '').join('');
+  }
+
+  function parseJsonLoose(text) {
+    let cleaned = text.trim();
+    cleaned = cleaned.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+    const starts = [cleaned.indexOf('['), cleaned.indexOf('{')].filter(i => i !== -1);
+    const start = starts.length ? Math.min(...starts) : -1;
+    const end = Math.max(cleaned.lastIndexOf(']'), cleaned.lastIndexOf('}'));
+    if (start !== -1 && end !== -1) cleaned = cleaned.slice(start, end + 1);
+    return JSON.parse(cleaned);
+  }
+
+  // ---------------- AI daily content generation (Vocabulary / Grammar / Listening) ----------------
+
+  function todayContentCacheKey(kind) {
+    return `daily_ai_${kind}_${state.language}_${state.level}_${todayISO()}`;
+  }
+
+  function loadCachedContent(kind) {
+    try {
+      const raw = localStorage.getItem(todayContentCacheKey(kind));
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function saveCachedContent(kind, data) {
+    try { localStorage.setItem(todayContentCacheKey(kind), JSON.stringify(data)); } catch (e) { /* ignore quota errors */ }
+  }
+
+  async function generateVocabViaAI() {
+    const system = `You are a ${state.language} vocabulary teacher for a Korean-speaking learner at ${state.level} level. Respond with ONLY a valid JSON array, no markdown fences, no extra text.`;
+    const user = `Create 10 useful everyday ${state.language} vocabulary words for a ${state.level} learner. Each item: {"word": the word in ${state.language}, "ipa": a pronunciation guide, "meaning": Korean meaning, "example": a natural ${state.language} example sentence that contains the exact "word" text literally, "hint": a short memorization tip written in Korean}. Return a JSON array of exactly 10 objects. The "word" MUST appear character-for-character inside "example".`;
+    const text = await callGeminiAPI(system, user, { maxTokens: 1400 });
+    const items = parseJsonLoose(text);
+    const valid = items.filter(it => it && it.word && it.example && it.meaning && it.hint && it.example.includes(it.word));
+    if (valid.length < 6) throw new Error('VALIDATION_FAILED');
+    return valid;
+  }
+
+  async function generateGrammarViaAI() {
+    const system = `You are a ${state.language} grammar teacher for a Korean-speaking learner at ${state.level} level. Respond with ONLY a valid JSON array, no markdown fences, no extra text.`;
+    const user = `Create 5 useful ${state.language} grammar patterns for a ${state.level} learner. Each item: {"title": a short pattern name with a brief Korean gloss in parentheses, "explanation": a short explanation written in Korean, "example": a natural ${state.language} example sentence, "answer": the exact grammar-form substring inside "example" that demonstrates the pattern, "hint": a short Korean usage tip}. Return a JSON array of exactly 5 objects. The "answer" MUST appear character-for-character inside "example".`;
+    const text = await callGeminiAPI(system, user, { maxTokens: 1400 });
+    const items = parseJsonLoose(text);
+    const valid = items.filter(it => it && it.title && it.explanation && it.example && it.answer && it.hint && it.example.includes(it.answer));
+    if (valid.length < 3) throw new Error('VALIDATION_FAILED');
+    return valid;
+  }
+
+  async function generateListeningViaAI() {
+    const system = `You are a ${state.language} listening-comprehension content creator for a Korean-speaking learner at ${state.level} level. Respond with ONLY a valid JSON array, no markdown fences, no extra text.`;
+    const user = `Create 3 short natural ${state.language} sentences about everyday situations for a ${state.level} learner. Each item: {"sentence": the sentence in ${state.language}, "translation": Korean translation, "expressions": [2 objects {"term": a key word or phrase from the sentence, "meaning": Korean meaning}], "quiz": {"question": a comprehension question about the sentence, "options": [4 short answer choices], "answer": the exact string of the correct option}}. Return a JSON array of exactly 3 objects. "quiz.answer" MUST exactly match one of the strings in "quiz.options".`;
+    const text = await callGeminiAPI(system, user, { maxTokens: 1600 });
+    const items = parseJsonLoose(text);
+    const valid = items.filter(it => it && it.sentence && it.translation && Array.isArray(it.expressions) &&
+      it.quiz && Array.isArray(it.quiz.options) && it.quiz.options.includes(it.quiz.answer));
+    if (valid.length < 2) throw new Error('VALIDATION_FAILED');
+    return valid;
+  }
+
+  async function ensureVocabReady() {
+    const cached = loadCachedContent('vocab');
+    if (cached) { VOCAB = cached; state.vocabIndex = Math.min(state.vocabIndex, VOCAB.length - 1); renderVocabCard(); return; }
+    if (!getGeminiKey()) { VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english; renderVocabCard(); return; }
+    document.getElementById('vocabLoading').style.display = 'block';
+    document.querySelector('#vocab-study-phase .flashcard-stage').style.display = 'none';
+    try {
+      VOCAB = await generateVocabViaAI();
+      saveCachedContent('vocab', VOCAB);
+    } catch (e) {
+      console.warn('Vocab AI generation failed, using default content.', e);
+      VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english;
+      showToast(t('ai_fallback_toast'));
+    }
+    state.vocabIndex = 0;
+    document.getElementById('vocabLoading').style.display = 'none';
+    document.querySelector('#vocab-study-phase .flashcard-stage').style.display = 'flex';
+    renderVocabCard();
+  }
+
+  async function ensureGrammarReady() {
+    const cached = loadCachedContent('grammar');
+    if (cached) { DAILY_GRAMMAR = cached; state.grammarIndex = Math.min(state.grammarIndex, DAILY_GRAMMAR.length - 1); renderGrammarCard(); return; }
+    if (!getGeminiKey()) { DAILY_GRAMMAR = null; renderGrammarCard(); return; }
+    document.getElementById('grammarLoading').style.display = 'block';
+    document.querySelector('#grammar-study-phase .content-stage').style.display = 'none';
+    try {
+      DAILY_GRAMMAR = await generateGrammarViaAI();
+      saveCachedContent('grammar', DAILY_GRAMMAR);
+    } catch (e) {
+      console.warn('Grammar AI generation failed, using default content.', e);
+      DAILY_GRAMMAR = null;
+      showToast(t('ai_fallback_toast'));
+    }
+    state.grammarIndex = 0;
+    document.getElementById('grammarLoading').style.display = 'none';
+    document.querySelector('#grammar-study-phase .content-stage').style.display = 'flex';
+    renderGrammarCard();
+  }
+
+  async function ensureListenReady() {
+    const cached = loadCachedContent('listening');
+    if (cached) { DAILY_LISTEN = cached; state.listenIndex = Math.min(state.listenIndex, DAILY_LISTEN.length - 1); resetListeningStudy(); return; }
+    if (!getGeminiKey()) { DAILY_LISTEN = null; resetListeningStudy(); return; }
+    document.getElementById('listenLoading').style.display = 'block';
+    document.querySelector('#listen-study-phase .listening-card').style.display = 'none';
+    try {
+      DAILY_LISTEN = await generateListeningViaAI();
+      saveCachedContent('listening', DAILY_LISTEN);
+    } catch (e) {
+      console.warn('Listening AI generation failed, using default content.', e);
+      DAILY_LISTEN = null;
+      showToast(t('ai_fallback_toast'));
+    }
+    state.listenIndex = 0;
+    document.getElementById('listenLoading').style.display = 'none';
+    document.querySelector('#listen-study-phase .listening-card').style.display = 'block';
+    resetListeningStudy();
+  }
+
+  function renderAiKeyStatus() {
+    const key = getGeminiKey();
+    const statusEl = document.getElementById('aiKeyStatus');
+    const input = document.getElementById('aiApiKeyInput');
+    if (key) {
+      input.value = key;
+      statusEl.textContent = t('ai_key_saved_status');
+    } else {
+      input.value = '';
+      statusEl.textContent = '';
+    }
+  }
+
+  document.getElementById('aiSettingsBtn').addEventListener('click', () => {
+    renderAiKeyStatus();
+    document.getElementById('aiSettingsModal').classList.add('show');
+  });
+  document.getElementById('aiSettingsCloseBtn').addEventListener('click', () => {
+    document.getElementById('aiSettingsModal').classList.remove('show');
+  });
+
+  document.getElementById('aiKeySaveBtn').addEventListener('click', () => {
+    const key = document.getElementById('aiApiKeyInput').value.trim();
+    if (!key) { showToast(t('ai_key_empty_toast')); return; }
+    localStorage.setItem(AI_KEY_STORAGE, key);
+    document.getElementById('aiKeyStatus').textContent = t('ai_key_saved_status');
+    showToast(t('ai_key_saved_toast'));
+  });
+
+  document.getElementById('aiKeyRemoveBtn').addEventListener('click', () => {
+    localStorage.removeItem(AI_KEY_STORAGE);
+    renderAiKeyStatus();
+    showToast(t('ai_key_removed_toast'));
+  });
+
+  document.getElementById('aiKeyTestBtn').addEventListener('click', async () => {
+    const keyInInput = document.getElementById('aiApiKeyInput').value.trim();
+    if (keyInInput) localStorage.setItem(AI_KEY_STORAGE, keyInInput);
+    const statusEl = document.getElementById('aiKeyStatus');
+    statusEl.textContent = t('ai_key_testing_status');
+    try {
+      const reply = await callGeminiAPI('Reply with exactly one word: OK', 'ping', { maxTokens: 5 });
+      if (reply && reply.trim().length > 0) {
+        statusEl.textContent = t('ai_key_valid_status');
+      } else {
+        statusEl.textContent = t('ai_key_invalid_status');
+      }
+    } catch (e) {
+      console.error(e);
+      statusEl.textContent = e.message === 'NO_API_KEY' ? t('ai_key_empty_toast') : t('ai_key_invalid_status');
+    }
   });
 
   // ---------------- Apply UI translations ----------------
@@ -1710,10 +2127,33 @@
       const label = btn.querySelector('.nav-label');
       if (label) label.textContent = t(NAV_KEY[btn.dataset.view]);
     });
-    document.getElementById('loginBtn').textContent = t('nav_login');
     document.getElementById('loginModalTitle').textContent = t('login_modal_title');
     document.getElementById('loginModalText').textContent = t('login_modal_text');
     document.getElementById('loginModalCloseBtn').textContent = t('login_modal_close');
+    document.getElementById('googleSignInBtn').textContent = t('google_signin_btn');
+    document.getElementById('signOutBtn').textContent = t('sign_out_btn');
+    renderAuthUI();
+
+    document.getElementById('aiSettingsTitle').textContent = t('ai_settings_title');
+    document.getElementById('aiSettingsText').textContent = t('ai_settings_text');
+    document.getElementById('aiSettingsInputLabel').textContent = t('ai_settings_input_label');
+    document.getElementById('aiKeyTestBtn').textContent = t('ai_key_test_btn');
+    document.getElementById('aiKeySaveBtn').textContent = t('ai_key_save_btn');
+    document.getElementById('aiKeyRemoveBtn').textContent = t('ai_key_remove_btn');
+    document.getElementById('aiSettingsCloseBtn').textContent = t('ai_settings_close_btn');
+
+    document.getElementById('vocabLoading').textContent = t('ai_loading_vocab');
+    document.getElementById('grammarLoading').textContent = t('ai_loading_grammar');
+    document.getElementById('listenLoading').textContent = t('ai_loading_listen');
+
+    document.getElementById('practiceStartBtn').textContent = t('practice_start_btn');
+    document.getElementById('practiceInput').placeholder = t('practice_input_placeholder');
+    document.getElementById('practiceSendBtn').textContent = t('practice_send_btn');
+    document.getElementById('practiceRestartBtn').textContent = t('practice_restart_btn');
+    document.getElementById('practiceCloseBtn').textContent = t('practice_close_btn');
+    if (document.getElementById('practiceMicBtn').textContent !== '🔴') {
+      document.getElementById('practiceMicBtn').textContent = t('practice_mic_btn');
+    }
 
     document.getElementById('studyLangLabel').textContent = t('study_lang_label');
     document.getElementById('levelLabel').textContent = t('level_label');
@@ -1833,6 +2273,9 @@
     document.querySelectorAll('.subtab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.subtab === name);
     });
+    if (name === 'vocabulary') ensureVocabReady();
+    else if (name === 'grammar') ensureGrammarReady();
+    else if (name === 'listening') ensureListenReady();
   }
 
   document.querySelectorAll('.subtab-btn').forEach(btn => {
@@ -1853,7 +2296,7 @@
     hintEl.classList.remove('show');
     document.getElementById('flashcard').classList.remove('flipped');
     document.getElementById('vocabProgressLabel').textContent = (state.vocabIndex + 1) + ' / ' + VOCAB.length;
-    document.getElementById('vocabCardDesc').textContent = t('card_vocab_desc');
+    document.getElementById('vocabCardDesc').textContent = state.uiLanguage === 'korean' ? `단어 ${VOCAB.length}개` : `${VOCAB.length} words`;
   }
 
   function nextVocabCard() {
@@ -1968,6 +2411,16 @@
     resetListeningStudy();
     document.getElementById('listen-study-phase').style.display = 'block';
     document.getElementById('listen-review-phase').style.display = 'none';
+
+    ensureContentForActiveSubtab();
+  }
+
+  function ensureContentForActiveSubtab() {
+    const activeBtn = document.querySelector('.subtab-btn.active');
+    const active = activeBtn ? activeBtn.dataset.subtab : 'vocabulary';
+    if (active === 'vocabulary') ensureVocabReady();
+    else if (active === 'grammar') ensureGrammarReady();
+    else if (active === 'listening') ensureListenReady();
   }
 
   // ---------------- Vocabulary review (fill-in-the-blank) ----------------
@@ -2037,7 +2490,7 @@
 
   // ---------------- Grammar (study + fill-in-the-blank review) ----------------
 
-  function GRAMMAR() { return GRAMMAR_BY_LANG[state.language]; }
+  function GRAMMAR() { return DAILY_GRAMMAR || GRAMMAR_BY_LANG[state.language]; }
 
   function renderGrammarCard() {
     const item = GRAMMAR()[state.grammarIndex];
@@ -2048,7 +2501,7 @@
     hintEl.textContent = item.hint;
     hintEl.classList.remove('show');
     document.getElementById('grammarProgressLabel').textContent = (state.grammarIndex + 1) + ' / ' + GRAMMAR().length;
-    document.getElementById('grammarCardDesc').textContent = t('card_grammar_desc');
+    document.getElementById('grammarCardDesc').textContent = state.uiLanguage === 'korean' ? `패턴 ${GRAMMAR().length}개` : `${GRAMMAR().length} patterns`;
   }
 
   function nextGrammarCard() {
@@ -2208,27 +2661,55 @@
     input.focus();
   }
 
-  function checkConvReview() {
+  async function gradeConvAnswerWithAI(item, userAnswer) {
+    const system = `You are grading a ${state.language} language learner's response in a conversation practice exercise. Respond with ONLY valid JSON: {"correct": true or false, "feedback": a short one-sentence comment written in Korean, encouraging in tone}.`;
+    const user = `Situation: ${item.situation}\nPrompt/question the learner was asked: ${item.reviewQuestion}\nExample of a good answer: "${item.expectedAnswer}"\nLearner's actual answer: "${userAnswer}"\n\nJudge whether the learner's answer is an appropriate, natural ${state.language} response to the prompt (it does NOT need to match the example word-for-word — any reasonable, grammatically acceptable response with the right meaning counts as correct). Return the JSON verdict only.`;
+    const text = await callGeminiAPI(system, user, { maxTokens: 200 });
+    const result = parseJsonLoose(text);
+    if (typeof result.correct !== 'boolean') throw new Error('BAD_GRADING_RESPONSE');
+    return result;
+  }
+
+  async function checkConvReview() {
     const item = CONV()[convReviewIdx];
     const input = document.getElementById('convReviewInput');
     const feedback = document.getElementById('convReviewFeedback');
-    const isCorrect = lenientMatch(input.value, item.expectedAnswer);
+    const checkBtn = document.getElementById('convReviewCheckBtn');
+    const userAnswer = input.value;
+
+    let isCorrect, aiFeedback = null;
+    if (getGeminiKey()) {
+      checkBtn.disabled = true;
+      feedback.textContent = t('ai_grading_status');
+      try {
+        const verdict = await gradeConvAnswerWithAI(item, userAnswer);
+        isCorrect = verdict.correct;
+        aiFeedback = verdict.feedback;
+      } catch (e) {
+        console.warn('AI grading failed, falling back to basic match.', e);
+        isCorrect = lenientMatch(userAnswer, item.expectedAnswer);
+      }
+      checkBtn.disabled = false;
+    } else {
+      isCorrect = lenientMatch(userAnswer, item.expectedAnswer);
+    }
+
     if (isCorrect) {
       input.className = 'underline-input correct'; input.disabled = true;
-      feedback.textContent = t('conv_good_feedback');
+      feedback.textContent = aiFeedback || t('conv_good_feedback');
       convReviewCorrect += 1;
       recordReviewAnswer(true);
-      setTimeout(advanceConvReview, 900);
+      setTimeout(advanceConvReview, 1200);
     } else if (convReviewAttempt === 0) {
       convReviewAttempt = 1;
       input.className = 'underline-input incorrect';
-      feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
+      feedback.textContent = (aiFeedback ? aiFeedback + ' ' : '') + t('hint_prefix') + item.hint + t('try_again_suffix');
       input.value = ''; input.focus();
     } else {
       input.className = 'underline-input incorrect'; input.disabled = true;
       feedback.textContent = t('conv_wrong_reveal_template', { a: item.expectedAnswer });
       recordReviewAnswer(false);
-      setTimeout(advanceConvReview, 1600);
+      setTimeout(advanceConvReview, 1800);
     }
   }
 
@@ -2241,6 +2722,7 @@
       document.getElementById('convReviewCard').style.display = 'none';
       document.getElementById('convReviewResult').style.display = 'block';
       document.getElementById('convReviewScore').textContent = convReviewCorrect + ' / ' + CONV().length;
+      document.getElementById('practiceStartBtn').style.display = getGeminiKey() ? 'inline-flex' : 'none';
       markTaskDone('conversation');
       showCelebration('💬', t('celeb_conv_title'), t('celeb_conv_text', { c: convReviewCorrect, t: CONV().length }));
     }
@@ -2248,11 +2730,142 @@
 
   document.getElementById('convReviewCheckBtn').addEventListener('click', checkConvReview);
   document.getElementById('convReviewInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkConvReview(); });
+
+  // ---------------- AI conversation practice (post-review) ----------------
+
+  const PRACTICE_MAX_TURNS = 4;
+  let practiceMessages = [];
+  let practiceTurnCount = 0;
+  let practiceEnded = false;
+
+  function practiceSystemPrompt() {
+    const situations = CONV().map(it => `- (${it.situation}) "${it.studySentence}" — ${it.meaning}`).join('\n');
+    return `You are a friendly native ${state.language} speaker helping a Korean learner (level: ${state.level}) briefly practice speaking. Today the learner studied these phrases:\n${situations}\n\nHave a short, simple, encouraging conversation that naturally gives the learner a chance to reuse today's phrases. Speak mostly in ${state.language} with short Korean hints in parentheses when helpful for a beginner. Keep each reply to 1-3 short sentences. This conversation must stay SHORT — after about ${PRACTICE_MAX_TURNS} learner replies, wrap up warmly and end the conversation.`;
+  }
+
+  function appendPracticeBubble(role, text) {
+    const win = document.getElementById('practiceChatWindow');
+    const div = document.createElement('div');
+    div.style.maxWidth = '78%';
+    div.style.padding = '10px 14px';
+    div.style.borderRadius = '12px';
+    div.style.fontSize = '0.92rem';
+    div.style.lineHeight = '1.5';
+    div.style.whiteSpace = 'pre-wrap';
+    if (role === 'user') {
+      div.style.alignSelf = 'flex-end';
+      div.style.background = 'var(--primary)';
+      div.style.color = '#fff';
+    } else {
+      div.style.alignSelf = 'flex-start';
+      div.style.background = 'var(--card)';
+      div.style.border = '1px solid var(--border)';
+    }
+    div.textContent = text;
+    win.appendChild(div);
+    win.scrollTop = win.scrollHeight;
+    return div;
+  }
+
+  async function startPractice() {
+    practiceMessages = [];
+    practiceTurnCount = 0;
+    practiceEnded = false;
+    document.getElementById('practiceChatWindow').innerHTML = '';
+    document.getElementById('practiceInput').disabled = true;
+    document.getElementById('practiceSendBtn').disabled = true;
+    document.getElementById('practiceRestartBtn').style.display = 'none';
+    document.getElementById('practiceTitle').textContent = t('practice_intro_title');
+
+    document.getElementById('conv-review-phase').style.display = 'none';
+    document.getElementById('conv-practice-phase').style.display = 'block';
+
+    const thinking = appendPracticeBubble('assistant', t('practice_thinking'));
+    try {
+      const opening = await callGeminiAPI(practiceSystemPrompt(), 'Start the conversation with a short, friendly opening line.', { maxTokens: 200 });
+      thinking.textContent = opening;
+      practiceMessages.push({ role: 'assistant', content: opening });
+      document.getElementById('practiceInput').disabled = false;
+      document.getElementById('practiceSendBtn').disabled = false;
+      document.getElementById('practiceInput').focus();
+    } catch (e) {
+      console.error(e);
+      thinking.textContent = t('ai_key_invalid_status');
+    }
+  }
+
+  async function sendPracticeMessage() {
+    if (practiceEnded) return;
+    const input = document.getElementById('practiceInput');
+    const text = input.value.trim();
+    if (!text) return;
+    appendPracticeBubble('user', text);
+    practiceMessages.push({ role: 'user', content: text });
+    practiceTurnCount += 1;
+    input.value = '';
+    input.disabled = true;
+    document.getElementById('practiceSendBtn').disabled = true;
+
+    const thinking = appendPracticeBubble('assistant', t('practice_thinking'));
+    try {
+      let systemPrompt = practiceSystemPrompt();
+      if (practiceTurnCount >= PRACTICE_MAX_TURNS) {
+        systemPrompt += ` This is the learner's final reply for today — respond briefly, then warmly end the conversation (in ${state.language}, with a short Korean note that practice is done).`;
+      }
+      const reply = await callGeminiAPI(systemPrompt, practiceMessages, { maxTokens: 200 });
+      thinking.textContent = reply;
+      practiceMessages.push({ role: 'assistant', content: reply });
+      if (practiceTurnCount >= PRACTICE_MAX_TURNS) {
+        practiceEnded = true;
+        appendPracticeBubble('assistant', t('practice_end_message'));
+        document.getElementById('practiceRestartBtn').style.display = 'inline-flex';
+      } else {
+        input.disabled = false;
+        document.getElementById('practiceSendBtn').disabled = false;
+        input.focus();
+      }
+    } catch (e) {
+      console.error(e);
+      thinking.textContent = t('ai_key_invalid_status');
+      input.disabled = false;
+      document.getElementById('practiceSendBtn').disabled = false;
+    }
+  }
+
+  document.getElementById('practiceStartBtn').addEventListener('click', startPractice);
+  document.getElementById('practiceRestartBtn').addEventListener('click', startPractice);
+  document.getElementById('practiceSendBtn').addEventListener('click', sendPracticeMessage);
+  document.getElementById('practiceInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendPracticeMessage(); });
+  document.getElementById('practiceCloseBtn').addEventListener('click', () => {
+    document.getElementById('conv-practice-phase').style.display = 'none';
+    document.getElementById('conv-review-phase').style.display = 'block';
+  });
+
+  if ('webkitSpeechRecognition' in window) {
+    const micBtn = document.getElementById('practiceMicBtn');
+    micBtn.style.display = 'inline-flex';
+    const recognition = new webkitSpeechRecognition();
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    micBtn.addEventListener('click', () => {
+      recognition.lang = LANG_TTS[state.language] || 'en-US';
+      micBtn.textContent = '🔴';
+      recognition.start();
+    });
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      const input = document.getElementById('practiceInput');
+      input.value = transcript;
+      input.focus();
+    };
+    recognition.onend = () => { micBtn.textContent = t('practice_mic_btn'); };
+    recognition.onerror = () => { micBtn.textContent = t('practice_mic_btn'); };
+  }
   document.getElementById('convReviewListenBtn').addEventListener('click', () => speak(CONV()[convReviewIdx].studySentence));
 
   // ---------------- Listening (staged reveal + review) ----------------
 
-  function LISTEN() { return LISTENING_BY_LANG[state.language]; }
+  function LISTEN() { return DAILY_LISTEN || LISTENING_BY_LANG[state.language]; }
 
   let listenStage = 0; // 0..4 listens counted
 
@@ -2265,7 +2878,7 @@
     document.getElementById('listenNextBtn').style.display = 'none';
     document.getElementById('listenStageHint').textContent = t('listen_hint_initial');
     document.getElementById('listenProgressLabel').textContent = (state.listenIndex + 1) + ' / ' + LISTEN().length;
-    document.getElementById('listenCardDesc').textContent = t('card_listen_desc');
+    document.getElementById('listenCardDesc').textContent = state.uiLanguage === 'korean' ? `클립 ${LISTEN().length}개` : `${LISTEN().length} clips`;
   }
 
   function renderListenExpressions() {
