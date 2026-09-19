@@ -496,6 +496,18 @@
     pointer-events: none;
     overflow: hidden;
   }
+  /* Moved by JS with transform: translateY(), not scrollTop. A separate
+     scrollable box here (even overflow:hidden + a JS-set scrollTop) can
+     silently fail to actually move on some browsers - especially right
+     after its content changes - while writeInput's own real scrolling
+     (a normal overflow:auto textarea) always works, which is exactly what
+     produced the "background ruled-lines scroll but the typed text
+     doesn't" report: the two were never guaranteed to move together.
+     transform is a plain style write with no separate scroll state to fall
+     out of sync, so it can't drift from writeInput's scrollTop. */
+  #writeOverlayInner {
+    will-change: transform;
+  }
   .write-overlay .wrong { color: var(--wrong); }
   .write-input {
     background-color: transparent;
@@ -679,7 +691,7 @@
       <div class="page page-right">
         <div class="page-head">나의 노트</div>
         <div class="write-surface">
-          <div class="write-layer write-overlay" id="writeOverlay"></div>
+          <div class="write-layer write-overlay" id="writeOverlay"><div id="writeOverlayInner"></div></div>
           <textarea class="write-layer write-input" id="writeInput" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="왼쪽 원문을 보며 이곳에 옮겨 적어보세요..."></textarea>
         </div>
       </div>
@@ -1285,7 +1297,7 @@
   const donePill = document.getElementById('donePill');
   const accuracyPill = document.getElementById('accuracyPill');
   const sourceList = document.getElementById('sourceList');
-  const writeOverlay = document.getElementById('writeOverlay');
+  const writeOverlayInner = document.getElementById('writeOverlayInner');
   const writeInput = document.getElementById('writeInput');
   const finishBtn = document.getElementById('finishBtn');
   const backBtn = document.getElementById('backBtn');
@@ -1349,10 +1361,18 @@
       if (ok) correct++;
       html += ok ? escapeHtml(ch) : `<span class="wrong">${escapeHtml(ch)}</span>`;
     }
-    writeOverlay.innerHTML = html;
+    writeOverlayInner.innerHTML = html;
     const acc = typed.length ? Math.round((correct / typed.length) * 100) : 0;
     accuracyPill.textContent = `정확도 ${acc}%`;
-    writeOverlay.scrollTop = writeInput.scrollTop;
+    syncOverlayScroll();
+  }
+
+  // Keeps the overlay's text lined up with writeInput's real scroll position.
+  // writeOverlayInner never scrolls on its own - it's just moved with
+  // transform - so this one line is the only thing that can ever set its
+  // position, and it always matches writeInput.scrollTop exactly.
+  function syncOverlayScroll() {
+    writeOverlayInner.style.transform = `translateY(${-writeInput.scrollTop}px)`;
   }
 
   function updateDonePill() {
@@ -1371,18 +1391,7 @@
   // is what makes this correct for a sentence that *wraps* onto more than
   // one visual line, which is the common case here, not the exception.
   function measureCaretOffset(pos) {
-    // renderOverlay() just rebuilt writeOverlay's innerHTML, and browsers are
-    // *inconsistent* about whether replacing an element's children preserves
-    // its scrollTop or resets it to 0 (this is exactly the kind of thing
-    // that differs between Chrome and Safari). Rather than trust either
-    // behavior, force a known state - scrolled to the very top - right
-    // before measuring, so "rect.top - overlayTop" is always the caret's
-    // true offset from the *start* of the content, on every browser, every
-    // time, regardless of whatever scrollTop the rebuild happened to leave
-    // behind. This is what broke specifically once real scrolling kicked in
-    // (short notes never hit the inconsistency; long ones always did).
-    writeOverlay.scrollTop = 0;
-    const walker = document.createTreeWalker(writeOverlay, NodeFilter.SHOW_TEXT);
+    const walker = document.createTreeWalker(writeOverlayInner, NodeFilter.SHOW_TEXT);
     let remaining = pos;
     let node = null, offset = 0, n;
     while ((n = walker.nextNode())) {
@@ -1395,7 +1404,13 @@
     range.setStart(node, offset);
     range.collapse(true);
     const rect = range.getBoundingClientRect();
-    const overlayTop = writeOverlay.getBoundingClientRect().top;
+    // writeOverlayInner carries the same translateY() as the text node being
+    // measured, so diffing against ITS rect (not the outer, unmoved
+    // writeOverlay) cancels that offset out - the result is always the
+    // caret's position from the *start* of the content, regardless of
+    // current scroll, with no need to touch any scroll/transform state to
+    // get there.
+    const overlayTop = writeOverlayInner.getBoundingClientRect().top;
     return { top: rect.top - overlayTop, bottom: rect.bottom - overlayTop };
   }
 
@@ -1417,7 +1432,7 @@
     } else if (pos.top < viewTop) {
       writeInput.scrollTop = pos.top;
     }
-    writeOverlay.scrollTop = writeInput.scrollTop;
+    syncOverlayScroll();
   }
 
   let saveTimer = null;
@@ -1437,7 +1452,7 @@
   // The source page and the notebook scroll independently - each side just
   // keeps its own overlay in sync with its own textarea.
   writeInput.addEventListener('scroll', () => {
-    writeOverlay.scrollTop = writeInput.scrollTop;
+    syncOverlayScroll();
   });
 
   // On mobile, the on-screen keyboard eats the bottom half of the screen -
