@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>🌱 Daily Lang_study</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -1143,6 +1144,7 @@
       <!-- Conversation sub-view -->
       <div id="study-conversation" style="display:none">
         <div id="conv-study-phase">
+          <p class="ai-loading-label" id="convLoading" style="display:none;text-align:center;color:var(--subtext);padding:40px 0;">🤖 AI가 오늘의 회화를 만들고 있어요...</p>
           <p class="study-progress-label" id="convProgressLabel">1 / 5</p>
           <div class="content-stage">
             <div class="content-card">
@@ -1388,11 +1390,11 @@
       { word: 'ความขอบคุณ', ipa: 'kwam-khob-khun', meaning: '감사', example: 'เธอแสดงความขอบคุณด้วยรอยยิ้มที่อบอุ่น', hint: '고마운 마음을 나타내는 말이에요.' },
       { word: 'อยากรู้อยากเห็น', ipa: 'yak-ru-yak-hen', meaning: '호기심 많은', example: 'แมวที่อยากรู้อยากเห็นสำรวจทุกมุม', hint: '새로운 것을 알고 싶어하는 마음이에요.' },
       { word: 'สงบ', ipa: 'sa-ngob', meaning: '평화로운', example: 'ทะเลสาบแห่งนี้เงียบและสงบ', hint: '조용하고 갈등이 없는 상태예요.' },
-      { word: 'บรรลุ', ipa: 'ban-lu', meaning: 'to achieve', example: 'เธอพยายามอย่างหนักเพื่อบรรลุเป้าหมาย', hint: '목표를 이뤄낸다는 뜻이에요.' },
-      { word: 'ยอมรับ', ipa: 'yom-rap', meaning: 'to accept/embrace', example: 'เขาตัดสินใจยอมรับการเปลี่ยนแปลง', hint: '새로운 것을 인정하고 받아들인다는 뜻이에요.' },
-      { word: 'จริงใจ', ipa: 'jing-jai', meaning: 'genuine', example: 'รอยยิ้มของเธออบอุ่นและจริงใจ', hint: '거짓이 없다는 뜻이에요.' },
-      { word: 'เจริญรุ่งเรือง', ipa: 'ja-roen-rung-rueang', meaning: 'to flourish', example: 'สวนเริ่มเจริญรุ่งเรืองในฤดูใบไม้ผลิ', hint: '잘 자라거나 번영한다는 뜻이에요.' },
-      { word: 'น่าเชื่อถือ', ipa: 'na-chuea-thue', meaning: 'reliable', example: 'เขาเป็นเพื่อนที่น่าเชื่อถือ', hint: '믿을 수 있다는 뜻이에요.' },
+      { word: 'บรรลุ', ipa: 'ban-lu', meaning: '성취하다', example: 'เธอพยายามอย่างหนักเพื่อบรรลุเป้าหมาย', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: 'ยอมรับ', ipa: 'yom-rap', meaning: '받아들이다', example: 'เขาตัดสินใจยอมรับการเปลี่ยนแปลง', hint: '새로운 것을 인정하고 받아들인다는 뜻이에요.' },
+      { word: 'จริงใจ', ipa: 'jing-jai', meaning: '진실한', example: 'รอยยิ้มของเธออบอุ่นและจริงใจ', hint: '거짓이 없다는 뜻이에요.' },
+      { word: 'เจริญรุ่งเรือง', ipa: 'ja-roen-rung-rueang', meaning: '번창하다', example: 'สวนเริ่มเจริญรุ่งเรืองในฤดูใบไม้ผลิ', hint: '잘 자라거나 번영한다는 뜻이에요.' },
+      { word: 'น่าเชื่อถือ', ipa: 'na-chuea-thue', meaning: '믿을 수 있는', example: 'เขาเป็นเพื่อนที่น่าเชื่อถือ', hint: '믿을 수 있다는 뜻이에요.' },
     ],
   };
 
@@ -1487,6 +1489,7 @@
       grammar_review_instruction: '빈칸에 오늘 배운 문법을 입력하세요.',
       placeholder_answer: '정답 입력', placeholder_response: '답변 입력', check_btn: '확인',
       correct_feedback: '정답이에요! 🌿', hint_prefix: '힌트: ', try_again_suffix: ' 다시 한 번 입력해보세요!',
+      type_to_continue_suffix: ' 정답을 입력해야 다음으로 넘어가요.', select_to_continue_suffix: ' 정답을 선택해야 다음으로 넘어가요.',
       answer_reveal_template: '아쉬워요! 정답은 "{a}" 예요.',
       conv_good_feedback: '좋아요! 자연스러운 답변이에요 🌿', conv_wrong_reveal_template: '아쉬워요! 예시 답변: "{a}"',
       review_complete_template: '{mode} 복습 완료!',
@@ -1514,7 +1517,7 @@
       ai_key_saved_status: '✓ 키가 저장되어 있어요', ai_key_testing_status: '테스트 중...', ai_key_valid_status: '✓ 연결 성공! 정상적으로 사용할 수 있어요',
       ai_key_invalid_status: '✗ 연결에 실패했어요. 키를 다시 확인해주세요', ai_key_empty_toast: 'API 키를 입력해주세요', ai_key_saved_toast: 'API 키가 저장되었어요',
       ai_key_removed_toast: 'API 키를 삭제했어요',
-      ai_loading_vocab: '🤖 AI가 오늘의 단어를 만들고 있어요...', ai_loading_grammar: '🤖 AI가 오늘의 문법을 만들고 있어요...', ai_loading_listen: '🤖 AI가 오늘의 듣기 콘텐츠를 만들고 있어요...',
+      ai_loading_vocab: '🤖 AI가 오늘의 단어를 만들고 있어요...', ai_loading_grammar: '🤖 AI가 오늘의 문법을 만들고 있어요...', ai_loading_conv: '🤖 AI가 오늘의 회화를 만들고 있어요...', ai_loading_listen: '🤖 AI가 오늘의 듣기 콘텐츠를 만들고 있어요...',
       ai_fallback_toast: 'AI 생성에 실패해서 기본 콘텐츠로 보여드려요.',
       ai_grading_status: 'AI가 답변을 확인하고 있어요...',
       practice_intro_title: '오늘 배운 표현으로 대화 연습하기', practice_start_btn: '🗣️ AI와 대화 연습하기', practice_end_message: '오늘 연습은 여기까지예요! 정말 잘하셨어요 🎉',
@@ -1538,6 +1541,7 @@
       grammar_review_instruction: 'Fill in the grammar pattern you studied.',
       placeholder_answer: 'Type your answer', placeholder_response: 'Type your response', check_btn: 'Check',
       correct_feedback: 'Correct! 🌿', hint_prefix: 'Hint: ', try_again_suffix: ' Try once more!',
+      type_to_continue_suffix: ' Type the answer to continue.', select_to_continue_suffix: ' Select the correct answer to continue.',
       answer_reveal_template: 'Not quite! The answer was "{a}".',
       conv_good_feedback: "Nice, that's a natural answer 🌿", conv_wrong_reveal_template: 'Not quite! Example answer: "{a}"',
       review_complete_template: '{mode} review complete!',
@@ -1565,7 +1569,7 @@
       ai_key_saved_status: '✓ Key is saved', ai_key_testing_status: 'Testing...', ai_key_valid_status: '✓ Connected successfully!',
       ai_key_invalid_status: '✗ Connection failed. Please check your key', ai_key_empty_toast: 'Please enter an API key', ai_key_saved_toast: 'API key saved',
       ai_key_removed_toast: 'API key removed',
-      ai_loading_vocab: '🤖 AI is creating today\'s words...', ai_loading_grammar: '🤖 AI is creating today\'s grammar...', ai_loading_listen: '🤖 AI is creating today\'s listening content...',
+      ai_loading_vocab: '🤖 AI is creating today\'s words...', ai_loading_grammar: '🤖 AI is creating today\'s grammar...', ai_loading_conv: '🤖 AI is creating today\'s conversation...', ai_loading_listen: '🤖 AI is creating today\'s listening content...',
       ai_fallback_toast: 'AI generation failed, showing default content instead.',
       ai_grading_status: 'AI is checking your answer...',
       practice_intro_title: "Practice today's expressions in conversation", practice_start_btn: '🗣️ Practice with AI', practice_end_message: "That's it for today's practice! Great job 🎉",
@@ -1613,6 +1617,7 @@
   let VOCAB = VOCAB_BY_LANG[state.language];
   let DAILY_GRAMMAR = null;
   let DAILY_LISTEN = null;
+  let DAILY_CONV = null;
 
   function loadState() {
     let saved;
@@ -1740,6 +1745,7 @@
     VOCAB = VOCAB_BY_LANG[langKey];
     DAILY_GRAMMAR = null;
     DAILY_LISTEN = null;
+    DAILY_CONV = null;
     state.vocabIndex = 0;
     state.grammarIndex = 0;
     state.convIndex = 0;
@@ -1783,6 +1789,7 @@
     state.level = level;
     DAILY_GRAMMAR = null;
     DAILY_LISTEN = null;
+    DAILY_CONV = null;
     saveState();
     renderLevelSelector();
     resetAllModesForLanguage();
@@ -2049,6 +2056,16 @@
     return valid;
   }
 
+  async function generateConvViaAI() {
+    const system = `You are a ${state.language} conversation coach for a Korean-speaking learner at ${state.level} level. Respond with ONLY a valid JSON array, no markdown fences, no extra text.`;
+    const user = `Create 5 short everyday conversational situations for practicing ${state.language} at ${state.level} level. Each item: {"situation": a short Korean description of the situation, "studySentence": a natural ${state.language} sentence useful in that situation, "meaning": Korean translation of "studySentence", "reviewQuestion": a ${state.language} prompt or question (with a short Korean gloss if helpful) that sets up the situation and asks the learner to respond, "expectedAnswer": the exact ${state.language} sentence the learner should answer with (should match "studySentence"), "hint": a short Korean usage tip}. Return a JSON array of exactly 5 objects.`;
+    const text = await callGeminiAPI(system, user, { maxTokens: 1600 });
+    const items = parseJsonLoose(text);
+    const valid = items.filter(it => it && it.situation && it.studySentence && it.meaning && it.reviewQuestion && it.expectedAnswer && it.hint);
+    if (valid.length < 3) throw new Error('VALIDATION_FAILED');
+    return valid;
+  }
+
   async function generateListeningViaAI() {
     const system = `You are a ${state.language} listening-comprehension content creator for a Korean-speaking learner at ${state.level} level. Respond with ONLY a valid JSON array, no markdown fences, no extra text.`;
     const user = `Create 3 short natural ${state.language} sentences about everyday situations for a ${state.level} learner. Each item: {"sentence": the sentence in ${state.language}, "translation": Korean translation, "expressions": [2 objects {"term": a key word or phrase from the sentence, "meaning": Korean meaning}], "quiz": {"question": a comprehension question about the sentence, "options": [4 short answer choices], "answer": the exact string of the correct option}}. Return a JSON array of exactly 3 objects. "quiz.answer" MUST exactly match one of the strings in "quiz.options".`;
@@ -2118,6 +2135,36 @@
     document.getElementById('grammarLoading').style.display = 'none';
     document.querySelector('#grammar-study-phase .content-stage').style.display = 'flex';
     renderGrammarCard();
+  }
+
+  async function ensureConvReady() {
+    if (!getGeminiKey()) { DAILY_CONV = null; renderConvCard(); return; }
+    const record = loadDailyRecord('conversation');
+    if (record.versions.length >= MAX_DAILY_GENERATIONS) {
+      DAILY_CONV = pickRandom(record.versions);
+      state.convIndex = 0;
+      renderConvCard();
+      return;
+    }
+    document.getElementById('convLoading').style.display = 'block';
+    document.querySelector('#conv-study-phase .content-stage').style.display = 'none';
+    try {
+      DAILY_CONV = await generateConvViaAI();
+      record.versions.push(DAILY_CONV);
+      saveDailyRecord('conversation', record);
+    } catch (e) {
+      console.warn('Conversation AI generation failed.', e);
+      if (record.versions.length > 0) {
+        DAILY_CONV = pickRandom(record.versions);
+      } else {
+        DAILY_CONV = null;
+        showToast(t('ai_fallback_toast'));
+      }
+    }
+    state.convIndex = 0;
+    document.getElementById('convLoading').style.display = 'none';
+    document.querySelector('#conv-study-phase .content-stage').style.display = 'flex';
+    renderConvCard();
   }
 
   async function ensureListenReady() {
@@ -2231,6 +2278,7 @@
 
     document.getElementById('vocabLoading').textContent = t('ai_loading_vocab');
     document.getElementById('grammarLoading').textContent = t('ai_loading_grammar');
+    document.getElementById('convLoading').textContent = t('ai_loading_conv');
     document.getElementById('listenLoading').textContent = t('ai_loading_listen');
 
     document.getElementById('practiceStartBtn').textContent = t('practice_start_btn');
@@ -2362,6 +2410,7 @@
     });
     if (name === 'vocabulary') ensureVocabReady();
     else if (name === 'grammar') ensureGrammarReady();
+    else if (name === 'conversation') ensureConvReady();
     else if (name === 'listening') ensureListenReady();
   }
 
@@ -2507,6 +2556,7 @@
     const active = activeBtn ? activeBtn.dataset.subtab : 'vocabulary';
     if (active === 'vocabulary') ensureVocabReady();
     else if (active === 'grammar') ensureGrammarReady();
+    else if (active === 'conversation') ensureConvReady();
     else if (active === 'listening') ensureListenReady();
   }
 
@@ -2538,6 +2588,20 @@
     const input = document.getElementById('vocabReviewInput');
     const feedback = document.getElementById('vocabReviewFeedback');
     const isCorrect = exactMatch(input.value, item.word);
+
+    if (vocabReviewAttempt >= 2) {
+      if (isCorrect) {
+        input.className = 'correct'; input.disabled = true;
+        feedback.textContent = t('correct_feedback');
+        setTimeout(advanceVocabReview, 700);
+      } else {
+        input.className = 'incorrect';
+        feedback.textContent = t('answer_reveal_template', { a: item.word }) + t('type_to_continue_suffix');
+        input.value = ''; input.focus();
+      }
+      return;
+    }
+
     if (isCorrect) {
       input.className = 'correct'; input.disabled = true;
       feedback.textContent = t('correct_feedback');
@@ -2550,10 +2614,11 @@
       feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
       input.value = ''; input.focus();
     } else {
-      input.className = 'incorrect'; input.disabled = true;
-      feedback.textContent = t('answer_reveal_template', { a: item.word });
+      vocabReviewAttempt = 2;
+      input.className = 'incorrect';
+      feedback.textContent = t('answer_reveal_template', { a: item.word }) + t('type_to_continue_suffix');
       recordReviewAnswer(false);
-      setTimeout(advanceVocabReview, 1400);
+      input.value = ''; input.focus();
     }
   }
 
@@ -2573,7 +2638,7 @@
 
   document.getElementById('vocabReviewCheckBtn').addEventListener('click', checkVocabReview);
   document.getElementById('vocabReviewInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkVocabReview(); });
-  document.getElementById('vocabReviewListenBtn').addEventListener('click', () => speak(VOCAB[vocabReviewIdx].word));
+  document.getElementById('vocabReviewListenBtn').addEventListener('click', () => speak(VOCAB[vocabReviewIdx].example));
 
   // ---------------- Grammar (study + fill-in-the-blank review) ----------------
 
@@ -2645,6 +2710,20 @@
     const input = document.getElementById('grammarReviewInput');
     const feedback = document.getElementById('grammarReviewFeedback');
     const isCorrect = exactMatch(input.value, item.answer);
+
+    if (grammarReviewAttempt >= 2) {
+      if (isCorrect) {
+        input.className = 'underline-input correct'; input.disabled = true;
+        feedback.textContent = t('correct_feedback');
+        setTimeout(advanceGrammarReview, 700);
+      } else {
+        input.className = 'underline-input incorrect';
+        feedback.textContent = t('answer_reveal_template', { a: item.answer }) + t('type_to_continue_suffix');
+        input.value = ''; input.focus();
+      }
+      return;
+    }
+
     if (isCorrect) {
       input.className = 'underline-input correct'; input.disabled = true;
       feedback.textContent = t('correct_feedback');
@@ -2657,10 +2736,11 @@
       feedback.textContent = t('hint_prefix') + item.hint + t('try_again_suffix');
       input.value = ''; input.focus();
     } else {
-      input.className = 'underline-input incorrect'; input.disabled = true;
-      feedback.textContent = t('answer_reveal_template', { a: item.answer });
+      grammarReviewAttempt = 2;
+      input.className = 'underline-input incorrect';
+      feedback.textContent = t('answer_reveal_template', { a: item.answer }) + t('type_to_continue_suffix');
       recordReviewAnswer(false);
-      setTimeout(advanceGrammarReview, 1400);
+      input.value = ''; input.focus();
     }
   }
 
@@ -2684,7 +2764,7 @@
 
   // ---------------- Conversation (study + Q&A review) ----------------
 
-  function CONV() { return CONVERSATION_BY_LANG[state.language]; }
+  function CONV() { return DAILY_CONV || CONVERSATION_BY_LANG[state.language]; }
 
   function renderConvCard() {
     const item = CONV()[state.convIndex];
@@ -2764,6 +2844,19 @@
     const checkBtn = document.getElementById('convReviewCheckBtn');
     const userAnswer = input.value;
 
+    if (convReviewAttempt >= 2) {
+      if (exactMatch(userAnswer, item.expectedAnswer)) {
+        input.className = 'underline-input correct'; input.disabled = true;
+        feedback.textContent = t('correct_feedback');
+        setTimeout(advanceConvReview, 900);
+      } else {
+        input.className = 'underline-input incorrect';
+        feedback.textContent = t('conv_wrong_reveal_template', { a: item.expectedAnswer }) + t('type_to_continue_suffix');
+        input.value = ''; input.focus();
+      }
+      return;
+    }
+
     let isCorrect, aiFeedback = null;
     if (getGeminiKey()) {
       checkBtn.disabled = true;
@@ -2793,10 +2886,11 @@
       feedback.textContent = (aiFeedback ? aiFeedback + ' ' : '') + t('hint_prefix') + item.hint + t('try_again_suffix');
       input.value = ''; input.focus();
     } else {
-      input.className = 'underline-input incorrect'; input.disabled = true;
-      feedback.textContent = t('conv_wrong_reveal_template', { a: item.expectedAnswer });
+      convReviewAttempt = 2;
+      input.className = 'underline-input incorrect';
+      feedback.textContent = t('conv_wrong_reveal_template', { a: item.expectedAnswer }) + t('type_to_continue_suffix');
       recordReviewAnswer(false);
-      setTimeout(advanceConvReview, 1800);
+      input.value = ''; input.focus();
     }
   }
 
@@ -3059,6 +3153,11 @@
   }
 
   function handleListenReviewAnswer(btn, chosen, correctAnswer, sentence) {
+    if (listenReviewAttempt >= 2) {
+      // post-reveal stage: only the highlighted correct option is clickable, and clicking it advances
+      if (chosen === correctAnswer) advanceListenReview();
+      return;
+    }
     const isCorrect = chosen === correctAnswer;
     if (isCorrect) {
       document.querySelectorAll('#listenReviewOptions .quiz-option').forEach(b => b.disabled = true);
@@ -3076,14 +3175,15 @@
       hintBtn.style.display = 'inline-flex';
       hintBtn.onclick = () => speak(sentence);
     } else {
+      listenReviewAttempt = 2;
       document.querySelectorAll('#listenReviewOptions .quiz-option').forEach(b => {
-        b.disabled = true;
-        if (b.textContent.includes(correctAnswer)) b.classList.add('correct');
+        const isThisCorrect = b.textContent.includes(correctAnswer);
+        b.disabled = !isThisCorrect;
+        if (isThisCorrect) b.classList.add('correct');
       });
       btn.classList.add('incorrect');
       recordReviewAnswer(false);
-      document.getElementById('listenReviewFeedback').textContent = t('listen_reveal_template', { a: correctAnswer });
-      setTimeout(advanceListenReview, 1600);
+      document.getElementById('listenReviewFeedback').textContent = t('listen_reveal_template', { a: correctAnswer }) + t('select_to_continue_suffix');
     }
   }
 
