@@ -490,6 +490,14 @@
     word-wrap: break-word;
     overflow-y: auto;
     overscroll-behavior: contain;
+    /* Mobile Safari can inflate a text-dense block's font size ("font
+       boosting") independently of a form control right next to it, which
+       would make writeOverlay's text wrap at different points than
+       writeInput's real (invisible) text - and that's exactly what puts the
+       real caret a full line away from the visible text it should sit in.
+       Disabling that adjustment keeps both layers' text metrics identical. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
   .write-overlay {
     color: var(--text);
@@ -527,6 +535,13 @@
        (scrolling still works via wheel/touch/JS scrollTop, none of which
        need a visible track) keeps both layers the same width always. */
     scrollbar-width: none;
+    /* Mobile WebKit can keep a few px of its own internal inset on a
+       textarea's text even with padding/border zeroed above, unless the
+       native form-control chrome itself is turned off - another way the
+       real (invisible) text can end up sitting a bit off from writeOverlay's
+       visible text. */
+    -webkit-appearance: none;
+    appearance: none;
   }
   .write-input::-webkit-scrollbar { display: none; }
 
@@ -536,8 +551,12 @@
   @media (max-width: 780px) {
     /* --book-h now gives the stacked pages a real height to split, instead
        of "auto" - each .page is flex:1 in that column, so the screen is cut
-       cleanly in half: top = source text, bottom = the input note. */
-    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: min(72vh, 640px); }
+       cleanly in half: top = source text, bottom = the input note. The
+       + 64px (two lines' worth: one for the source page, one for the
+       notebook, since they split this height evenly) is the requested
+       "grow both by one line, downward" - it's added on top of the vh/px
+       cap rather than inside it, so it doesn't get clamped away. */
+    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: calc(min(72vh, 640px) + 64px); }
     .book { flex-direction: column; width: 100%; }
     .page { width: 100%; height: auto; flex: 1; min-height: 0; }
     .page-left::after { display: none; }
