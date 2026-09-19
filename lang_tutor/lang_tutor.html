@@ -1990,19 +1990,29 @@
 
   // ---------------- AI daily content generation (Vocabulary / Grammar / Listening) ----------------
 
+  const MAX_DAILY_GENERATIONS = 3;
+
   function todayContentCacheKey(kind) {
     return `daily_ai_${kind}_${state.language}_${state.level}_${todayISO()}`;
   }
 
-  function loadCachedContent(kind) {
+  function loadDailyRecord(kind) {
     try {
       const raw = localStorage.getItem(todayContentCacheKey(kind));
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (parsed && Array.isArray(parsed.versions)) return parsed;
+      // migrate old single-array cache shape from before versioning existed
+      if (Array.isArray(parsed)) return { versions: [parsed] };
+    } catch (e) { /* ignore */ }
+    return { versions: [] };
   }
 
-  function saveCachedContent(kind, data) {
-    try { localStorage.setItem(todayContentCacheKey(kind), JSON.stringify(data)); } catch (e) { /* ignore quota errors */ }
+  function saveDailyRecord(kind, record) {
+    try { localStorage.setItem(todayContentCacheKey(kind), JSON.stringify(record)); } catch (e) { /* ignore quota errors */ }
+  }
+
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   async function generateVocabViaAI() {
@@ -2037,18 +2047,28 @@
   }
 
   async function ensureVocabReady() {
-    const cached = loadCachedContent('vocab');
-    if (cached) { VOCAB = cached; state.vocabIndex = Math.min(state.vocabIndex, VOCAB.length - 1); renderVocabCard(); return; }
     if (!getGeminiKey()) { VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english; renderVocabCard(); return; }
+    const record = loadDailyRecord('vocab');
+    if (record.versions.length >= MAX_DAILY_GENERATIONS) {
+      VOCAB = pickRandom(record.versions);
+      state.vocabIndex = 0;
+      renderVocabCard();
+      return;
+    }
     document.getElementById('vocabLoading').style.display = 'block';
     document.querySelector('#vocab-study-phase .flashcard-stage').style.display = 'none';
     try {
       VOCAB = await generateVocabViaAI();
-      saveCachedContent('vocab', VOCAB);
+      record.versions.push(VOCAB);
+      saveDailyRecord('vocab', record);
     } catch (e) {
-      console.warn('Vocab AI generation failed, using default content.', e);
-      VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english;
-      showToast(t('ai_fallback_toast'));
+      console.warn('Vocab AI generation failed.', e);
+      if (record.versions.length > 0) {
+        VOCAB = pickRandom(record.versions);
+      } else {
+        VOCAB = VOCAB_BY_LANG[state.language] || VOCAB_BY_LANG.english;
+        showToast(t('ai_fallback_toast'));
+      }
     }
     state.vocabIndex = 0;
     document.getElementById('vocabLoading').style.display = 'none';
@@ -2057,18 +2077,28 @@
   }
 
   async function ensureGrammarReady() {
-    const cached = loadCachedContent('grammar');
-    if (cached) { DAILY_GRAMMAR = cached; state.grammarIndex = Math.min(state.grammarIndex, DAILY_GRAMMAR.length - 1); renderGrammarCard(); return; }
     if (!getGeminiKey()) { DAILY_GRAMMAR = null; renderGrammarCard(); return; }
+    const record = loadDailyRecord('grammar');
+    if (record.versions.length >= MAX_DAILY_GENERATIONS) {
+      DAILY_GRAMMAR = pickRandom(record.versions);
+      state.grammarIndex = 0;
+      renderGrammarCard();
+      return;
+    }
     document.getElementById('grammarLoading').style.display = 'block';
     document.querySelector('#grammar-study-phase .content-stage').style.display = 'none';
     try {
       DAILY_GRAMMAR = await generateGrammarViaAI();
-      saveCachedContent('grammar', DAILY_GRAMMAR);
+      record.versions.push(DAILY_GRAMMAR);
+      saveDailyRecord('grammar', record);
     } catch (e) {
-      console.warn('Grammar AI generation failed, using default content.', e);
-      DAILY_GRAMMAR = null;
-      showToast(t('ai_fallback_toast'));
+      console.warn('Grammar AI generation failed.', e);
+      if (record.versions.length > 0) {
+        DAILY_GRAMMAR = pickRandom(record.versions);
+      } else {
+        DAILY_GRAMMAR = null;
+        showToast(t('ai_fallback_toast'));
+      }
     }
     state.grammarIndex = 0;
     document.getElementById('grammarLoading').style.display = 'none';
@@ -2077,18 +2107,28 @@
   }
 
   async function ensureListenReady() {
-    const cached = loadCachedContent('listening');
-    if (cached) { DAILY_LISTEN = cached; state.listenIndex = Math.min(state.listenIndex, DAILY_LISTEN.length - 1); resetListeningStudy(); return; }
     if (!getGeminiKey()) { DAILY_LISTEN = null; resetListeningStudy(); return; }
+    const record = loadDailyRecord('listening');
+    if (record.versions.length >= MAX_DAILY_GENERATIONS) {
+      DAILY_LISTEN = pickRandom(record.versions);
+      state.listenIndex = 0;
+      resetListeningStudy();
+      return;
+    }
     document.getElementById('listenLoading').style.display = 'block';
     document.querySelector('#listen-study-phase .listening-card').style.display = 'none';
     try {
       DAILY_LISTEN = await generateListeningViaAI();
-      saveCachedContent('listening', DAILY_LISTEN);
+      record.versions.push(DAILY_LISTEN);
+      saveDailyRecord('listening', record);
     } catch (e) {
-      console.warn('Listening AI generation failed, using default content.', e);
-      DAILY_LISTEN = null;
-      showToast(t('ai_fallback_toast'));
+      console.warn('Listening AI generation failed.', e);
+      if (record.versions.length > 0) {
+        DAILY_LISTEN = pickRandom(record.versions);
+      } else {
+        DAILY_LISTEN = null;
+        showToast(t('ai_fallback_toast'));
+      }
     }
     state.listenIndex = 0;
     document.getElementById('listenLoading').style.display = 'none';
