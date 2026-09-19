@@ -1293,6 +1293,17 @@
   // is what makes this correct for a sentence that *wraps* onto more than
   // one visual line, which is the common case here, not the exception.
   function measureCaretOffset(pos) {
+    // renderOverlay() just rebuilt writeOverlay's innerHTML, and browsers are
+    // *inconsistent* about whether replacing an element's children preserves
+    // its scrollTop or resets it to 0 (this is exactly the kind of thing
+    // that differs between Chrome and Safari). Rather than trust either
+    // behavior, force a known state - scrolled to the very top - right
+    // before measuring, so "rect.top - overlayTop" is always the caret's
+    // true offset from the *start* of the content, on every browser, every
+    // time, regardless of whatever scrollTop the rebuild happened to leave
+    // behind. This is what broke specifically once real scrolling kicked in
+    // (short notes never hit the inconsistency; long ones always did).
+    writeOverlay.scrollTop = 0;
     const walker = document.createTreeWalker(writeOverlay, NodeFilter.SHOW_TEXT);
     let remaining = pos;
     let node = null, offset = 0, n;
@@ -1307,9 +1318,7 @@
     range.collapse(true);
     const rect = range.getBoundingClientRect();
     const overlayTop = writeOverlay.getBoundingClientRect().top;
-    const top = rect.top - overlayTop + writeOverlay.scrollTop;
-    const bottom = rect.bottom - overlayTop + writeOverlay.scrollTop;
-    return { top, bottom };
+    return { top: rect.top - overlayTop, bottom: rect.bottom - overlayTop };
   }
 
   // The browser's own "scroll the caret into view" for a plain textarea
@@ -1343,45 +1352,10 @@
       saveState();
     }, 300);
   });
-  // Keeps the source page and the notebook scrolling together - matched by
-  // *line index* rather than raw pixels or scroll fraction, since a source
-  // row (padded, ~44px) and a notebook line (--line-h, 34px) aren't the same
-  // height, and the two sides' content lengths usually differ too.
-  //
-  // Setting scrollTop programmatically still fires that element's own
-  // 'scroll' event - but asynchronously (after this handler returns), not
-  // during it. A guard flag reset synchronously (at the end of this same
-  // handler) is already back to false by the time that echo arrives, so it
-  // does nothing to stop it: the echo goes on to re-sync the *other* side
-  // again, and on some browsers' event timing that round trip repeats and
-  // the two sides visibly fight/drift instead of just following each other.
-  // Holding the guard through a requestAnimationFrame instead ensures it's
-  // still true when the echo actually fires, so the echo is the one that's
-  // correctly ignored.
-  let scrollSyncing = false;
-  function withScrollGuard(fn) {
-    if (scrollSyncing) return;
-    scrollSyncing = true;
-    fn();
-    requestAnimationFrame(() => { scrollSyncing = false; });
-  }
-  function avgSourceRowHeight() {
-    const rows = sourceList.children.length;
-    return rows ? sourceList.scrollHeight / rows : 1;
-  }
+  // The source page and the notebook scroll independently - each side just
+  // keeps its own overlay in sync with its own textarea.
   writeInput.addEventListener('scroll', () => {
     writeOverlay.scrollTop = writeInput.scrollTop;
-    withScrollGuard(() => {
-      const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
-      sourceList.scrollTop = (writeInput.scrollTop / lineHeight) * avgSourceRowHeight();
-    });
-  });
-  sourceList.addEventListener('scroll', () => {
-    withScrollGuard(() => {
-      const lineHeight = parseFloat(getComputedStyle(writeInput).lineHeight) || 34;
-      writeInput.scrollTop = (sourceList.scrollTop / avgSourceRowHeight()) * lineHeight;
-      writeOverlay.scrollTop = writeInput.scrollTop;
-    });
   });
 
   finishBtn.addEventListener('click', () => {
