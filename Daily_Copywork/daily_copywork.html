@@ -22,7 +22,7 @@
     signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
   import {
-    getFirestore, doc, getDoc, setDoc
+    getFirestore, doc, getDoc, setDoc, onSnapshot
   } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -40,7 +40,7 @@
     db: getFirestore(app),
     GoogleAuthProvider, signInWithPopup,
     createUserWithEmailAndPassword, signInWithEmailAndPassword,
-    signOut, onAuthStateChanged, doc, getDoc, setDoc
+    signOut, onAuthStateChanged, doc, getDoc, setDoc, onSnapshot
   };
   window.dispatchEvent(new Event('firebase-ready'));
 </script>
@@ -524,6 +524,23 @@
     .write-surface { flex: 1; min-height: 0; }
     .app-header { padding: 16px 18px; }
     main { padding: 22px 14px 40px; }
+
+    /* While the on-screen keyboard is up, the full split book doesn't fit
+       above it - this shrinks to just enough to stay useful (1 source line
+       to check against, 2 notebook lines to write into) so both stay
+       visible above the keyboard instead of the keyboard covering the
+       notebook the user just tapped into. */
+    #bookView.typing-compact .book { height: auto; }
+    #bookView.typing-compact .page { height: auto; flex: none; }
+    #bookView.typing-compact .source-list {
+      flex: none;
+      max-height: calc(var(--line-h) + 18px);
+      overflow-y: auto;
+    }
+    #bookView.typing-compact .write-surface {
+      flex: none;
+      height: calc(var(--line-h) * 2 + 16px);
+    }
   }
 </style>
 </head>
@@ -979,28 +996,52 @@
     profilePopover.hidden = true;
   });
 
-  // Cloud data (if any) wins on login - it's treated as the account's
-  // canonical progress. A brand new account just gets today's local state
-  // pushed up as its starting point.
-  async function loadCloudState(fb, uid) {
-    const snap = await fb.getDoc(fb.doc(fb.db, 'users', uid));
-    if (snap.exists()) {
-      state = Object.assign(defaultState(), snap.data());
-    }
-    saveState();
-    renderHome();
+  // A one-time getDoc() at login only ever sees whatever the cloud held at
+  // that moment - it never learns about a change another already-open,
+  // already-logged-in device makes afterwards, which is exactly why PC and
+  // mobile could drift apart while both stayed open. A *live* listener on
+  // the same document fixes that: it fires again on its own whenever the
+  // doc changes, from any device, for as long as this tab stays logged in.
+  //
+  // Firestore also re-fires this same listener for our *own* writes (once
+  // optimistically from the local cache, again once the server confirms
+  // it) - snapshot.metadata.hasPendingWrites is true for our own not-yet-
+  // confirmed write and false once it's a genuine externally-sourced
+  // update, so that's the flag this uses to tell "echo of what we just
+  // wrote" apart from "another device changed something."
+  let unsubscribeCloudState = null;
+
+  function subscribeCloudState(fb, uid) {
+    const ref = fb.doc(fb.db, 'users', uid);
+    return fb.onSnapshot(ref, (snap) => {
+      if (snap.metadata.hasPendingWrites) return;
+      if (snap.exists()) {
+        state = Object.assign(defaultState(), snap.data());
+      } else {
+        // Brand new account - nothing in the cloud yet, so push up
+        // whatever this device currently has as the starting point.
+        saveState();
+      }
+      if (homeView.classList.contains('active')) {
+        renderHome();
+      }
+      // If the book view is active instead, `state` is still updated above -
+      // it's just not forced onto the screen mid-keystroke. openBook()/
+      // renderHome() picks it up correctly the next time either runs.
+    }, (err) => console.error('cloud sync listen failed', err));
   }
 
   function initFirebaseAuth() {
     const fb = window.__dailyBookFirebase;
     fb.onAuthStateChanged(fb.auth, (user) => {
       currentUser = user;
+      if (unsubscribeCloudState) { unsubscribeCloudState(); unsubscribeCloudState = null; }
       if (user) {
         loginTriggerBtn.hidden = true;
         profileWrap.hidden = false;
         profileEmail.textContent = user.email || '';
         profileCircleBtn.textContent = (user.email || '?').charAt(0).toUpperCase();
-        loadCloudState(fb, user.uid).catch(err => console.error('cloud load failed', err));
+        unsubscribeCloudState = subscribeCloudState(fb, user.uid);
       } else {
         loginTriggerBtn.hidden = false;
         profileWrap.hidden = true;
@@ -1356,6 +1397,22 @@
   // keeps its own overlay in sync with its own textarea.
   writeInput.addEventListener('scroll', () => {
     writeOverlay.scrollTop = writeInput.scrollTop;
+  });
+
+  // On mobile, the on-screen keyboard eats the bottom half of the screen -
+  // this class only does anything under the mobile media query (see CSS),
+  // shrinking the book to 1 source line + 2 notebook lines so both stay
+  // visible above the keyboard instead of it covering the notebook the user
+  // just tapped into. The scrollIntoView is delayed to outlast the
+  // keyboard's own open animation, which the layout shift above starts.
+  writeInput.addEventListener('focus', () => {
+    bookView.classList.add('typing-compact');
+    setTimeout(() => {
+      writeInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 300);
+  });
+  writeInput.addEventListener('blur', () => {
+    bookView.classList.remove('typing-compact');
   });
 
   finishBtn.addEventListener('click', () => {
