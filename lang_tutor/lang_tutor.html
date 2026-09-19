@@ -1348,11 +1348,13 @@
   const LANGUAGES = [
     { key: 'english', flag: '🇺🇸', label: 'English' },
     { key: 'spanish', flag: '🇪🇸', label: 'Español' },
+    { key: 'thai', flag: '🇹🇭', label: 'ภาษาไทย' },
   ];
 
   const LANG_TTS = {
     english: 'en-US',
     spanish: 'es-ES',
+    thai: 'th-TH',
   };
 
   const VOCAB_BY_LANG = {
@@ -1380,6 +1382,18 @@
       { word: 'florecer', ipa: '/flo.ɾeˈseɾ/', meaning: '번창하다', example: 'El jardín comenzó a florecer en primavera.', hint: 'flor(꽃)에서 나온 단어예요.' },
       { word: 'confiable', ipa: '/komˈfja.βle/', meaning: '믿을 수 있는', example: 'Él es un amigo confiable.', hint: 'confiar(신뢰하다)에서 나왔어요.' },
     ],
+    thai: [
+      { word: 'สบาย', ipa: 'sabai', meaning: '편안한', example: 'รองเท้าคู่นี้สบายมาก', hint: '기분 좋고 편안하다는 뜻이에요.' },
+      { word: 'การเดินทาง', ipa: 'kan-doen-thang', meaning: '여정', example: 'ชีวิตคือการเดินทาง ไม่ใช่จุดหมายปลายทาง', hint: '여행이나 이동의 과정을 뜻해요.' },
+      { word: 'ความขอบคุณ', ipa: 'kwam-khob-khun', meaning: '감사', example: 'เธอแสดงความขอบคุณด้วยรอยยิ้มที่อบอุ่น', hint: '고마운 마음을 나타내는 말이에요.' },
+      { word: 'อยากรู้อยากเห็น', ipa: 'yak-ru-yak-hen', meaning: '호기심 많은', example: 'แมวที่อยากรู้อยากเห็นสำรวจทุกมุม', hint: '새로운 것을 알고 싶어하는 마음이에요.' },
+      { word: 'สงบ', ipa: 'sa-ngob', meaning: '평화로운', example: 'ทะเลสาบแห่งนี้เงียบและสงบ', hint: '조용하고 갈등이 없는 상태예요.' },
+      { word: 'บรรลุ', ipa: 'ban-lu', meaning: 'to achieve', example: 'เธอพยายามอย่างหนักเพื่อบรรลุเป้าหมาย', hint: '목표를 이뤄낸다는 뜻이에요.' },
+      { word: 'ยอมรับ', ipa: 'yom-rap', meaning: 'to accept/embrace', example: 'เขาตัดสินใจยอมรับการเปลี่ยนแปลง', hint: '새로운 것을 인정하고 받아들인다는 뜻이에요.' },
+      { word: 'จริงใจ', ipa: 'jing-jai', meaning: 'genuine', example: 'รอยยิ้มของเธออบอุ่นและจริงใจ', hint: '거짓이 없다는 뜻이에요.' },
+      { word: 'เจริญรุ่งเรือง', ipa: 'ja-roen-rung-rueang', meaning: 'to flourish', example: 'สวนเริ่มเจริญรุ่งเรืองในฤดูใบไม้ผลิ', hint: '잘 자라거나 번영한다는 뜻이에요.' },
+      { word: 'น่าเชื่อถือ', ipa: 'na-chuea-thue', meaning: 'reliable', example: 'เขาเป็นเพื่อนที่น่าเชื่อถือ', hint: '믿을 수 있다는 뜻이에요.' },
+    ],
   };
 
   const GRAMMAR_BY_LANG = {
@@ -1396,6 +1410,13 @@
       { title: 'Comparativos (más ... que)', explanation: "두 대상을 비교할 때 'más + 형용사 + que'를 사용해요.", example: 'Esta mochila es más pesada que esa.', answer: 'más pesada que', hint: 'más + 형용사 + que ~: ~보다 더 ...해요.' },
       { title: "Futuro con 'ir a'", explanation: "가까운 미래의 계획은 'ir a + 동사원형'으로 표현해요.", example: 'Vamos a viajar a Japón el próximo mes.', answer: 'Vamos a viajar', hint: 'ir 동사 + a + 동사원형 순서예요.' },
       { title: 'Pretérito perfecto (haber + participio)', explanation: "과거에 시작해 현재까지 영향을 주는 일은 'haber + 과거분사'로 표현해요.", example: 'Ya he terminado mi tarea.', answer: 'he terminado', hint: 'haber 동사 + 과거분사(-ado/-ido) 순서예요.' },
+    ],
+    thai: [
+      { title: 'กำลัง + 동사 (진행형)', explanation: "지금 진행 중인 동작은 'กำลัง + 동사'로 표현해요.", example: 'เธอกำลังอ่านหนังสืออยู่ตอนนี้', answer: 'กำลังอ่าน', hint: 'กำลัง는 동사 앞에 붙어서 진행 중임을 나타내요.' },
+      { title: 'แล้ว (완료/과거)', explanation: '이미 끝난 일은 동사 뒤에 แล้ว를 붙여요.', example: 'เขาไปโรงเรียนแล้ว', answer: 'ไปโรงเรียนแล้ว', hint: '동사 + แล้ว는 완료·과거를 나타내요.' },
+      { title: 'กว่า (비교)', explanation: "두 가지를 비교할 때 '형용사 + กว่า'를 사용해요.", example: 'กระเป๋าใบนี้หนักกว่าใบนั้น', answer: 'หนักกว่า', hint: '형용사 + กว่า: ~보다 더 ~해요.' },
+      { title: 'จะ (미래)', explanation: '미래의 계획은 동사 앞에 จะ를 붙여요.', example: 'เราจะไปเที่ยวญี่ปุ่นเดือนหน้า', answer: 'จะไปเที่ยว', hint: 'จะ + 동사는 미래의 일을 나타내요.' },
+      { title: 'เคย (경험)', explanation: '과거의 경험은 동사 앞에 เคย를 붙여요.', example: 'ฉันเคยปีนภูเขาฟูจิ', answer: 'เคยปีน', hint: "เคย + 동사는 '~해 본 적이 있다'를 나타내요." },
     ],
   };
 
@@ -1414,6 +1435,13 @@
       { situation: '약속 잡기', studySentence: '¿Estás libre este viernes por la noche?', meaning: '이번 금요일 저녁에 시간 있어요?', reviewQuestion: 'Quieres invitar a un amigo el viernes. ¿Qué le preguntas?', expectedAnswer: '¿Estás libre este viernes por la noche?', hint: "Usa '¿Estás libre ...?'" },
       { situation: '사과하기', studySentence: 'Lo siento mucho por llegar tarde.', meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'Llegaste 20 minutos tarde a ver a un amigo. ¿Qué dices?', expectedAnswer: 'Lo siento mucho por llegar tarde.', hint: "Usa 'Lo siento por ...'" },
     ],
+    thai: [
+      { situation: '카페에서 음료 주문하기', studySentence: 'ขอลาเต้เย็นไซส์กลางค่ะ', meaning: '아이스 라떼 미디엄 사이즈 주세요.', reviewQuestion: 'พนักงานถามว่า "รับอะไรดีคะ" คุณจะสั่งลาเต้เย็นว่าอย่างไร?', expectedAnswer: 'ขอลาเต้เย็นไซส์กลางค่ะ', hint: "'ขอ...ค่ะ/ครับ' 패턴을 사용해보세요." },
+      { situation: '자기소개하기', studySentence: 'ยินดีที่ได้รู้จักค่ะ ฉันชื่อเจนนี่', meaning: '만나서 반가워요, 저는 제니예요.', reviewQuestion: 'มีคนพูดว่า "เราไม่เคยเจอกันมาก่อนใช่ไหม" คุณจะแนะนำตัวอย่างไร?', expectedAnswer: 'ยินดีที่ได้รู้จักค่ะ ฉันชื่อเจนนี่', hint: "'ยินดีที่ได้รู้จัก...ฉันชื่อ...' 패턴이에요." },
+      { situation: '길 묻기', studySentence: 'ขอโทษค่ะ ไปสถานีรถไฟฟ้ายังไงคะ', meaning: '실례합니다, 지하철역에 어떻게 가나요?', reviewQuestion: 'คุณหลงทางใกล้สถานี คุณจะถามคนแปลกหน้าว่าอย่างไร?', expectedAnswer: 'ขอโทษค่ะ ไปสถานีรถไฟฟ้ายังไงคะ', hint: "'ขอโทษค่ะ ไป...ยังไงคะ' 패턴이에요." },
+      { situation: '약속 잡기', studySentence: 'วันศุกร์นี้ตอนเย็นว่างไหมคะ', meaning: '이번 주 금요일 저녁에 시간 있어요?', reviewQuestion: 'คุณอยากชวนเพื่อนออกไปวันศุกร์ คุณจะถามว่าอย่างไร?', expectedAnswer: 'วันศุกร์นี้ตอนเย็นว่างไหมคะ', hint: "'...ว่างไหมคะ' 패턴이에요." },
+      { situation: '사과하기', studySentence: 'ขอโทษจริงๆ ที่มาสาย', meaning: '늦어서 정말 죄송해요.', reviewQuestion: 'คุณมาสาย 20 นาทีในการนัดพบเพื่อน คุณจะพูดว่าอย่างไร?', expectedAnswer: 'ขอโทษจริงๆ ที่มาสาย', hint: "'ขอโทษที่...' 패턴이에요." },
+    ],
   };
 
   const LISTENING_BY_LANG = {
@@ -1426,6 +1454,11 @@
       { sentence: 'Normalmente tomo una taza de café antes de empezar a trabajar.', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'una taza de', meaning: '한 잔의' }, { term: 'antes de', meaning: '~하기 전에' }], quiz: { question: '¿Qué toma antes de trabajar?', options: ['Té', 'Café', 'Jugo', 'Agua'], answer: 'Café' } },
       { sentence: 'El clima ha estado muy agradable esta semana, así que salí a caminar.', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'salir a caminar', meaning: '산책하러 가다' }, { term: 'así que', meaning: '그래서' }], quiz: { question: '¿Por qué salió a caminar?', options: ['Llovía', 'El clima era agradable', 'Estaba aburrido', 'Necesitaba ejercicio'], answer: 'El clima era agradable' } },
       { sentence: '¿Podrías enviarme el informe para mañana por la mañana?', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: '¿Podrías...?', meaning: '~해 주실 수 있나요' }, { term: 'para mañana por la mañana', meaning: '내일 아침까지' }], quiz: { question: '¿Cuándo se necesita el informe?', options: ['Esta noche', 'Mañana por la mañana', 'La próxima semana', 'Ahora mismo'], answer: 'Mañana por la mañana' } },
+    ],
+    thai: [
+      { sentence: 'ปกติฉันดื่มกาแฟหนึ่งแก้วก่อนเริ่มทำงาน', translation: '저는 보통 일을 시작하기 전에 커피 한 잔을 마셔요.', expressions: [{ term: 'หนึ่งแก้ว', meaning: '한 잔' }, { term: 'ก่อน', meaning: '~하기 전에' }], quiz: { question: 'ผู้พูดดื่มอะไรก่อนทำงาน?', options: ['ชา', 'กาแฟ', 'น้ำผลไม้', 'น้ำเปล่า'], answer: 'กาแฟ' } },
+      { sentence: 'สัปดาห์นี้อากาศดีมาก ฉันเลยไปเดินเล่น', translation: '이번 주 날씨가 정말 좋아서 산책을 다녀왔어요.', expressions: [{ term: 'ไปเดินเล่น', meaning: '산책하러 가다' }, { term: 'เลย', meaning: '그래서' }], quiz: { question: 'ทำไมเธอไปเดินเล่น?', options: ['ฝนตก', 'อากาศดี', 'เบื่อ', 'อยากออกกำลังกาย'], answer: 'อากาศดี' } },
+      { sentence: 'คุณช่วยส่งรายงานให้ฉันภายในพรุ่งนี้เช้าได้ไหมคะ', translation: '내일 아침까지 저에게 보고서를 보내주실 수 있나요?', expressions: [{ term: 'ช่วย...ได้ไหม', meaning: '~해 주실 수 있나요' }, { term: 'ภายในพรุ่งนี้เช้า', meaning: '내일 아침까지' }], quiz: { question: 'ต้องการรายงานเมื่อไหร่?', options: ['คืนนี้', 'พรุ่งนี้เช้า', 'สัปดาห์หน้า', 'เดี๋ยวนี้'], answer: 'พรุ่งนี้เช้า' } },
     ],
   };
 
