@@ -505,7 +505,18 @@
     caret-color: var(--text);
     resize: none;
     outline: none;
+    /* This textarea's real (invisible) text has to wrap at *exactly* the
+       same points as writeOverlay's visible text, or the real caret (which
+       only this element has) ends up sitting over the wrong character.
+       A classic (space-consuming) scrollbar on this textarea - which
+       writeOverlay, with overflow:hidden, never grows - would narrow this
+       element's text by however wide that scrollbar is, wrapping it
+       differently as soon as scrolling kicks in. Hiding the scrollbar itself
+       (scrolling still works via wheel/touch/JS scrollTop, none of which
+       need a visible track) keeps both layers the same width always. */
+    scrollbar-width: none;
   }
+  .write-input::-webkit-scrollbar { display: none; }
 
   .book-footer { display: flex; justify-content: center; margin-top: 24px; }
 
@@ -1433,12 +1444,20 @@
   // this class only does anything under the mobile media query (see CSS),
   // shrinking the book to 1 source line + 2 notebook lines so both stay
   // visible above the keyboard instead of it covering the notebook the user
-  // just tapped into. The scrollIntoView is delayed to outlast the
-  // keyboard's own open animation, which the layout shift above starts.
+  // just tapped into.
+  //
+  // The browser's own "scroll the focused field into view" already runs the
+  // moment the keyboard opens, and centering *writeInput itself* on top of
+  // that pushed the toolbar (Day N / accuracy) above the top of the screen
+  // instead of leaving it as the first thing visible. Aligning bookView's
+  // own top edge instead - after a delay long enough to run *after* that
+  // native scroll and the compact-mode reflow it triggers - corrects back
+  // to the toolbar being the top of what's on screen, rather than fighting
+  // the native scroll while it's still happening.
   writeInput.addEventListener('focus', () => {
     bookView.classList.add('typing-compact');
     setTimeout(() => {
-      writeInput.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      bookView.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }, 300);
   });
   writeInput.addEventListener('blur', () => {
