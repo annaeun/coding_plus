@@ -560,12 +560,12 @@
     /* --book-h now gives the stacked pages a real height to split, instead
        of "auto" - each .page is flex:1 in that column, so the screen is cut
        cleanly in half: top = source text, bottom = the input note. The
-       + 128px (four lines' worth: two for the source page, two for the
+       + 192px (six lines' worth: three for the source page, three for the
        notebook, since they split this height evenly) is the requested
-       "grow both by one line, downward", applied twice - it's added on top
-       of the vh/px cap rather than inside it, so it doesn't get clamped
-       away. */
-    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: calc(min(72vh, 640px) + 128px); }
+       "grow both by one line, downward", applied three times now - it's
+       added on top of the vh/px cap rather than inside it, so it doesn't
+       get clamped away. */
+    :root { --page-w: min(92vw, 430px); --line-h: 32px; --book-h: calc(min(72vh, 640px) + 192px); }
     .book { flex-direction: column; width: 100%; }
     .page { width: 100%; height: auto; flex: 1; min-height: 0; }
     .page-left::after { display: none; }
