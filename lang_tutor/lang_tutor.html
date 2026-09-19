@@ -2185,7 +2185,7 @@
       }
     } catch (e) {
       console.error(e);
-      statusEl.textContent = e.message === 'NO_API_KEY' ? t('ai_key_empty_toast') : t('ai_key_invalid_status');
+      statusEl.textContent = e.message === 'NO_API_KEY' ? t('ai_key_empty_toast') : t('ai_key_invalid_status') + ' (' + e.message.slice(0, 150) + ')';
     }
   });
 
