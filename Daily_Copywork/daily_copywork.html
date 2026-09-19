@@ -541,6 +541,23 @@
       flex: none;
       height: calc(var(--line-h) * 2 + 16px);
     }
+    /* The toolbar (Day N / accuracy) and the "오늘의 필사 원문" / "나의 노트"
+       labels were taking a fixed chunk of the little vertical room left
+       above the keyboard, regardless of how small the book below them got -
+       shrinking them too is what actually gives the source line and the
+       notebook the extra space, not just the book's own height change. */
+    #bookView.typing-compact .book-toolbar { margin-bottom: 10px; }
+    #bookView.typing-compact .back-btn { width: 26px; height: 26px; font-size: 0.8rem; }
+    #bookView.typing-compact .day-label { font-size: 0.85rem; }
+    #bookView.typing-compact .day-sub { display: none; }
+    #bookView.typing-compact .accuracy-pill,
+    #bookView.typing-compact .done-pill { font-size: 0.68rem; padding: 3px 8px; }
+    #bookView.typing-compact .page-head {
+      font-size: 0.7rem;
+      padding-bottom: 4px;
+      margin-bottom: 2px;
+      border-bottom-width: 1px;
+    }
   }
 </style>
 </head>
