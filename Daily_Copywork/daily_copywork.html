@@ -587,13 +587,15 @@
       flex: none;
       /* +33px reclaimed from hiding .book-footer below (~66px: the button's
          own ~42px plus its 24px margin-top), split evenly with the
-         notebook. */
-      max-height: calc(var(--line-h) + 18px + 33px);
+         notebook. One extra line each on top of that (it's fine if the
+         keyboard covers part of it - the user asked for the bigger area
+         over keeping everything above the keyboard). */
+      max-height: calc(var(--line-h) * 2 + 18px + 33px);
       overflow-y: auto;
     }
     #bookView.typing-compact .write-surface {
       flex: none;
-      height: calc(var(--line-h) * 2 + 16px + 33px);
+      height: calc(var(--line-h) * 3 + 16px + 33px);
     }
     /* Hidden while typing so its ~66px goes to the source/notebook areas
        above instead of sitting under the keyboard where it can't be tapped
